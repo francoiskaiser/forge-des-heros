@@ -41,13 +41,51 @@
   --f-display: "IM Fell English SC", "Cormorant SC", Georgia, serif;
   --f-body: "Alegreya Sans", "Segoe UI", system-ui, sans-serif;
   --r: 10px;
+  --onember: #1d130a;
+  --bloodink: #ffd9d3;
+  --dmgink: #ffcfc7;
+  --healink: #c7f1dd;
+  --barbg: rgba(27, 22, 18, .94);
+  --scrim: rgba(8, 6, 4, .66);
+  --shadow: rgba(0, 0, 0, .55);
+  --glow: rgba(229, 154, 79, .10);
   color-scheme: dark;
+}
+/* Mode clair : parchemin de jour, encre brune, braise assombrie pour le contraste */
+:root[data-forge-theme="light"] {
+  --bg: #f2ebdf;
+  --bg2: #e9e0d0;
+  --panel: #fbf7f0;
+  --panel2: #f4ede2;
+  --line: #ddd1be;
+  --line2: #c6b49a;
+  --ink: #2b2118;
+  --mute: #66563f;
+  --faint: #8f7d64;
+  --ember: #b25c19;
+  --ember2: #8f4710;
+  --emberbg: rgba(178, 92, 25, .11);
+  --blood: #b2382c;
+  --bloodbg: rgba(178, 56, 44, .09);
+  --verd: #2b7d55;
+  --verdbg: rgba(43, 125, 85, .11);
+  --arc: #5a4ab8;
+  --arcbg: rgba(90, 74, 184, .09);
+  --onember: #fffaf2;
+  --bloodink: #8a281e;
+  --dmgink: #962f22;
+  --healink: #1d6643;
+  --barbg: rgba(251, 247, 240, .94);
+  --scrim: rgba(43, 33, 24, .42);
+  --shadow: rgba(70, 45, 20, .18);
+  --glow: rgba(178, 92, 25, .07);
+  color-scheme: light;
 }
 * { box-sizing: border-box; }
 html { background: var(--bg); }
 body {
   background: var(--bg);
-  background-image: radial-gradient(ellipse 80% 40% at 50% -10%, rgba(229, 154, 79, .10), transparent 70%);
+  background-image: radial-gradient(ellipse 80% 40% at 50% -10%, var(--glow), transparent 70%);
   color: var(--ink); font: 16px/1.5 var(--f-body); margin: 0; min-height: 100%;
   padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
 }
@@ -72,13 +110,13 @@ b, strong { font-weight: 700; }
 /* Boutons */
 .btn { display: inline-flex; align-items: center; gap: .5em; padding: .62em 1.1em; border-radius: 999px; border: 1px solid var(--line2); background: var(--panel2); font-weight: 700; transition: background .15s, border-color .15s; }
 .btn:hover { border-color: var(--ember); }
-.btn.primary { background: var(--ember); color: #1d130a; border-color: var(--ember); }
+.btn.primary { background: var(--ember); color: var(--onember); border-color: var(--ember); }
 .btn.primary:hover { background: var(--ember2); }
 .btn.ghost { background: transparent; }
 .btn.small { padding: .4em .85em; font-size: .9rem; }
 .btn.danger { color: var(--blood); }
-.btn.dmgb { background: var(--bloodbg); border-color: var(--blood); color: #ffd9d3; }
-.btn.healb { background: var(--verdbg); border-color: var(--verd); color: #d6f5e6; }
+.btn.dmgb { background: var(--bloodbg); border-color: var(--blood); color: var(--bloodink); }
+.btn.healb { background: var(--verdbg); border-color: var(--verd); color: var(--healink); }
 .btn:disabled { opacity: .4; cursor: not-allowed; }
 .icon-btn { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; color: var(--ink); }
 .icon-btn:hover { background: var(--panel2); }
@@ -124,7 +162,7 @@ b, strong { font-weight: 700; }
 .legal { color: var(--faint); font-size: .78rem; margin-top: 32px; max-width: 70ch; }
 
 /* Barre du haut */
-.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; display: flex; align-items: center; gap: 8px; padding: 8px max(10px, env(safe-area-inset-right, 0px)) 8px max(10px, env(safe-area-inset-left, 0px)); background: rgba(27, 22, 18, .94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; display: flex; align-items: center; gap: 8px; padding: 8px max(10px, env(safe-area-inset-right, 0px)) 8px max(10px, env(safe-area-inset-left, 0px)); background: var(--barbg); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
 .tb-title { flex: 1; min-width: 0; display: grid; line-height: 1.2; }
 .tb-title strong { font-family: var(--f-display); font-weight: 400; font-size: 1.2rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tb-title .eyebrow { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -136,7 +174,7 @@ b, strong { font-weight: 700; }
 .rail-step { flex: none; display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; border-radius: 999px; color: var(--mute); border: 1px solid transparent; position: relative; }
 .rail-step.on { border-color: var(--ember); color: var(--ink); background: var(--emberbg); }
 .rs-num { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: .82rem; font-weight: 700; border: 1px solid var(--line2); }
-.rail-step.done .rs-num { background: var(--ember); color: #1d130a; border-color: var(--ember); }
+.rail-step.done .rs-num { background: var(--ember); color: var(--onember); border-color: var(--ember); }
 .rail-step.done .rs-num svg { width: 15px; height: 15px; }
 .rs-badge { font-size: .7rem; background: var(--line2); color: var(--ink); border-radius: 999px; padding: 0 6px; font-weight: 700; }
 .create-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; align-items: start; padding-block: 8px 30px; }
@@ -228,7 +266,7 @@ select { background: var(--bg2); border: 1px solid var(--line2); border-radius: 
 .spell-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; border-bottom: 1px solid var(--line); }
 .spell-row:last-child { border-bottom: 0; }
 .sr-main { display: flex; align-items: center; gap: 10px; padding: 9px 4px; text-align: left; min-width: 0; }
-.sr-check { width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--line2); display: grid; place-items: center; flex: none; color: #1d130a; }
+.sr-check { width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--line2); display: grid; place-items: center; flex: none; color: var(--onember); }
 .spell-row.on .sr-check { background: var(--arc); border-color: var(--arc); }
 .spell-row.lock .sr-check { background: var(--line2); border-color: var(--line2); color: var(--ink); }
 .sr-check svg { width: 14px; height: 14px; }
@@ -287,7 +325,7 @@ textarea.code { font-family: ui-monospace, monospace; font-size: .8rem; }
 .ab-save.pr { color: var(--ink); }
 .ab-save.pr i { background: var(--ember); border-color: var(--ember); }
 .conds { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
-.cond { display: inline-flex; gap: 4px; align-items: center; font-size: .85rem; padding: 3px 8px 3px 10px; border-radius: 99px; background: var(--bloodbg); border: 1px solid var(--blood); color: #ffd9d3; }
+.cond { display: inline-flex; gap: 4px; align-items: center; font-size: .85rem; padding: 3px 8px 3px 10px; border-radius: 99px; background: var(--bloodbg); border: 1px solid var(--blood); color: var(--bloodink); }
 .cond svg { width: .9em; height: .9em; }
 .tabs { display: flex; gap: 2px; overflow-x: auto; border-bottom: 1px solid var(--line); margin-bottom: 14px; scrollbar-width: none; position: sticky; top: calc(57px + env(safe-area-inset-top, 0px)); background: var(--bg); z-index: 10; }
 .tabs::-webkit-scrollbar { display: none; }
@@ -304,8 +342,8 @@ textarea.code { font-family: ui-monospace, monospace; font-size: .8rem; }
 .rb small { font-size: .62rem; font-weight: 400; color: var(--faint); }
 .rb:is(button):hover { border-color: var(--ember); }
 .rb.hit { color: var(--ember2); font-size: 1.1rem; }
-.rb.dmg { color: #ffcfc7; }
-.rb.heal { color: #c7f1dd; border-color: rgba(111, 191, 152, .4); }
+.rb.dmg { color: var(--dmgink); }
+.rb.heal { color: var(--healink); border-color: rgba(111, 191, 152, .4); }
 .rb.dc { color: var(--arc); border-style: dashed; }
 .rb.cast { color: var(--arc); border-color: rgba(168, 154, 232, .45); }
 .rb.wide { display: inline-flex; gap: 6px; padding: 7px 12px; }
@@ -354,7 +392,7 @@ textarea.code { font-family: ui-monospace, monospace; font-size: .8rem; }
 .item { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--line); }
 .it-name { display: grid; min-width: 0; }
 .it-name b { overflow-wrap: anywhere; }
-.eq { width: 26px; height: 26px; border-radius: 7px; border: 1px solid var(--line2); display: grid; place-items: center; color: #1d130a; }
+.eq { width: 26px; height: 26px; border-radius: 7px; border: 1px solid var(--line2); display: grid; place-items: center; color: var(--onember); }
 .eq.on { background: var(--ember); border-color: var(--ember); }
 .eq.none { border: 0; }
 .eq svg { width: 15px; height: 15px; }
@@ -367,11 +405,11 @@ textarea.code { font-family: ui-monospace, monospace; font-size: .8rem; }
 textarea.notes { min-height: 260px; line-height: 1.55; }
 
 /* Barre de jets */
-#rollbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; background: rgba(27, 22, 18, .96); backdrop-filter: blur(10px); border-top: 1px solid var(--line); padding: 8px max(12px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px)); }
+#rollbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; background: var(--barbg); backdrop-filter: blur(10px); border-top: 1px solid var(--line); padding: 8px max(12px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px)); }
 .rb-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 10px; }
 .advseg { display: flex; border: 1px solid var(--line2); border-radius: 999px; overflow: hidden; flex: none; }
 .advseg button { padding: 7px 12px; font-size: .85rem; font-weight: 700; color: var(--mute); }
-.advseg button.on { color: #1d130a; background: var(--ink); }
+.advseg button.on { color: var(--onember); background: var(--ink); }
 .advseg button.on.adv { background: var(--verd); }
 .advseg button.on.dis { background: var(--blood); color: #fff; }
 .last-roll { flex: 1; min-width: 0; display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
@@ -379,31 +417,31 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
 .last-roll b { font-size: 1.4rem; font-variant-numeric: tabular-nums; color: var(--ember2); }
 .last-roll.crit b { color: var(--verd); } .last-roll.fumble b { color: var(--blood); }
 .rb-inner > .mute { flex: 1; text-align: right; }
-.tray-btn { width: 46px; height: 46px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--ember); color: #1d130a; }
+.tray-btn { width: 46px; height: 46px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--ember); color: var(--onember); }
 .tray-btn svg { width: 26px; height: 26px; }
 
 #rolltoast { position: fixed; left: 50%; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px); opacity: 0; pointer-events: none; z-index: 40; transition: opacity .2s, transform .25s cubic-bezier(.2, 1.4, .4, 1); }
 #rolltoast.show { opacity: 1; transform: translate(-50%, 0); }
-.rt { display: grid; justify-items: center; gap: 2px; min-width: 220px; max-width: min(360px, calc(100vw - 32px)); padding: 12px 22px 14px; border-radius: 18px; background: var(--panel2); border: 1px solid var(--ember); box-shadow: 0 18px 50px rgba(0, 0, 0, .55), 0 0 30px rgba(229, 154, 79, .2); text-align: center; }
+.rt { display: grid; justify-items: center; gap: 2px; min-width: 220px; max-width: min(360px, calc(100vw - 32px)); padding: 12px 22px 14px; border-radius: 18px; background: var(--panel2); border: 1px solid var(--ember); box-shadow: 0 18px 50px var(--shadow), 0 0 30px rgba(229, 154, 79, .2); text-align: center; }
 .rt-label { font-size: .85rem; color: var(--mute); }
 .rt-total { font-size: 3rem; font-weight: 700; line-height: 1; color: var(--ember2); font-variant-numeric: tabular-nums; animation: pop .35s ease-out; }
 .rt-detail { font-size: .8rem; color: var(--faint); font-variant-numeric: tabular-nums; }
 .rt-note { font-family: var(--f-display); font-size: 1.15rem; }
 .rt.crit { border-color: var(--verd); } .rt.crit .rt-total, .rt.crit .rt-note { color: var(--verd); }
 .rt.fumble { border-color: var(--blood); } .rt.fumble .rt-total, .rt.fumble .rt-note { color: var(--blood); }
-.rt.dmgr .rt-total { color: #ffb4a8; } .rt.healr { border-color: var(--verd); } .rt.healr .rt-total { color: var(--verd); }
+.rt.dmgr .rt-total { color: var(--dmgink); } .rt.healr { border-color: var(--verd); } .rt.healr .rt-total { color: var(--verd); }
 @keyframes pop { 0% { transform: scale(.4) rotate(-20deg); opacity: 0; } 70% { transform: scale(1.12) rotate(4deg); opacity: 1; } 100% { transform: scale(1) rotate(0); } }
 #toast { position: fixed; left: 50%; top: calc(14px + env(safe-area-inset-top, 0px)); transform: translate(-50%, -20px); opacity: 0; pointer-events: none; z-index: 60; background: var(--ink); color: var(--bg); padding: 9px 16px; border-radius: 999px; font-weight: 700; font-size: .9rem; transition: all .2s; max-width: calc(100vw - 32px); text-align: center; }
 #toast.show { opacity: 1; transform: translate(-50%, 0); }
 
 /* Modales et plateau */
-.modal-back { position: fixed; inset: 0; background: rgba(8, 6, 4, .66); z-index: 45; }
-.modal { position: fixed; z-index: 50; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(520px, calc(100vw - 24px)); max-height: calc(100vh - 40px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); overflow: auto; background: var(--panel); border: 1px solid var(--line2); border-radius: 18px; padding: 22px; box-shadow: 0 30px 80px rgba(0, 0, 0, .6); }
+.modal-back { position: fixed; inset: 0; background: var(--scrim); z-index: 45; }
+.modal { position: fixed; z-index: 50; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(520px, calc(100vw - 24px)); max-height: calc(100vh - 40px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); overflow: auto; background: var(--panel); border: 1px solid var(--line2); border-radius: 18px; padding: 22px; box-shadow: 0 30px 80px var(--shadow); }
 .modal h3 { font-size: 1.5rem; color: var(--ember2); margin-bottom: 8px; padding-right: 36px; }
 .mclose { position: absolute; right: 10px; top: 10px; }
 .cast-opts { display: grid; gap: 8px; margin-top: 14px; }
 .cast-opts .btn { justify-content: space-between; border-radius: 12px; }
-.tray { position: fixed; z-index: 50; right: max(12px, env(safe-area-inset-right, 0px)); bottom: calc(74px + env(safe-area-inset-bottom, 0px)); width: min(400px, calc(100vw - 24px)); max-height: calc(100vh - 110px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); overflow: auto; background: var(--panel); border: 1px solid var(--line2); border-radius: 18px; padding: 16px; box-shadow: 0 30px 80px rgba(0, 0, 0, .6); }
+.tray { position: fixed; z-index: 50; right: max(12px, env(safe-area-inset-right, 0px)); bottom: calc(74px + env(safe-area-inset-bottom, 0px)); width: min(400px, calc(100vw - 24px)); max-height: calc(100vh - 110px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); overflow: auto; background: var(--panel); border: 1px solid var(--line2); border-radius: 18px; padding: 16px; box-shadow: 0 30px 80px var(--shadow); }
 .tray-head { display: flex; justify-content: space-between; align-items: center; }
 .tray h3 { font-size: 1.35rem; color: var(--ember2); }
 .tray h4 { margin: 16px 0 6px; }
@@ -480,7 +518,7 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
 .init-ro { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 4px; }
 .init-ro li { display: flex; gap: 10px; align-items: center; padding: 7px 10px; border-radius: 9px; background: var(--bg2); }
 .init-ro li.now { background: var(--emberbg); border: 1px solid var(--ember); }
-.init-ro li.monstre b { color: #ffcfc7; }
+.init-ro li.monstre b { color: var(--dmgink); }
 .iv { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 26px; text-align: center; color: var(--ember2); font-size: 1.1rem; }
 .turn-tag { margin-left: auto; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ember); font-weight: 700; }
 .party-sum { display: flex; flex-wrap: wrap; gap: 8px 22px; padding: 10px 14px; border-radius: 12px; background: var(--panel); border: 1px solid var(--line); margin-bottom: 12px; color: var(--mute); }
@@ -500,9 +538,9 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
 .pc-stats > div { display: grid; background: var(--bg2); border-radius: 8px; padding: 5px 2px; }
 .pc-stats b { font-variant-numeric: tabular-nums; }
 .pc-stats .lbl { font-size: .6rem; }
-.pc-alert { margin: 0; color: #ffd9d3; font-weight: 700; font-size: .88rem; }
+.pc-alert { margin: 0; color: var(--bloodink); font-weight: 700; font-size: .88rem; }
 .pc-cond { display: flex; flex-wrap: wrap; gap: 4px; }
-.pc-cond span { font-size: .78rem; padding: 2px 8px; border-radius: 99px; background: var(--bloodbg); border: 1px solid var(--blood); color: #ffd9d3; }
+.pc-cond span { font-size: .78rem; padding: 2px 8px; border-radius: 99px; background: var(--bloodbg); border: 1px solid var(--blood); color: var(--bloodink); }
 .pc-conc { margin: 0; color: var(--arc); font-size: .86rem; }
 .pc-slots { display: flex; flex-wrap: wrap; gap: 4px; }
 .sl { font-size: .78rem; font-variant-numeric: tabular-nums; padding: 2px 7px; border-radius: 6px; border: 1px solid rgba(168, 154, 232, .4); color: var(--arc); }
@@ -517,7 +555,7 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
 .init-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
 .irow { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 11px; background: var(--bg2); border: 1px solid var(--line); }
 .irow.now { border-color: var(--ember); background: var(--emberbg); box-shadow: 0 0 0 1px var(--ember) inset; }
-.irow.monstre .i-main b { color: #ffcfc7; }
+.irow.monstre .i-main b { color: var(--dmgink); }
 .irow.dead { opacity: .5; }
 .irow.dead .i-main b { text-decoration: line-through; }
 .iv-ctl { display: grid; justify-items: center; gap: 2px; }
@@ -528,8 +566,8 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
 .ihp-btns { display: flex; gap: 6px; align-items: center; margin-top: 2px; }
 .mon-amt { width: 70px; background: var(--panel); border: 1px solid var(--line2); border-radius: 8px; padding: .3em .5em; }
 .mon-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-.update-banner { position: fixed; z-index: 70; left: 50%; transform: translateX(-50%); top: calc(12px + env(safe-area-inset-top, 0px)); display: flex; gap: 12px; align-items: center; padding: 10px 12px 10px 16px; border-radius: 999px; background: var(--ink); color: var(--bg); font-weight: 700; box-shadow: 0 12px 40px rgba(0,0,0,.5); max-width: calc(100vw - 24px); }
-.update-banner button { background: var(--ember); color: #1d130a; border-radius: 999px; padding: .4em .9em; font-weight: 700; }
+.update-banner { position: fixed; z-index: 70; left: 50%; transform: translateX(-50%); top: calc(12px + env(safe-area-inset-top, 0px)); display: flex; gap: 12px; align-items: center; padding: 10px 12px 10px 16px; border-radius: 999px; background: var(--ink); color: var(--bg); font-weight: 700; box-shadow: 0 12px 40px var(--shadow); max-width: calc(100vw - 24px); }
+.update-banner button { background: var(--ember); color: var(--onember); border-radius: 999px; padding: .4em .9em; font-weight: 700; }
 @media (max-width: 640px) { .mon-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ro-abil { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
 /* Comptes */
@@ -537,7 +575,7 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
 .acc-chip { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line2); background: var(--panel); font-weight: 700; max-width: 100%; }
 .acc-chip:hover { border-color: var(--ember); }
 .acc-chip.on { padding: 5px 14px 5px 5px; }
-.acc-av { width: 32px; height: 32px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--ember); color: #1d130a; font-weight: 700; }
+.acc-av { width: 32px; height: 32px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--ember); color: var(--onember); font-weight: 700; }
 .acc-txt { display: grid; text-align: left; line-height: 1.2; min-width: 0; }
 .acc-txt b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 22ch; }
 .acc-txt small { color: var(--verd); font-weight: 400; font-size: .75rem; }
@@ -551,7 +589,39 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
 .acc-switch { margin-top: 14px; }
 
 .acc-txt small.bad { color: var(--blood); }
-.sync-err { margin: 10px 0; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--blood); background: var(--bloodbg); color: #ffd9d3; font-size: .9rem; }
+.sync-err { margin: 10px 0; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--blood); background: var(--bloodbg); color: var(--bloodink); font-size: .9rem; }
+
+/* Page Compte et réglages */
+.settings { max-width: 1100px; }
+.set-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+.set-col { display: grid; gap: 0; min-width: 0; }
+.set-sec h3 { margin-bottom: 10px; }
+.acc-id { display: flex; gap: 12px; align-items: center; margin-bottom: 8px; }
+.acc-id > div { display: grid; min-width: 0; }
+.acc-id b { font-size: 1.1rem; overflow-wrap: anywhere; }
+.acc-av.big { width: 52px; height: 52px; font-size: 1.4rem; }
+.okc { color: var(--verd); }
+.confirm-box { margin-top: 12px; padding: 12px; border-radius: 12px; border: 1px solid var(--blood); background: var(--bloodbg); }
+.confirm-box p { margin: 0; }
+.theme-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.theme-opt { display: grid; gap: 4px; justify-items: start; text-align: left; padding: 10px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg2); min-width: 0; }
+.theme-opt.on { border-color: var(--ember); box-shadow: 0 0 0 1px var(--ember) inset; background: var(--emberbg); }
+.swatch { display: flex; width: 100%; height: 34px; border-radius: 8px; overflow: hidden; border: 1px solid var(--line2); margin-bottom: 4px; }
+.swatch i { flex: 1; }
+.sw-dark i:nth-child(1) { background: #15110e; } .sw-dark i:nth-child(2) { background: #2a2119; } .sw-dark i:nth-child(3) { background: #e59a4f; }
+.sw-light i:nth-child(1) { background: #f2ebdf; } .sw-light i:nth-child(2) { background: #fbf7f0; } .sw-light i:nth-child(3) { background: #b25c19; }
+.sw-system { background: linear-gradient(135deg, #15110e 50%, #f2ebdf 50%); }
+.sw-system i { display: none; }
+.support-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+.support-btn { display: grid; gap: 4px; justify-items: start; text-align: left; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg2); }
+.support-btn:hover { border-color: var(--ember); }
+.sb-ic { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; margin-bottom: 4px; }
+.sb-ic.bug { background: var(--bloodbg); color: var(--blood); border: 1px solid var(--blood); }
+.sb-ic.idea { background: var(--verdbg); color: var(--verd); border: 1px solid var(--verd); }
+.check { display: flex; gap: 8px; align-items: center; font-size: .9rem; color: var(--mute); margin: 4px 0 8px; }
+.fb-msg textarea { min-height: 120px; }
+@media (max-width: 860px) { .set-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 420px) { .theme-grid, .support-grid { grid-template-columns: minmax(0, 1fr); } .theme-opt { grid-template-columns: 70px minmax(0,1fr); } }
 
 </style>
 </head>
@@ -2256,6 +2326,7 @@ function render() {
   else if (S.view === "create") app.innerHTML = viewCreate();
   else if (S.view === "sheet") app.innerHTML = viewSheet();
   else if (S.view === "gm") app.innerHTML = viewGM();
+  else if (S.view === "account") app.innerHTML = viewSettings();
   $("#overlay").innerHTML = (S.modal ? viewModal() : "") + (S.tray ? viewTray() : "");
   $("#rollbar").innerHTML = viewRollbar();
   document.body.classList.toggle("noscroll", !!S.modal || S.tray);
@@ -3683,15 +3754,16 @@ const AUTH_ERR = {
 const authMsg = (e) => AUTH_ERR[e && e.code] || "Connexion impossible" + (e && e.code ? " (" + e.code + ")" : "") + ".";
 
 async function afterLogin(kind) {
-  S.modal = null;
+  S.modal = null; S.acc = { mode: "in" };
   toast(kind === "new" ? "Compte créé. Vos personnages sont synchronisés." : "Connecté. Synchronisation de vos personnages…");
   await syncAccount();
 }
 
 async function accAct(a, d) {
+  if (typeof settingsAct === "function" && (await settingsAct(a, d))) return true;
   switch (a) {
-    case "accOpen": S.modal = { k: "account", mode: "in" }; return true;
-    case "accMode": S.modal = { k: "account", mode: d.v }; return true;
+    case "accOpen": S.view = "account"; S.acc = { mode: "in" }; window.scrollTo(0, 0); return true;
+    case "accMode": S.acc = { mode: d.v }; return true;
     case "accGoogle": {
       if (Account.busy) return true;
       Account.busy = true;
@@ -3706,14 +3778,14 @@ async function accAct(a, d) {
           else throw e;
         }
         await afterLogin();
-      } catch (e) { S.modal = { k: "account", mode: "in", err: authMsg(e) }; }
+      } catch (e) { S.acc = { mode: "in", err: authMsg(e) }; }
       Account.busy = false;
       return true;
     }
     case "accEmail": {
       if (Account.busy) return true;
-      const email = ($("#accEmail").value || "").trim(), pw = $("#accPw").value || "", mode = (S.modal && S.modal.mode) || "in";
-      if (!email || !pw) { S.modal = { k: "account", mode, err: "Saisissez votre e-mail et votre mot de passe.", email }; return true; }
+      const email = ($("#accEmail").value || "").trim(), pw = $("#accPw").value || "", mode = (S.acc && S.acc.mode) || "in";
+      if (!email || !pw) { S.acc = { mode, err: "Saisissez votre e-mail et votre mot de passe.", email }; return true; }
       Account.busy = true;
       try {
         const cur = FB.auth.currentUser;
@@ -3727,18 +3799,17 @@ async function accAct(a, d) {
           else await FB.auth.signInWithEmailAndPassword(email, pw);
           await afterLogin();
         }
-      } catch (e) { S.modal = { k: "account", mode, err: authMsg(e), email }; }
+      } catch (e) { S.acc = { mode, err: authMsg(e), email }; }
       Account.busy = false;
       return true;
     }
     case "accReset": {
       const email = ($("#accEmail").value || "").trim();
-      if (!email) { S.modal = { k: "account", mode: "in", err: "Saisissez d’abord votre adresse e-mail." }; return true; }
-      try { await FB.auth.sendPasswordResetEmail(email); S.modal = { k: "account", mode: "in", info: "E-mail envoyé à " + email + ". Suivez le lien pour choisir un nouveau mot de passe.", email }; }
-      catch (e) { S.modal = { k: "account", mode: "in", err: authMsg(e), email }; }
+      if (!email) { S.acc = { mode: "in", err: "Saisissez d’abord votre adresse e-mail." }; return true; }
+      try { await FB.auth.sendPasswordResetEmail(email); S.acc = { mode: "in", info: "E-mail envoyé à " + email + ". Suivez le lien pour choisir un nouveau mot de passe.", email }; }
+      catch (e) { S.acc = { mode: "in", err: authMsg(e), email }; }
       return true;
     }
-    case "accOut": S.modal = { k: "accountOut" }; return true;
     case "accRetry": S.modal = null; await syncAccount(); toast(Account.status === "ok" ? "Synchronisé" : "Échec : " + (Account.errCode || "inconnu")); return true;
     case "accOutDo": {
       if (Account.unsub) { Account.unsub(); Account.unsub = null; }
@@ -3749,7 +3820,7 @@ async function accAct(a, d) {
       try { localStorage.removeItem("forge-gm"); } catch (e) { }
       await FB.auth.signOut();
       try { await FB.auth.signInAnonymously(); } catch (e) { }
-      Account.status = ""; S.modal = null; S.view = "home";
+      Account.status = ""; S.modal = null; S.acc = { mode: "in" };
       toast("Déconnecté. Vos personnages restent dans votre compte.");
       return true;
     }
@@ -3758,42 +3829,164 @@ async function accAct(a, d) {
 }
 
 function accountChip() {
-  if (!FB.ok) return "";
-  const u = Account.user();
-  if (!u) return `<button class="acc-chip" data-a="accOpen">${ICON.boot}<span>Se connecter</span></button>`;
+  const u = FB.ok ? Account.user() : null;
+  if (!u) return `<button class="acc-chip" data-a="openSettings">${ICON.boot}<span>${FB.ok ? "Se connecter" : "Réglages"}</span></button>`;
   const label = u.displayName || u.email || "Mon compte";
-  const st = Account.status === "sync" ? "Synchronisation…" : Account.status === "err" ? (Account.errCode === "permission-denied" ? "Accès refusé par Firebase" : Account.errCode === "unavailable" ? "Hors ligne, réessai automatique" : "Synchronisation échouée") : "Synchronisé";
-  return `<button class="acc-chip on" data-a="accOut" title="Compte"><span class="acc-av">${esc(label.trim()[0] || "?").toUpperCase()}</span><span class="acc-txt"><b>${esc(label)}</b><small class="${Account.status === "err" ? "bad" : ""}">${st}</small></span></button>`;
+  return `<button class="acc-chip on" data-a="openSettings" title="Compte et réglages"><span class="acc-av">${esc((label.trim()[0] || "?").toUpperCase())}</span><span class="acc-txt"><b>${esc(label)}</b><small class="${Account.status === "err" ? "bad" : ""}">${syncLabel()}</small></span></button>`;
 }
 function accountNudge() {
   if (!FB.ok || Account.user()) return "";
-  return `<section class="acc-nudge"><div><b>Retrouvez vos personnages partout</b><p class="mute small">Connectez-vous pour synchroniser vos fiches et vos aventures entre votre téléphone, votre tablette et votre ordinateur.</p></div><button class="btn primary" data-a="accOpen">Se connecter</button></section>`;
+  return `<section class="acc-nudge"><div><b>Retrouvez vos personnages partout</b><p class="mute small">Connectez-vous pour synchroniser vos fiches et vos aventures entre votre téléphone, votre tablette et votre ordinateur.</p></div><button class="btn primary" data-a="openSettings">Se connecter</button></section>`;
 }
 
-function accountModal(m) {
-  if (m.k === "accountOut") {
-    const u = Account.user();
-    return `<h3>Mon compte</h3><p>${esc(u ? (u.email || u.displayName || "") : "")}</p>
-      ${Account.status === "err" ? `<div class="sync-err"><b>La synchronisation a échoué</b> (code : ${esc(Account.errCode || "inconnu")}).<br>${Account.errCode === "permission-denied" ? "Firebase refuse l’accès : les règles de sécurité de Firestore ne sont pas à jour. Collez le contenu de firestore.rules dans Firestore › Règles, puis Publier." : "L’app réessaie automatiquement toutes les 20 secondes."}</div><div class="row-btns"><button class="btn small" data-a="accRetry">Réessayer maintenant</button></div>` : ""}
-      <p class="mute">Vos personnages sont enregistrés dans votre compte et suivent vos appareils. En vous déconnectant, ils disparaissent de cet appareil jusqu’à la prochaine connexion.</p>
-      <div class="row-btns"><button class="btn dmgb" data-a="accOutDo">Se déconnecter</button><button class="btn ghost" data-a="closeModal">Fermer</button></div>`;
-  }
-  if (m.k !== "account") return null;
-  const isNew = m.mode === "new";
-  return `<h3>${isNew ? "Créer un compte" : "Se connecter"}</h3>
-    <p class="mute">${isNew ? "Les personnages déjà présents sur cet appareil seront ajoutés à votre compte." : "Vos personnages et vos aventures vous suivront sur tous vos appareils."}</p>
-    <button class="btn google" data-a="accGoogle">${GOOGLE_G}Continuer avec Google</button>
-    <div class="or"><span>ou</span></div>
-    <label class="field"><span>E-mail</span><input id="accEmail" type="email" autocomplete="email" value="${esc(m.email || "")}" placeholder="vous@exemple.be"></label>
-    <label class="field"><span>Mot de passe</span><input id="accPw" type="password" autocomplete="${isNew ? "new-password" : "current-password"}" placeholder="${isNew ? "6 caractères minimum" : ""}"></label>
-    ${m.err ? `<p class="bad">${esc(m.err)}</p>` : ""}${m.info ? `<p class="ok">${esc(m.info)}</p>` : ""}
-    <div class="row-btns"><button class="btn primary" data-a="accEmail">${isNew ? "Créer mon compte" : "Se connecter"}</button>
-      ${isNew ? "" : '<button class="btn ghost small" data-a="accReset">Mot de passe oublié</button>'}</div>
-    <p class="mute small acc-switch">${isNew ? 'Déjà un compte ? <button class="linkish" data-a="accMode" data-v="in">Se connecter</button>' : 'Pas encore de compte ? <button class="linkish" data-a="accMode" data-v="new">Créer un compte</button>'}</p>`;
-}
+function accountModal(m) { return typeof feedbackModal === "function" ? feedbackModal(m) : null; }
 const GOOGLE_G = '<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>';
 
 function accountStart() { if (Account.user()) syncAccount(); }
+
+/* Forge des Héros — page Compte et réglages : thème, langue, support, version */
+
+const APP_VERSION = "1.6.0";
+
+/* ---------- Thème ---------- */
+const Theme = {
+  get() { try { return localStorage.getItem("forge-theme") || "dark"; } catch (e) { return "dark"; } },
+  set(v) { try { localStorage.setItem("forge-theme", v); } catch (e) { } this.apply(); },
+  resolved() {
+    const v = this.get();
+    if (v !== "system") return v;
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  },
+  apply() {
+    const r = this.resolved();
+    document.documentElement.setAttribute("data-forge-theme", r);
+    const m = document.querySelector('meta[name="theme-color"]');
+    if (m) m.setAttribute("content", r === "light" ? "#f2ebdf" : "#15110e");
+  },
+};
+Theme.apply();
+if (window.matchMedia) {
+  const mq = window.matchMedia("(prefers-color-scheme: light)");
+  const onChange = () => { if (Theme.get() === "system") Theme.apply(); };
+  if (mq.addEventListener) mq.addEventListener("change", onChange); else if (mq.addListener) mq.addListener(onChange);
+}
+
+/* ---------- Page Compte et réglages ---------- */
+function syncLabel() {
+  if (Account.status === "sync") return "Synchronisation…";
+  if (Account.status === "err") return Account.errCode === "permission-denied" ? "Accès refusé par Firebase" : Account.errCode === "unavailable" ? "Hors ligne, réessai automatique" : "Synchronisation échouée";
+  return "Synchronisé";
+}
+
+function accountForm() {
+  const st = S.acc || { mode: "in" };
+  const isNew = st.mode === "new";
+  return `<div class="acc-form">
+    <p class="mute">${isNew ? "Les personnages déjà présents sur cet appareil seront ajoutés à votre compte." : "Connectez-vous pour retrouver vos personnages et vos aventures sur tous vos appareils."}</p>
+    <button class="btn google" data-a="accGoogle">${GOOGLE_G}Continuer avec Google</button>
+    <div class="or"><span>ou</span></div>
+    <label class="field"><span>E-mail</span><input id="accEmail" type="email" autocomplete="email" value="${esc(st.email || "")}" placeholder="vous@exemple.be"></label>
+    <label class="field"><span>Mot de passe</span><input id="accPw" type="password" autocomplete="${isNew ? "new-password" : "current-password"}" placeholder="${isNew ? "6 caractères minimum" : ""}"></label>
+    ${st.err ? `<p class="bad">${esc(st.err)}</p>` : ""}${st.info ? `<p class="ok">${esc(st.info)}</p>` : ""}
+    <div class="row-btns"><button class="btn primary" data-a="accEmail">${isNew ? "Créer mon compte" : "Se connecter"}</button>
+      ${isNew ? "" : '<button class="btn ghost small" data-a="accReset">Mot de passe oublié</button>'}</div>
+    <p class="mute small acc-switch">${isNew ? 'Déjà un compte ? <button class="linkish" data-a="accMode" data-v="in">Se connecter</button>' : 'Pas encore de compte ? <button class="linkish" data-a="accMode" data-v="new">Créer un compte</button>'}</p>
+  </div>`;
+}
+
+function accountSection() {
+  if (!FB.ok) return `<section class="panel set-sec"><h3 class="ph">Compte</h3><p class="mute">La connexion n’est pas disponible dans cette version de l’app. Ouvrez l’app installée pour synchroniser vos personnages.</p></section>`;
+  const u = Account.user();
+  if (!u) return `<section class="panel set-sec"><h3 class="ph">${S.acc && S.acc.mode === "new" ? "Créer un compte" : "Se connecter"}</h3>${accountForm()}</section>`;
+  const label = u.displayName || u.email || "Mon compte";
+  const nChars = S.chars.length, nGm = GmList.get().length;
+  return `<section class="panel set-sec">
+    <h3 class="ph">Compte</h3>
+    <div class="acc-id"><span class="acc-av big">${esc((label.trim()[0] || "?").toUpperCase())}</span>
+      <div><b>${esc(label)}</b>${u.displayName && u.email ? `<span class="mute small">${esc(u.email)}</span>` : ""}<span class="small ${Account.status === "err" ? "bad" : "okc"}">${syncLabel()}</span></div></div>
+    <p class="mute small">${nChars} personnage${nChars > 1 ? "s" : ""} et ${nGm} aventure${nGm > 1 ? "s" : ""} de MJ synchronisés avec ce compte.</p>
+    ${Account.status === "err" ? `<div class="sync-err"><b>La synchronisation a échoué</b> (code : ${esc(Account.errCode || "inconnu")}).<br>${Account.errCode === "permission-denied" ? "Firebase refuse l’accès : les règles de sécurité de Firestore ne sont pas à jour." : "L’app réessaie automatiquement toutes les 20 secondes."}</div><div class="row-btns"><button class="btn small" data-a="accRetry">Réessayer maintenant</button></div>` : ""}
+    ${S.acc && S.acc.confirmOut ? `<div class="confirm-box"><p>En vous déconnectant, vos personnages disparaissent de cet appareil. Ils restent dans votre compte et reviennent à la prochaine connexion.</p><div class="row-btns"><button class="btn dmgb" data-a="accOutDo">Se déconnecter</button><button class="btn ghost" data-a="accOutCancel">Annuler</button></div></div>`
+      : `<div class="row-btns"><button class="btn ghost" data-a="accOutAsk">Se déconnecter</button></div>`}
+  </section>`;
+}
+
+function viewSettings() {
+  const t = Theme.get();
+  const themeOpt = (k, n, d) => `<button class="theme-opt ${t === k ? "on" : ""}" data-a="setTheme" data-v="${k}" aria-pressed="${t === k}"><span class="swatch sw-${k}"><i></i><i></i><i></i></span><b>${n}</b><span class="mute small">${d}</span></button>`;
+  const langs = [["fr", "Français", true], ["en", "English", false], ["de", "Deutsch", false], ["es", "Español", false]];
+  return `<header class="topbar">
+    <button class="icon-btn" data-a="home" aria-label="Retour">${ICON.back}</button>
+    <div class="tb-title"><strong>Compte et réglages</strong><span class="eyebrow">Forge des Héros ${APP_VERSION}</span></div>
+  </header>
+  <main class="sheet settings">
+    <div class="set-grid">
+      <div class="set-col">${accountSection()}</div>
+      <div class="set-col">
+        <section class="panel set-sec"><h3 class="ph">Apparence</h3>
+          <div class="theme-grid">${themeOpt("dark", "Sombre", "Taverne à la chandelle")}${themeOpt("light", "Clair", "Parchemin de jour")}${themeOpt("system", "Automatique", "Suit votre appareil")}</div>
+        </section>
+        <section class="panel set-sec"><h3 class="ph">Langue</h3>
+          <div class="chips">${langs.map(([k, n, ok]) => `<button class="chip ${k === "fr" ? "on" : ""}" ${ok ? "" : 'aria-disabled="true"'} data-a="${ok ? "noop" : "langSoon"}">${n}${ok ? "" : "<small>bientôt</small>"}</button>`).join("")}</div>
+          <p class="mute small">L’anglais, l’allemand et l’espagnol sont en préparation.</p>
+        </section>
+        <section class="panel set-sec"><h3 class="ph">Support</h3>
+          <p class="mute small">Votre message arrive directement chez le créateur de l’app.</p>
+          <div class="support-grid">
+            <button class="support-btn" data-a="fbOpen" data-v="bug"><span class="sb-ic bug">!</span><b>Signaler un problème</b><span class="mute small">Quelque chose ne marche pas ou s’affiche mal</span></button>
+            <button class="support-btn" data-a="fbOpen" data-v="idea"><span class="sb-ic idea">+</span><b>Proposer une amélioration</b><span class="mute small">Une idée, une règle manquante, un souhait</span></button>
+          </div>
+        </section>
+        <section class="panel set-sec"><h3 class="ph">À propos</h3>
+          <dl class="facts"><div><dt>Version</dt><dd>${APP_VERSION}</dd></div><div><dt>Règles</dt><dd>D&D 2024 (SRD 5.2)</dd></div></dl>
+          <p class="mute small">Contient du contenu du System Reference Document 5.2 de Wizards of the Coast LLC, sous licence CC-BY-4.0. Traduction et résumés non officiels. Application non affiliée à Wizards of the Coast ni à D&D Beyond.</p>
+        </section>
+      </div>
+    </div>
+  </main>`;
+}
+
+/* ---------- Support ---------- */
+function feedbackModal(m) {
+  if (m.k !== "feedback") return null;
+  if (m.sent) return `<h3>Merci !</h3><p>${m.type === "bug" ? "Votre signalement a bien été envoyé. Il sera examiné rapidement." : "Votre idée a bien été envoyée. Merci de contribuer à la Forge !"}</p><div class="row-btns"><button class="btn primary" data-a="closeModal">Fermer</button></div>`;
+  const bug = m.type === "bug";
+  const u = typeof Account !== "undefined" && FB.ok ? Account.user() : null;
+  return `<h3>${bug ? "Signaler un problème" : "Proposer une amélioration"}</h3>
+    <div class="chips">${chip("Problème", bug, "fbType", 'data-v="bug"')}${chip("Amélioration", !bug, "fbType", 'data-v="idea"')}</div>
+    <label class="field fb-msg"><span>${bug ? "Que s’est-il passé ?" : "Votre idée"}</span><textarea id="fbMsg" rows="6" maxlength="4000" placeholder="${bug ? "Ce que vous faisiez, ce qui s’est passé, ce que vous attendiez…" : "Décrivez ce qui vous serait utile…"}">${esc(m.msg || "")}</textarea></label>
+    <label class="field"><span>E-mail pour vous répondre (facultatif)</span><input id="fbEmail" type="email" value="${esc(m.email != null ? m.email : (u && u.email) || "")}" placeholder="vous@exemple.be"></label>
+    ${bug ? `<label class="check"><input type="checkbox" id="fbTech" checked> Joindre les infos techniques (version, appareil, écran ouvert)</label>` : ""}
+    ${m.err ? `<p class="bad">${esc(m.err)}</p>` : ""}
+    <div class="row-btns"><button class="btn primary" data-a="fbSend">Envoyer</button><button class="btn ghost" data-a="closeModal">Annuler</button></div>`;
+}
+
+async function settingsAct(a, d) {
+  switch (a) {
+    case "openSettings": S.view = "account"; S.acc = { mode: "in" }; S.modal = null; window.scrollTo(0, 0); return true;
+    case "setTheme": Theme.set(d.v); return true;
+    case "langSoon": toast("Cette langue arrive bientôt."); return false;
+    case "noop": return false;
+    case "accOutAsk": S.acc = Object.assign({}, S.acc, { confirmOut: true }); return true;
+    case "accOutCancel": S.acc = { mode: "in" }; return true;
+    case "fbOpen": S.modal = { k: "feedback", type: d.v }; return true;
+    case "fbType": { const msg = ($("#fbMsg") || {}).value, email = ($("#fbEmail") || {}).value; S.modal = { k: "feedback", type: d.v, msg, email }; return true; }
+    case "fbSend": {
+      const msg = ($("#fbMsg").value || "").trim(), email = ($("#fbEmail").value || "").trim(), type = S.modal.type;
+      if (msg.length < 5) { S.modal = Object.assign({}, S.modal, { msg, email, err: "Décrivez en quelques mots, s’il vous plaît." }); return true; }
+      if (!FB.ok) { S.modal = Object.assign({}, S.modal, { msg, email, err: "L’envoi n’est possible que dans l’app installée, connectée à internet." }); return true; }
+      const tech = $("#fbTech") ? $("#fbTech").checked : false;
+      const ch = curChar();
+      const doc = { type, message: msg, email: email || null, uid: FB.uid, version: APP_VERSION, created: Date.now(),
+        device: tech ? { ua: navigator.userAgent.slice(0, 300), screen: window.innerWidth + "x" + window.innerHeight, theme: Theme.resolved(), standalone: !!(window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) } : null,
+        context: tech ? { view: S.view, tab: S.tab, cls: ch ? ch.b.cls : null, level: ch ? ch.b.level : null } : null };
+      try { await FB.db.collection("feedback").add(doc); S.modal = { k: "feedback", type, sent: true }; }
+      catch (e) { S.modal = Object.assign({}, S.modal, { msg, email, err: "Envoi impossible (" + ((e && e.code) || "erreur") + "). Vérifiez votre connexion." }); }
+      return true;
+    }
+  }
+  return false;
+}
 
 boot();
 if ("serviceWorker" in navigator) {

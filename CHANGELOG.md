@@ -1,0 +1,23 @@
+# Historique des versions — Forge des Héros
+
+Chaque version correspond à un « tag » Git. Pour revenir en arrière, voir la section en bas.
+
+## 1.6.0 — 18 octobre 2026
+- Page **Compte et réglages** (bouton en haut à droite de l'accueil).
+- **Mode clair** « parchemin », mode sombre et mode automatique.
+- **Support** : signaler un problème ou proposer une amélioration (messages dans Firebase › Firestore › `feedback`).
+- Choix de la langue préparé (français ; anglais, allemand et espagnol à venir).
+
+## 1.5.1 — 18 octobre 2026
+- Cause précise affichée si la synchronisation échoue, réessai automatique.
+
+## 1.5.0 — 18 octobre 2026
+- **Comptes** (Google ou e-mail) et synchronisation des personnages entre appareils.
+
+## 1.4.0 — 17 octobre 2026
+- **Mode aventure** : code d'aventure, écran du maître du jeu, initiative, notes de campagne.
+- Niveaux 1 à 20, sorts jusqu'au niveau 9.
+
+## Revenir à une version précédente
+Demandez simplement à Claude : « reviens à la version 1.5.1 ». Il publie l'ancienne version
+comme une nouvelle mise à jour ; l'historique est conservé et l'on peut revenir en avant à tout moment.
