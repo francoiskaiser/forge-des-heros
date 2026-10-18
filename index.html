@@ -550,6 +550,9 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
 .linkish { color: var(--ember2); text-decoration: underline; font-weight: 700; }
 .acc-switch { margin-top: 14px; }
 
+.acc-txt small.bad { color: var(--blood); }
+.sync-err { margin: 10px 0; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--blood); background: var(--bloodbg); color: #ffd9d3; font-size: .9rem; }
+
 </style>
 </head>
 <body>
@@ -3561,7 +3564,13 @@ document.addEventListener("input", (e) => {
 
 /* Forge des Héros — comptes et synchronisation des personnages entre appareils */
 
-const Account = { status: "", unsub: null, busy: false };
+const Account = { status: "", unsub: null, busy: false, errCode: null, retry: null };
+function syncFailed(e) {
+  Account.status = "err"; Account.errCode = (e && e.code) || "unknown";
+  clearTimeout(Account.retry);
+  Account.retry = setTimeout(() => { if (Account.user()) syncAccount(); }, 20000);
+}
+window.addEventListener("online", () => { if (Account.user() && Account.status === "err") syncAccount(); });
 Account.user = () => (FB.ok && FB.auth && FB.auth.currentUser && !FB.auth.currentUser.isAnonymous ? FB.auth.currentUser : null);
 
 function userChars() { return FB.db.collection("users").doc(FB.uid).collection("chars"); }
@@ -3580,7 +3589,7 @@ function cloudPut(ch) {
   clearTimeout(cloudTimers[ch.id]);
   cloudTimers[ch.id] = setTimeout(() => {
     userChars().doc(ch.id).set(cloudDoc(ch)).then(() => { if (Account.status !== "ok") { Account.status = "ok"; liveRender(); } })
-      .catch(() => { Account.status = "err"; liveRender(); });
+      .catch((e) => { syncFailed(e); liveRender(); });
   }, 600);
 }
 function cloudDel(id) { if (Account.user()) userChars().doc(id).delete().catch(() => { }); }
@@ -3615,8 +3624,8 @@ async function syncAccount() {
     } catch (e) { }
     S.chars.filter((c) => c.adv).forEach((c) => pushMember(c));
     watchAccount();
-    Account.status = "ok";
-  } catch (e) { Account.status = "err"; }
+    Account.status = "ok"; Account.errCode = null;
+  } catch (e) { syncFailed(e); }
   render();
 }
 
@@ -3730,6 +3739,7 @@ async function accAct(a, d) {
       return true;
     }
     case "accOut": S.modal = { k: "accountOut" }; return true;
+    case "accRetry": S.modal = null; await syncAccount(); toast(Account.status === "ok" ? "Synchronisé" : "Échec : " + (Account.errCode || "inconnu")); return true;
     case "accOutDo": {
       if (Account.unsub) { Account.unsub(); Account.unsub = null; }
       Live.stop();
@@ -3752,7 +3762,7 @@ function accountChip() {
   const u = Account.user();
   if (!u) return `<button class="acc-chip" data-a="accOpen">${ICON.boot}<span>Se connecter</span></button>`;
   const label = u.displayName || u.email || "Mon compte";
-  const st = Account.status === "sync" ? "Synchronisation…" : Account.status === "err" ? "Hors ligne, réessai automatique" : "Synchronisé";
+  const st = Account.status === "sync" ? "Synchronisation…" : Account.status === "err" ? (Account.errCode === "permission-denied" ? "Accès refusé par Firebase" : Account.errCode === "unavailable" ? "Hors ligne, réessai automatique" : "Synchronisation échouée") : "Synchronisé";
   return `<button class="acc-chip on" data-a="accOut" title="Compte"><span class="acc-av">${esc(label.trim()[0] || "?").toUpperCase()}</span><span class="acc-txt"><b>${esc(label)}</b><small class="${Account.status === "err" ? "bad" : ""}">${st}</small></span></button>`;
 }
 function accountNudge() {
@@ -3764,6 +3774,7 @@ function accountModal(m) {
   if (m.k === "accountOut") {
     const u = Account.user();
     return `<h3>Mon compte</h3><p>${esc(u ? (u.email || u.displayName || "") : "")}</p>
+      ${Account.status === "err" ? `<div class="sync-err"><b>La synchronisation a échoué</b> (code : ${esc(Account.errCode || "inconnu")}).<br>${Account.errCode === "permission-denied" ? "Firebase refuse l’accès : les règles de sécurité de Firestore ne sont pas à jour. Collez le contenu de firestore.rules dans Firestore › Règles, puis Publier." : "L’app réessaie automatiquement toutes les 20 secondes."}</div><div class="row-btns"><button class="btn small" data-a="accRetry">Réessayer maintenant</button></div>` : ""}
       <p class="mute">Vos personnages sont enregistrés dans votre compte et suivent vos appareils. En vous déconnectant, ils disparaissent de cet appareil jusqu’à la prochaine connexion.</p>
       <div class="row-btns"><button class="btn dmgb" data-a="accOutDo">Se déconnecter</button><button class="btn ghost" data-a="closeModal">Fermer</button></div>`;
   }
