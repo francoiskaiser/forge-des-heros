@@ -624,6 +624,8 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
 @media (max-width: 860px) { .set-grid { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 420px) { .theme-grid, .support-grid { grid-template-columns: minmax(0, 1fr); } .theme-opt { grid-template-columns: 70px minmax(0,1fr); } }
 
+.deity-hint { margin: 0 0 10px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--ember); background: var(--emberbg); color: var(--ink); font-size: .9rem; }
+
 </style>
 </head>
 <body>
@@ -1738,7 +1740,7 @@ function newBuild() {
     humanFeat: null, magic: { bg: { list: "clr", cant: [], spell: null, ab: "sag" }, human: { list: "clr", cant: [], spell: null, ab: "sag" } },
     opts: { style: null, style2: null, order: null, strike: null, dragon: null, mastery: [], inv: [], meta: [], prey: null, land: null, lore2: [], arcanum: {}, asis: {}, boon: { id: null, a: null } },
     cant: [], prep: [], gear: { cls: "A", bg: "A" }, langs: [], align: "Neutral",
-    details: { age: "", taille: "", apparence: "", personnalite: "", ideaux: "", liens: "", defauts: "", histoire: "" },
+    details: { age: "", taille: "", divinite: "", apparence: "", personnalite: "", ideaux: "", liens: "", defauts: "", histoire: "" },
     created: Date.now(),
   };
 }
@@ -1769,6 +1771,7 @@ function migrate(b) {
   if (!o.lore2) o.lore2 = [];
   if (!o.arcanum) o.arcanum = {};
   ["style2", "strike", "dragon"].forEach((k) => { if (!(k in o)) o[k] = null; });
+  if (b.details && !("divinite" in b.details)) b.details.divinite = "";
   return b;
 }
 function asiAt(b, lv) { if (!b.opts.asis[lv]) b.opts.asis[lv] = { mode: "2", a: null, b: null }; return b.opts.asis[lv]; }
@@ -2672,6 +2675,8 @@ function stepDetails(b) {
   return `<section class="panel"><label class="field big"><span>Character name</span><input id="d-name" data-f="name" value="${esc(b.name)}" placeholder="E.g. Aldric Ironbreaker" autocomplete="off"></label>
     <div class="field"><span>Alignment</span><div class="align-grid">${ALIGN.map((a) => chip(ALIGN_L[a], b.align === a, "align", `data-v="${a}"`)).join("")}</div></div>
     <div class="two-col">${field("age", "Age", "E.g. 27 years")}${field("taille", "Height and weight", "E.g. 5'11\", 165 lb")}</div>
+    ${["clerc", "paladin"].includes(b.cls) ? `<div class="deity-hint">${b.cls === "clerc" ? "A cleric draws power from a deity or a sacred force: choose it with your GM." : "A paladin is bound by an oath, often sworn before a deity: name it if so."}</div>` : ""}
+    ${field("divinite", "Deity or faith", "Name of the god, pantheon, or force you serve (optional)")}
     ${field("apparence", "Appearance", "Hair, eyes, distinguishing marks…", true)}
     ${field("personnalite", "Personality traits", "How do you behave?", true)}
     <div class="two-col">${field("ideaux", "Ideals", "What you believe in", true)}${field("liens", "Bonds", "What ties you to the world", true)}</div>
@@ -2878,7 +2883,7 @@ function tabTraits(ch, s) {
 
 function tabNotes(ch) {
   const d = ch.b.details;
-  const show = [["Alignment", ALIGN_L[ch.b.align] || ch.b.align], ["Age", d.age], ["Height and weight", d.taille], ["Appearance", d.apparence], ["Personality", d.personnalite], ["Ideals", d.ideaux], ["Bonds", d.liens], ["Flaws", d.defauts], ["History", d.histoire]].filter(([, v]) => v);
+  const show = [["Alignment", ALIGN_L[ch.b.align] || ch.b.align], ["Deity or faith", d.divinite], ["Age", d.age], ["Height and weight", d.taille], ["Appearance", d.apparence], ["Personality", d.personnalite], ["Ideals", d.ideaux], ["Bonds", d.liens], ["Flaws", d.defauts], ["History", d.histoire]].filter(([, v]) => v);
   return `<div class="cols"><section class="panel"><h3 class="ph">Session notes</h3><textarea id="notes" class="notes" data-pf="notes" rows="12" placeholder="Quests, NPCs, clues, treasure…">${esc(ch.p.notes)}</textarea></section>
     <section class="panel"><h3 class="ph">Identity</h3><dl class="facts">${show.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
     <div class="row-btns"><button class="btn small ghost" data-a="exportOpen">Export</button><button class="btn small ghost danger" data-a="delAsk">${ICON.trash} Delete</button></div></section></div>`;
@@ -3484,6 +3489,7 @@ function gmDetailModal(m) {
       <div><dt>Resources</dt><dd>${s.resources.map((r) => `${r.n} ${r.max - ((p.res || {})[r.k] || 0)}/${r.max}`).join(" · ") || "—"}</dd></div>
       <div><dt>Inventory</dt><dd>${(p.inv || []).map((i) => (i.q > 1 ? i.q + "× " : "") + esc(itemName(i)) + (i.eq ? " ✓" : "")).join(", ")} · ${p.gold} gp</dd></div>
       <div><dt>Languages</dt><dd>${s.langs.map(esc).join(", ")}</dd></div>
+      ${b.details.divinite ? `<div><dt>Deity or faith</dt><dd>${esc(b.details.divinite)}</dd></div>` : ""}
       ${b.details.histoire ? `<div><dt>History</dt><dd>${esc(b.details.histoire)}</dd></div>` : ""}
       ${p.notes ? `<div><dt>Player notes</dt><dd>${esc(p.notes)}</dd></div>` : ""}
     </dl>
@@ -3860,7 +3866,7 @@ function accountStart() { if (Account.user()) syncAccount(); }
 
 /* Forge des Héros — page Compte et réglages : thème, langue, support, version */
 
-const APP_VERSION = "1.7.0";
+const APP_VERSION = "1.7.1";
 
 /* ---------- Thème ---------- */
 const Theme = {

@@ -26,7 +26,7 @@ function newBuild() {
     humanFeat: null, magic: { bg: { list: "clr", cant: [], spell: null, ab: "sag" }, human: { list: "clr", cant: [], spell: null, ab: "sag" } },
     opts: { style: null, style2: null, order: null, strike: null, dragon: null, mastery: [], inv: [], meta: [], prey: null, land: null, lore2: [], arcanum: {}, asis: {}, boon: { id: null, a: null } },
     cant: [], prep: [], gear: { cls: "A", bg: "A" }, langs: [], align: "Neutre",
-    details: { age: "", taille: "", apparence: "", personnalite: "", ideaux: "", liens: "", defauts: "", histoire: "" },
+    details: { age: "", taille: "", divinite: "", apparence: "", personnalite: "", ideaux: "", liens: "", defauts: "", histoire: "" },
     created: Date.now(),
   };
 }
@@ -57,6 +57,7 @@ function migrate(b) {
   if (!o.lore2) o.lore2 = [];
   if (!o.arcanum) o.arcanum = {};
   ["style2", "strike", "dragon"].forEach((k) => { if (!(k in o)) o[k] = null; });
+  if (b.details && !("divinite" in b.details)) b.details.divinite = "";
   return b;
 }
 function asiAt(b, lv) { if (!b.opts.asis[lv]) b.opts.asis[lv] = { mode: "2", a: null, b: null }; return b.opts.asis[lv]; }

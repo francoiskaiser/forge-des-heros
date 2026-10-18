@@ -2,6 +2,9 @@
 
 Chaque version correspond à un commit Git dont le message commence par son numéro. Pour revenir en arrière, voir la section en bas.
 
+## 1.7.1 — 18 octobre 2026
+- Champ **Divinité ou foi** dans l'identité du personnage (mis en avant pour les clercs et les paladins), visible dans les notes et par le MJ.
+
 ## 1.7.0 — 18 octobre 2026
 - **Version anglaise** complète (interface et contenu SRD 5.2 avec la terminologie officielle, distances en pieds).
 - Choix de la langue dans Compte et réglages ; détection automatique de la langue du téléphone à la première visite.

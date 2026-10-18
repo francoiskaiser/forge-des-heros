@@ -424,6 +424,8 @@ function stepDetails(b) {
   return `<section class="panel"><label class="field big"><span>Nom du personnage</span><input id="d-name" data-f="name" value="${esc(b.name)}" placeholder="Ex. Aldric Brisefer" autocomplete="off"></label>
     <div class="field"><span>Alignement</span><div class="align-grid">${ALIGN.map((a) => chip(ALIGN_L[a], b.align === a, "align", `data-v="${a}"`)).join("")}</div></div>
     <div class="two-col">${field("age", "Âge", "Ex. 27 ans")}${field("taille", "Taille et poids", "Ex. 1,80 m, 75 kg")}</div>
+    ${["clerc", "paladin"].includes(b.cls) ? `<div class="deity-hint">${b.cls === "clerc" ? "Un clerc tire ses pouvoirs d’une divinité ou d’une force sacrée : choisissez-la avec votre MJ." : "Un paladin est lié par un serment, souvent prêté devant une divinité : précisez-la si c’est le cas."}</div>` : ""}
+    ${field("divinite", "Divinité ou foi", "Nom du dieu, du panthéon ou de la force que vous servez (facultatif)")}
     ${field("apparence", "Apparence", "Cheveux, yeux, signes distinctifs…", true)}
     ${field("personnalite", "Traits de personnalité", "Comment vous comportez-vous ?", true)}
     <div class="two-col">${field("ideaux", "Idéaux", "Ce en quoi vous croyez", true)}${field("liens", "Liens", "Ce qui vous attache au monde", true)}</div>
@@ -630,7 +632,7 @@ function tabTraits(ch, s) {
 
 function tabNotes(ch) {
   const d = ch.b.details;
-  const show = [["Alignement", ALIGN_L[ch.b.align] || ch.b.align], ["Âge", d.age], ["Taille et poids", d.taille], ["Apparence", d.apparence], ["Personnalité", d.personnalite], ["Idéaux", d.ideaux], ["Liens", d.liens], ["Défauts", d.defauts], ["Histoire", d.histoire]].filter(([, v]) => v);
+  const show = [["Alignement", ALIGN_L[ch.b.align] || ch.b.align], ["Divinité ou foi", d.divinite], ["Âge", d.age], ["Taille et poids", d.taille], ["Apparence", d.apparence], ["Personnalité", d.personnalite], ["Idéaux", d.ideaux], ["Liens", d.liens], ["Défauts", d.defauts], ["Histoire", d.histoire]].filter(([, v]) => v);
   return `<div class="cols"><section class="panel"><h3 class="ph">Notes de partie</h3><textarea id="notes" class="notes" data-pf="notes" rows="12" placeholder="Quêtes, PNJ, indices, trésors…">${esc(ch.p.notes)}</textarea></section>
     <section class="panel"><h3 class="ph">Identité</h3><dl class="facts">${show.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
     <div class="row-btns"><button class="btn small ghost" data-a="exportOpen">Exporter</button><button class="btn small ghost danger" data-a="delAsk">${ICON.trash} Supprimer</button></div></section></div>`;

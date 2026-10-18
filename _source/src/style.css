@@ -603,3 +603,5 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
 .fb-msg textarea { min-height: 120px; }
 @media (max-width: 860px) { .set-grid { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 420px) { .theme-grid, .support-grid { grid-template-columns: minmax(0, 1fr); } .theme-opt { grid-template-columns: 70px minmax(0,1fr); } }
+
+.deity-hint { margin: 0 0 10px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--ember); background: var(--emberbg); color: var(--ink); font-size: .9rem; }

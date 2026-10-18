@@ -170,6 +170,7 @@ function gmDetailModal(m) {
       <div><dt>Ressources</dt><dd>${s.resources.map((r) => `${r.n} ${r.max - ((p.res || {})[r.k] || 0)}/${r.max}`).join(" · ") || "—"}</dd></div>
       <div><dt>Inventaire</dt><dd>${(p.inv || []).map((i) => (i.q > 1 ? i.q + "× " : "") + esc(itemName(i)) + (i.eq ? " ✓" : "")).join(", ")} · ${p.gold} po</dd></div>
       <div><dt>Langues</dt><dd>${s.langs.map(esc).join(", ")}</dd></div>
+      ${b.details.divinite ? `<div><dt>Divinité ou foi</dt><dd>${esc(b.details.divinite)}</dd></div>` : ""}
       ${b.details.histoire ? `<div><dt>Histoire</dt><dd>${esc(b.details.histoire)}</dd></div>` : ""}
       ${p.notes ? `<div><dt>Notes du joueur</dt><dd>${esc(p.notes)}</dd></div>` : ""}
     </dl>
