@@ -1,6 +1,6 @@
 /* Forge des Héros — service worker : fonctionne hors ligne après la première visite */
-const VERSION = "forge-v6";
-const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-maskable.png", "./apple-touch-icon.png", "./firebase-config.js"];
+const VERSION = "forge-v7";
+const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-maskable.png", "./apple-touch-icon.png", "./firebase-config.js", "./en/", "./en/index.html"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(VERSION).then((c) => c.addAll(CORE)).then(() => self.skipWaiting()));
@@ -29,5 +29,5 @@ self.addEventListener("fetch", (e) => {
     const copy = res.clone();
     caches.open(VERSION).then((c) => c.put(req, copy));
     return res;
-  }).catch(() => caches.match(req).then((r) => r || caches.match("./index.html"))));
+  }).catch(() => caches.match(req).then((r) => r || caches.match(url.pathname.includes("/en/") ? "./en/index.html" : "./index.html"))));
 });

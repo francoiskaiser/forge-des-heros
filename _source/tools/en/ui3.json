@@ -1,0 +1,9 @@
+{
+"sur": "of", "parmi": "from", "principale": "primary", "historique": "background", "niveau": "level", "niv": "lvl", "tour": "cantrip",
+"objets": "items", "rayon": "beam", "restants": "left", "arme": "weapon", "armure": "armor", "temporaires": "temporary", "chacun": "each",
+"avantage": "advantage", "concentration": "concentration", "personnage": "character", "initiative": "initiative", "vitesse": "speed",
+"attaque": "attack", "po": "gp", "gratuit": "free", "ou": "or", "erreur": "error", "inconnu": "unknown", "Défense": "Defense",
+"acide": "acid", "contondants": "bludgeoning", "feu": "fire", "force": "force", "foudre": "lightning", "froid": "cold",
+"perforants": "piercing", "poison": "poison", "psychiques": "psychic", "radiants": "radiant", "tranchants": "slashing",
+"tonnerre": "thunder", "nécrotiques": "necrotic"
+}

@@ -2,6 +2,12 @@
 
 Chaque version correspond à un commit Git dont le message commence par son numéro. Pour revenir en arrière, voir la section en bas.
 
+## 1.7.0 — 18 octobre 2026
+- **Version anglaise** complète (interface et contenu SRD 5.2 avec la terminologie officielle, distances en pieds).
+- Choix de la langue dans Compte et réglages ; détection automatique de la langue du téléphone à la première visite.
+- Les personnages, aventures et comptes sont partagés entre les deux langues.
+- Code source ajouté au dépôt (dossier `_source`).
+
 ## 1.6.0 — 18 octobre 2026
 - Page **Compte et réglages** (bouton en haut à droite de l'accueil).
 - **Mode clair** « parchemin », mode sombre et mode automatique.

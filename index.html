@@ -10,6 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Forge">
+<script>(function(){try{var p=localStorage.getItem("forge-lang");if(p==="en"||(!p&&!/^fr/i.test(navigator.language||"fr"))){location.replace("en/"+location.hash);}}catch(e){}})();window.FORGE_PWA=true;</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -636,6 +637,9 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="firebase-config.js"></script>
 <script>
+/* K() marque une valeur enregistrée (clé) : elle n’est jamais traduite. */
+const K = (x) => x;
+const LANG = "fr";
 /* Forge des Héros — données de règles.
    Contenu adapté du SRD 5.2 (Wizards of the Coast LLC), licence CC-BY-4.0.
    Traduction et résumés originaux. */
@@ -656,8 +660,11 @@ const SKILLS = {
 };
 const SKK = Object.keys(SKILLS).sort((a, b) => SKILLS[a].n.localeCompare(SKILLS[b].n, "fr"));
 
-const LANGS = ["Commun des signes", "Draconique", "Elfique", "Géant", "Gnome", "Gobelin", "Halfelin", "Nain", "Orc"];
-const ALIGN = ["Loyal bon", "Neutre bon", "Chaotique bon", "Loyal neutre", "Neutre", "Chaotique neutre", "Loyal mauvais", "Neutre mauvais", "Chaotique mauvais"];
+const LANG_PAIRS = [[K("Commun des signes"), "Commun des signes"], [K("Draconique"), "Draconique"], [K("Elfique"), "Elfique"], [K("Géant"), "Géant"], [K("Gnome"), "Gnome"], [K("Gobelin"), "Gobelin"], [K("Halfelin"), "Halfelin"], [K("Nain"), "Nain"], [K("Orc"), "Orc"]];
+const LANGS = LANG_PAIRS.map((p) => p[0]), LANG_L = Object.fromEntries(LANG_PAIRS);
+const ALIGN_PAIRS = [[K("Loyal bon"), "Loyal bon"], [K("Neutre bon"), "Neutre bon"], [K("Chaotique bon"), "Chaotique bon"], [K("Loyal neutre"), "Loyal neutre"], [K("Neutre"), "Neutre"], [K("Chaotique neutre"), "Chaotique neutre"], [K("Loyal mauvais"), "Loyal mauvais"], [K("Neutre mauvais"), "Neutre mauvais"], [K("Chaotique mauvais"), "Chaotique mauvais"]];
+const ALIGN = ALIGN_PAIRS.map((p) => p[0]), ALIGN_L = Object.fromEntries(ALIGN_PAIRS);
+const SIZE_L = Object.fromEntries([[K("Moyenne"), "Moyenne"], [K("Petite"), "Petite"]]);
 
 const DMG = { acide: "acide", contondant: "contondants", feu: "feu", force: "force", foudre: "foudre", froid: "froid", necro: "nécrotiques", perforant: "perforants", poison: "poison", psy: "psychiques", radiant: "radiants", tranchant: "tranchants", tonnerre: "tonnerre" };
 
@@ -689,7 +696,7 @@ const WEAPONS = {
   flechette: { n: "Fléchette", c: "simple", k: "dist", d: "1d4", t: "perforant", p: ["F", "LD"], r: "6/18 m", m: "harceler", w: 0.1, cost: "5 pc" },
   fronde: { n: "Fronde", c: "simple", k: "dist", d: "1d4", t: "contondant", p: ["M"], r: "9/36 m", m: "ralentir", w: 0, cost: "1 pa" },
   hachedebataille: { n: "Hache d’armes", c: "guerre", k: "cac", d: "1d8", t: "tranchant", p: ["P"], v: "1d10", m: "renverser", w: 2, cost: "10 po" },
-  fleau: { n: "Fléau", c: "guerre", k: "cac", d: "1d8", t: "contondant", p: [], m: "affaiblir", w: 1, cost: "10 po" },
+  fleau: { n: "Fléau d’armes", c: "guerre", k: "cac", d: "1d8", t: "contondant", p: [], m: "affaiblir", w: 1, cost: "10 po" },
   coutille: { n: "Coutille", c: "guerre", k: "cac", d: "1d10", t: "tranchant", p: ["LO", "AL", "DM"], m: "effleurer", w: 3, cost: "20 po" },
   hachea2mains: { n: "Hache à deux mains", c: "guerre", k: "cac", d: "1d12", t: "tranchant", p: ["LO", "DM"], m: "fendre", w: 3.5, cost: "30 po" },
   epeea2mains: { n: "Épée à deux mains", c: "guerre", k: "cac", d: "2d6", t: "tranchant", p: ["LO", "DM"], m: "effleurer", w: 3, cost: "50 po" },
@@ -1260,7 +1267,7 @@ const SPELLS = {
   apaisement: { n: "Apaisement des émotions", l: 2, e: "enc", t: A, p: "18 m", c: "V, S", du: "1 minute", co: true, cl: ["barde", "clerc"], sv: "cha", d: "Les humanoïdes d’une sphère de 6 m qui ratent un JS de Charisme ne sont plus charmés ou effrayés, ou deviennent indifférents." },
   tenebres: { n: "Ténèbres", l: 2, e: "evo", t: A, p: "18 m", c: "V, M", du: "10 minutes", co: true, cl: ["ensorceleur", "occultiste", "magicien"], d: "Des ténèbres magiques remplissent une sphère de 4,50 m. La vision dans le noir ne les perce pas." },
   visionnoir: { n: "Vision dans le noir", l: 2, e: "tra", t: A, p: "Contact", c: "V, S, M", du: "8 heures", cl: ["druide", "rodeur", "ensorceleur", "magicien"], d: "La créature gagne la vision dans le noir jusqu’à 45 m." },
-  ameliorationcarac: { n: "Amélioration de caractéristique", l: 2, e: "tra", t: A, p: "Contact", c: "V, S, M", du: "1 heure", co: true, cl: ["barde", "clerc", "druide", "rodeur", "ensorceleur", "magicien"], d: "Choisissez une caractéristique : la créature a l’avantage aux tests de cette caractéristique." },
+  ameliorationcarac: { n: "Caractéristique améliorée", l: 2, e: "tra", t: A, p: "Contact", c: "V, S, M", du: "1 heure", co: true, cl: ["barde", "clerc", "druide", "rodeur", "ensorceleur", "magicien"], d: "Choisissez une caractéristique : la créature a l’avantage aux tests de cette caractéristique." },
   spherefeu: { n: "Sphère de feu", l: 2, e: "inv", t: A, p: "18 m", c: "V, S, M", du: "1 minute", co: true, cl: ["druide", "ensorceleur", "magicien"], sv: "dex", dmg: "2d6", ty: "feu", up: "+1d6 par niveau", d: "Une sphère de feu de 1,50 m : les créatures qui finissent leur tour à côté font un JS de Dextérité, 2d6 dégâts de feu. Vous la déplacez par une action bonus." },
   chaufferetal: { n: "Chauffer le métal", l: 2, e: "tra", t: A, p: "18 m", c: "V, S, M", du: "1 minute", co: true, cl: ["barde", "druide"], dmg: "2d8", ty: "feu", up: "+1d8 par niveau", d: "Un objet métallique devient brûlant : 2d8 dégâts de feu à qui le touche ; vous recommencez par une action bonus." },
   immobilisation: { n: "Immobilisation de personne", l: 2, e: "enc", t: A, p: "18 m", c: "V, S, M", du: "1 minute", co: true, cl: ["barde", "clerc", "druide", "ensorceleur", "occultiste", "magicien"], sv: "sag", d: "Un humanoïde réussit un JS de Sagesse ou est paralysé. Il refait le JS à la fin de chacun de ses tours." },
@@ -1310,7 +1317,8 @@ const SPELLS = {
   lueurespoir: { n: "Lueur d’espoir", l: 3, e: "abj", t: A, p: "9 m", c: "V, S", du: "1 minute", co: true, cl: ["clerc"], d: "Les créatures choisies ont l’avantage aux JS de Sagesse et contre la mort, et regagnent le maximum possible avec les soins." },
 };
 
-const CONDITIONS = ["À terre", "Agrippé", "Assourdi", "Aveuglé", "Charmé", "Effrayé", "Empoisonné", "Entravé", "Étourdi", "Inconscient", "Invisible", "Neutralisé", "Paralysé", "Pétrifié"];
+const COND_PAIRS = [[K("À terre"), "À terre"], [K("Agrippé"), "Agrippé"], [K("Assourdi"), "Assourdi"], [K("Aveuglé"), "Aveuglé"], [K("Charmé"), "Charmé"], [K("Effrayé"), "Effrayé"], [K("Empoisonné"), "Empoisonné"], [K("Entravé"), "Entravé"], [K("Étourdi"), "Étourdi"], [K("Inconscient"), "Inconscient"], [K("Invisible"), "Invisible"], [K("Neutralisé"), "Neutralisé"], [K("Paralysé"), "Paralysé"], [K("Pétrifié"), "Pétrifié"]];
+const CONDITIONS = COND_PAIRS.map((p) => p[0]), COND_L = Object.fromEntries(COND_PAIRS);
 
 /* Forge des Héros — niveaux 6 à 20 et sorts de niveau 4 à 9.
    Contenu adapté du SRD 5.2 (Wizards of the Coast LLC), licence CC-BY-4.0. */
@@ -1708,7 +1716,7 @@ const mod = (s) => Math.floor((s - 10) / 2);
 const sg = (n) => (n >= 0 ? "+" + n : "−" + Math.abs(n));
 const pbOf = (lv) => 2 + Math.floor((lv - 1) / 4);
 const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
-const fmtM = (m) => (Number.isInteger(m) ? m : m.toFixed(1).replace(".", ",")) + " m";
+const fmtM = (m) => LANG === "en" ? Math.round(m / 0.3) + " ft" : (Number.isInteger(m) ? m : m.toFixed(1).replace(".", ",")) + " m";
 
 const STD_ARRAY = [15, 14, 13, 12, 10, 8];
 const PB_COST = { 8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 7, 15: 9 };
@@ -2029,7 +2037,7 @@ function compute(b, p) {
     const best = opts.sort((x, y) => y.v - x.v)[0];
     ac = best.v; acNote = best.n;
   }
-  if (eqShield) { ac += 2; acNote += " + bouclier"; }
+  if (eqShield) { ac += 2; acNote += " + " + ARMORS.bouclier.n.toLowerCase(); }
   const armorWarn = (armor && !aprof.includes(armor.t)) || (eqShield && !aprof.includes("bouclier"));
   const stealthDis = armor && armor.st;
 
@@ -2062,13 +2070,13 @@ function compute(b, p) {
     const mastery = c && c.mastery && b.opts.mastery.includes(i.ref.slice(2)) ? w.m : null;
     const props = w.p.map((x) => WPROP[x]).join(", ");
     attacks.push({
-      n: i.n || w.n, hit, dmg: die + (m[a] ? sg(m[a]).replace("−", "-") : ""), alt: w.v ? w.v + (m[a] ? sg(m[a]).replace("−", "-") : "") : null,
+      n: w.n, hit, dmg: die + (m[a] ? sg(m[a]).replace("−", "-") : ""), alt: w.v ? w.v + (m[a] ? sg(m[a]).replace("−", "-") : "") : null,
       ty: DMG[w.t], range: w.r || (w.p.includes("AL") ? "3 m" : "1,50 m"), props, mastery, prof: proficient, crit,
       rage: b.cls === "barbare" && a === "for",
     });
   });
   const unarmedA = b.cls === "moine" && m.dex > m.for ? "dex" : "for";
-  attacks.push({ n: "Frappe à mains nues", hit: m[unarmedA] + pb, dmg: b.cls === "moine" ? maDie + (m[unarmedA] ? sg(m[unarmedA]).replace("−", "-") : "") : String(Math.max(1, 1 + m.for)), ty: "contondants", range: "1,50 m", props: "", prof: true, crit, rage: b.cls === "barbare" });
+  attacks.push({ n: "Frappe à mains nues", hit: m[unarmedA] + pb, dmg: b.cls === "moine" ? maDie + (m[unarmedA] ? sg(m[unarmedA]).replace("−", "-") : "") : String(Math.max(1, 1 + m.for)), ty: DMG.contondant, range: "1,50 m", props: "", prof: true, crit, rage: b.cls === "barbare" });
 
   // Incantation
   let casting = null;
@@ -2100,7 +2108,7 @@ function compute(b, p) {
   const init = m.dex + (feats.includes("vigilant") ? pb : 0);
   const perc = skills.find((s) => s.k === "perc").v;
 
-  const langs = ["Commun", ...b.langs];
+  const langs = ["Commun", ...b.langs.map((l) => LANG_L[l] || l)];
   if (b.cls === "roublard") langs.push("Argot des voleurs");
   if (b.cls === "druide") langs.push("Druidique");
 
@@ -2127,6 +2135,12 @@ function itemFrom(entry) {
   if (ref.startsWith("w:")) return { uid: uid(), ref, n: WEAPONS[ref.slice(2)].n, q: q || 1, eq: false };
   if (ref.startsWith("a:")) return { uid: uid(), ref, n: ARMORS[ref.slice(2)].n, q: 1, eq: false };
   return { uid: uid(), ref: "g:" + ref, n: GEAR[ref] || ref, q: q || 1, eq: false };
+}
+function itemName(i) {
+  if (i.ref && i.ref.startsWith("w:") && WEAPONS[i.ref.slice(2)]) return WEAPONS[i.ref.slice(2)].n;
+  if (i.ref && i.ref.startsWith("a:") && ARMORS[i.ref.slice(2)]) return ARMORS[i.ref.slice(2)].n;
+  if (i.ref && i.ref.startsWith("g:") && GEAR[i.ref.slice(2)]) return GEAR[i.ref.slice(2)];
+  return i.n;
 }
 function startingInventory(b) {
   const c = CLASSES[b.cls], bg = BACKGROUNDS[b.bg];
@@ -2462,14 +2476,14 @@ function stepOrigin(b) {
     <button class="pick-card ${b.species === k ? "on" : ""}" data-a="setSpecies" data-v="${k}">
       <span class="pc-head"><span class="pc-name">${s.n}</span><span class="pc-hd">${s.size}</span></span>
       <span class="pc-tag">${s.tag}</span>
-      <span class="pc-meta"><span>Vitesse ${fmtM(s.speed)}</span><span>${s.dv ? "Vision ".concat(s.dv, " m") : ""}</span></span>
+      <span class="pc-meta"><span>Vitesse ${fmtM(s.speed)}</span><span>${s.dv ? "Vision " + fmtM(s.dv) : ""}</span></span>
     </button>`).join("");
   const sp = SPECIES[b.species];
   let spDetail = "";
   if (sp) {
     const choice = sp.choice ? `<h4>${sp.choice.label}</h4><div class="opt-grid">${Object.entries(sp.choice.opts).map(([k, o]) => `
       <button class="opt ${b.sChoice === k ? "on" : ""}" data-a="setSChoice" data-v="${k}"><b>${o.n}</b><span>${o.d || "Dégâts de " + DMG[o.t]}</span></button>`).join("")}</div>` : "";
-    const size = sp.sizeChoice ? `<h4>Taille</h4><div class="chips">${["Moyenne", "Petite"].map((z) => chip(z, b.size === z, "setSize", `data-v="${z}"`)).join("")}</div>` : "";
+    const size = sp.sizeChoice ? `<h4>Taille</h4><div class="chips">${[K("Moyenne"), K("Petite")].map((z) => chip(SIZE_L[z], b.size === z, "setSize", `data-v="${z}"`)).join("")}</div>` : "";
     const sab = sp.spellAb ? `<h4>Caractéristique des sorts d’espèce</h4><div class="chips">${["int", "sag", "cha"].map((a) => chip(ABIL[a].n, b.sSpellAb === a, "setSAb", `data-v="${a}"`)).join("")}</div>` : "";
     spDetail = `<section class="panel detail"><h3>${sp.n}</h3><p class="mute">${sp.desc}</p>
       <div class="feats">${sp.traits.map((t) => `<details class="feat" open><summary>${t.n}</summary><p>${t.d}</p></details>`).join("")}</div>${choice}${size}${sab}</section>`;
@@ -2579,14 +2593,14 @@ function stepOptions(b) {
     out.push(`<section class="panel"><h4>Manifestations occultes — ${b.opts.inv.length}/${n}</h4><div class="opt-grid">${Object.entries(INVOCATIONS).filter(([, v]) => v.lv <= b.level).map(([k, v]) => `<button class="opt ${b.opts.inv.includes(k) ? "on" : ""}" data-a="inv" data-v="${k}" ${!b.opts.inv.includes(k) && b.opts.inv.length >= n ? 'aria-disabled="true"' : ""}><b>${v.n}</b><span>${v.d}</span></button>`).join("")}</div></section>`);
   }
   if (b.cls === "ensorceleur" && b.level >= 2) { const mc = metaCount(b); out.push(`<section class="panel"><h4>Métamagie — ${b.opts.meta.length}/${mc}</h4><div class="opt-grid">${Object.entries(METAMAGIC).map(([k, v]) => `<button class="opt ${b.opts.meta.includes(k) ? "on" : ""}" data-a="meta" data-v="${k}" ${!b.opts.meta.includes(k) && b.opts.meta.length >= mc ? 'aria-disabled="true"' : ""}><b>${v.n}</b><span>${v.d}</span></button>`).join("")}</div></section>`); }
-  if (b.cls === "ensorceleur" && b.level >= 6) out.push(`<section class="panel"><h4>Affinité élémentaire : type de dégâts</h4><p class="mute small">Celui de votre ascendance draconique.</p><div class="chips">${["acide", "froid", "feu", "foudre", "poison"].map((t) => chip(DMG[t][0].toUpperCase() + DMG[t].slice(1), b.opts.dragon === t, "dragon", `data-v="${t}"`)).join("")}</div></section>`);
+  if (b.cls === "ensorceleur" && b.level >= 6) out.push(`<section class="panel"><h4>Affinité élémentaire : type de dégâts</h4><p class="mute small">Celui de votre ascendance draconique.</p><div class="chips">${[K("acide"), K("froid"), K("feu"), K("foudre"), K("poison")].map((t) => chip(DMG[t][0].toUpperCase() + DMG[t].slice(1), b.opts.dragon === t, "dragon", `data-v="${t}"`)).join("")}</div></section>`);
   if (b.cls === "guerrier" && b.level >= 7) out.push(`<section class="panel"><h4>Second style de combat (Champion)</h4><div class="opt-grid">${Object.entries(FIGHTING_STYLES).filter(([k]) => k !== b.opts.style).map(([k, f]) => `<button class="opt ${b.opts.style2 === k ? "on" : ""}" data-a="style2" data-v="${k}"><b>${f.n}</b><span>${f.d}</span></button>`).join("")}</div></section>`);
   if (STRIKE_OPTS[b.cls] && b.level >= STRIKE_OPTS[b.cls].lvl) { const so = STRIKE_OPTS[b.cls]; out.push(`<section class="panel"><h4>${so.label} (niveau ${so.lvl})</h4><div class="opt-grid">${Object.entries(so.opts).map(([k, o]) => `<button class="opt ${b.opts.strike === k ? "on" : ""}" data-a="strike" data-v="${k}"><b>${o.n}</b><span>${o.d}</span></button>`).join("")}</div></section>`); }
   if (b.cls === "rodeur" && b.level >= 3) out.push(`<section class="panel"><h4>Proie du chasseur</h4><div class="opt-grid">
     <button class="opt ${b.opts.prey === "colosse" ? "on" : ""}" data-a="prey" data-v="colosse"><b>Tueur de colosses</b><span>Une fois par tour, +1d8 dégâts contre une cible blessée.</span></button>
     <button class="opt ${b.opts.prey === "horde" ? "on" : ""}" data-a="prey" data-v="horde"><b>Briseur de hordes</b><span>Une attaque de plus contre une autre créature proche de la cible.</span></button></div></section>`);
   if (b.cls === "druide" && b.level >= 3) out.push(`<section class="panel"><h4>Cercle de la Terre : votre terre</h4><div class="opt-grid">${Object.entries(LAND_SPELLS).map(([k, l]) => `<button class="opt ${b.opts.land === k ? "on" : ""}" data-a="land" data-v="${k}"><b>${l.n}</b><span>${Object.values(l.s).flat().map((id) => SPELLS[id].n).join(", ")}</span></button>`).join("")}</div></section>`);
-  out.push(`<section class="panel"><h4>Langues — ${b.langs.length}/2</h4><p class="mute small">Vous parlez le commun et deux autres langues.</p><div class="chips">${LANGS.map((l) => chip(l, b.langs.includes(l), "lang", `data-v="${esc(l)}"`, !b.langs.includes(l) && b.langs.length >= 2 ? 'aria-disabled="true"' : "")).join("")}</div></section>`);
+  out.push(`<section class="panel"><h4>Langues — ${b.langs.length}/2</h4><p class="mute small">Vous parlez le commun et deux autres langues.</p><div class="chips">${LANGS.map((l) => chip(LANG_L[l], b.langs.includes(l), "lang", `data-v="${esc(l)}"`, !b.langs.includes(l) && b.langs.length >= 2 ? 'aria-disabled="true"' : "")).join("")}</div></section>`);
   return out.join("");
 }
 
@@ -2656,7 +2670,7 @@ function stepDetails(b) {
   const d = b.details;
   const field = (k, label, ph, area) => `<label class="field"><span>${label}</span>${area ? `<textarea id="d-${k}" data-f="details.${k}" rows="3" placeholder="${ph}">${esc(d[k])}</textarea>` : `<input id="d-${k}" data-f="details.${k}" value="${esc(d[k])}" placeholder="${ph}">`}</label>`;
   return `<section class="panel"><label class="field big"><span>Nom du personnage</span><input id="d-name" data-f="name" value="${esc(b.name)}" placeholder="Ex. Aldric Brisefer" autocomplete="off"></label>
-    <div class="field"><span>Alignement</span><div class="align-grid">${ALIGN.map((a) => chip(a, b.align === a, "align", `data-v="${a}"`)).join("")}</div></div>
+    <div class="field"><span>Alignement</span><div class="align-grid">${ALIGN.map((a) => chip(ALIGN_L[a], b.align === a, "align", `data-v="${a}"`)).join("")}</div></div>
     <div class="two-col">${field("age", "Âge", "Ex. 27 ans")}${field("taille", "Taille et poids", "Ex. 1,80 m, 75 kg")}</div>
     ${field("apparence", "Apparence", "Cheveux, yeux, signes distinctifs…", true)}
     ${field("personnalite", "Traits de personnalité", "Comment vous comportez-vous ?", true)}
@@ -2673,8 +2687,8 @@ function viewSheet() {
   const b = ch.b, p = ch.p, s = compute(b, p), c = CLASSES[b.cls], sp = SPECIES[b.species];
   const hpPct = Math.max(0, Math.min(100, (p.hp / s.hpMax) * 100));
   const down = p.hp <= 0;
-  const tabs = [["actions", "Actions"], ["carac", "Compétences"], ...(s.spells.length ? [["sorts", "Sorts"]] : []), ["inv", "Inventaire"], ["traits", "Aptitudes"], ...(typeof FB !== "undefined" && FB.ok ? [["aventure", ch.adv ? "Aventure ●" : "Aventure"]] : []), ["notes", "Notes"]];
-  const tabBody = { actions: tabActions, carac: tabSkills, sorts: tabSpells, inv: tabInventory, traits: tabTraits, notes: tabNotes, aventure: typeof tabAdventure === "function" ? tabAdventure : tabActions }[S.tab] || tabActions;
+  const tabs = [["actions", "Actions"], ["carac", "Compétences"], ...(s.spells.length ? [["sorts", "Sorts"]] : []), ["inv", "Inventaire"], ["traits", "Aptitudes"], ...(typeof FB !== "undefined" && FB.ok ? [["adv", ch.adv ? "Aventure ●" : "Aventure"]] : []), ["notes", "Notes"]];
+  const tabBody = { actions: tabActions, carac: tabSkills, sorts: tabSpells, inv: tabInventory, traits: tabTraits, notes: tabNotes, adv: typeof tabAdventure === "function" ? tabAdventure : tabActions }[S.tab] || tabActions;
   return `<header class="topbar sheet-top">
     <button class="icon-btn" data-a="home" aria-label="Retour">${ICON.back}</button>
     <div class="tb-title"><strong>${esc(b.name)}</strong><span class="eyebrow">${sp.n} · ${c.n} ${b.level}${s.sub ? " · " + esc(s.sub) : ""}</span></div>
@@ -2696,7 +2710,7 @@ function viewSheet() {
       <div class="stat-tiles">
         <div class="tile"><span class="lbl">CA</span><b>${s.ac}</b><span class="tsub">${esc(s.acNote)}</span>${s.armorWarn ? '<span class="warn">non maîtrisée</span>' : ""}</div>
         <button class="tile roll" data-a="r20" data-l="Initiative" data-m="${s.init}"><span class="lbl">Initiative</span><b>${sg(s.init)}</b><span class="tsub">${ICON.d20}</span></button>
-        <div class="tile"><span class="lbl">Vitesse</span><b>${fmtM(s.speed)}</b><span class="tsub">${s.darkvision ? "Vision " + s.darkvision + " m" : "&nbsp;"}</span></div>
+        <div class="tile"><span class="lbl">Vitesse</span><b>${fmtM(s.speed)}</b><span class="tsub">${s.darkvision ? "Vision " + fmtM(s.darkvision) : "&nbsp;"}</span></div>
         <div class="tile"><span class="lbl">Maîtrise</span><b>${sg(s.pb)}</b><span class="tsub">Perc. passive ${10 + s.perc}</span></div>
         <button class="tile ${p.insp ? "lit" : ""}" data-a="insp" aria-pressed="${p.insp}"><span class="lbl">Inspiration</span><b>${p.insp ? "★" : "☆"}</b><span class="tsub">héroïque</span></button>
       </div>
@@ -2707,7 +2721,7 @@ function viewSheet() {
       return `<div class="abil"><button class="ab-main" data-a="r20" data-l="Test de ${ABIL[k].n}" data-m="${s.m[k]}"><span class="lbl">${ABIL[k].n}</span><b>${sg(s.m[k])}</b><span class="ab-score">${s.ab[k]}</span></button>
         <button class="ab-save ${sv.pr ? "pr" : ""}" data-a="r20" data-l="Sauvegarde de ${ABIL[k].n}" data-m="${sv.v}"><i></i>JS ${sg(sv.v)}</button></div>`;
     }).join("")}</section>
-    ${p.cond.length ? `<div class="conds">${p.cond.map((x) => `<button class="cond" data-a="cond" data-v="${esc(x)}">${esc(x)} ${ICON.close}</button>`).join("")}</div>` : ""}
+    ${p.cond.length ? `<div class="conds">${p.cond.map((x) => `<button class="cond" data-a="cond" data-v="${esc(x)}">${esc(COND_L[x] || x)} ${ICON.close}</button>`).join("")}</div>` : ""}
     <nav class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" class="tab ${S.tab === k ? "on" : ""}" data-a="tab" data-v="${k}" aria-selected="${S.tab === k}">${n}</button>`).join("")}</nav>
     <section class="tab-body">${tabBody(ch, s)}</section>
   </main>`;
@@ -2767,7 +2781,7 @@ function tabActions(ch, s) {
       ${atk}${cantHtml}${extras.length ? `<div class="extras">${extras.join("")}</div>` : ""}</section>
     <section class="panel"><h3 class="ph">Ressources</h3>${s.resources.length ? s.resources.map((r) => resRow(ch, r)).join("") : '<p class="mute small">Aucune ressource limitée.</p>'}
       <div class="hd-row"><div><b>Dés de vie</b><span class="mute small">d${s.hd} · ${b.level - ch.p.hdUsed}/${b.level} restants</span></div><button class="btn small" data-a="spendHD" ${ch.p.hdUsed >= b.level ? "disabled" : ""}>Dépenser un dé</button></div>
-      <div class="cond-pick"><span class="lbl">États</span><div class="chips">${CONDITIONS.map((x) => chip(x, ch.p.cond.includes(x), "cond", `data-v="${x}"`)).join("")}</div></div>
+      <div class="cond-pick"><span class="lbl">États</span><div class="chips">${CONDITIONS.map((x) => chip(COND_L[x], ch.p.cond.includes(x), "cond", `data-v="${x}"`)).join("")}</div></div>
     </section></div>`;
 }
 function cantripTier(lvl) { return lvl >= 17 ? 4 : lvl >= 11 ? 3 : lvl >= 5 ? 2 : 1; }
@@ -2788,7 +2802,7 @@ function tabSkills(ch, s) {
     <dl class="facts"><div><dt>Perception passive</dt><dd>${10 + s.perc}</dd></div>
     <div><dt>Investigation passive</dt><dd>${10 + s.skills.find((x) => x.k === "inve").v}</dd></div>
     <div><dt>Perspicacité passive</dt><dd>${10 + s.skills.find((x) => x.k === "pspi").v}</dd></div>
-    ${s.darkvision ? `<div><dt>Vision dans le noir</dt><dd>${s.darkvision} m</dd></div>` : ""}
+    ${s.darkvision ? `<div><dt>Vision dans le noir</dt><dd>${fmtM(s.darkvision)}</dd></div>` : ""}
     <div><dt>Armures</dt><dd>${s.profs.armor}</dd></div><div><dt>Armes</dt><dd>${s.profs.weapons}</dd></div>
     <div><dt>Outils</dt><dd>${esc(s.profs.tools)}</dd></div><div><dt>Langues</dt><dd>${s.langs.map(esc).join(", ")}</dd></div></dl>
     ${s.stealthDis ? '<p class="warn">Votre armure impose le désavantage en Discrétion.</p>' : ""}
@@ -2839,7 +2853,7 @@ function tabInventory(ch) {
     const sub = w ? `${w.d} ${DMG[w.t]}${w.p.length ? " · " + w.p.map((x) => WPROP[x]).join(", ") : ""}` : a ? (a.t === "bouclier" ? "+2 CA" : `CA ${a.ac}${a.dex === 99 ? " + Dex" : a.dex ? " + Dex (max 2)" : ""}`) : "";
     return `<div class="item">
       ${w || a ? `<button class="eq ${i.eq ? "on" : ""}" data-a="equip" data-u="${i.uid}" aria-pressed="${i.eq}" title="${i.eq ? "Équipé" : "Équiper"}">${i.eq ? ICON.check : ""}</button>` : '<span class="eq none"></span>'}
-      <div class="it-name"><b>${esc(i.n)}</b>${sub ? `<span class="mute small">${sub}</span>` : ""}</div>
+      <div class="it-name"><b>${esc(itemName(i))}</b>${sub ? `<span class="mute small">${sub}</span>` : ""}</div>
       <div class="qty"><button class="mini" data-a="qty" data-u="${i.uid}" data-d="-1" aria-label="Moins">−</button><b>${i.q}</b><button class="mini" data-a="qty" data-u="${i.uid}" data-d="1" aria-label="Plus">+</button></div>
     </div>`;
   }).join("");
@@ -2864,7 +2878,7 @@ function tabTraits(ch, s) {
 
 function tabNotes(ch) {
   const d = ch.b.details;
-  const show = [["Alignement", ch.b.align], ["Âge", d.age], ["Taille et poids", d.taille], ["Apparence", d.apparence], ["Personnalité", d.personnalite], ["Idéaux", d.ideaux], ["Liens", d.liens], ["Défauts", d.defauts], ["Histoire", d.histoire]].filter(([, v]) => v);
+  const show = [["Alignement", ALIGN_L[ch.b.align] || ch.b.align], ["Âge", d.age], ["Taille et poids", d.taille], ["Apparence", d.apparence], ["Personnalité", d.personnalite], ["Idéaux", d.ideaux], ["Liens", d.liens], ["Défauts", d.defauts], ["Histoire", d.histoire]].filter(([, v]) => v);
   return `<div class="cols"><section class="panel"><h3 class="ph">Notes de partie</h3><textarea id="notes" class="notes" data-pf="notes" rows="12" placeholder="Quêtes, PNJ, indices, trésors…">${esc(ch.p.notes)}</textarea></section>
     <section class="panel"><h3 class="ph">Identité</h3><dl class="facts">${show.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>
     <div class="row-btns"><button class="btn small ghost" data-a="exportOpen">Exporter</button><button class="btn small ghost danger" data-a="delAsk">${ICON.trash} Supprimer</button></div></section></div>`;
@@ -3014,7 +3028,7 @@ async function act(a, d, el) {
     case "setLevel": b.level = +d.v; cleanBuild(b); break;
     case "setClass": setClass(b, d.v); break;
     case "setBg": if (b.bg !== d.v) { b.bg = d.v; b.bonus = { mode: "21", p2: null, p1: null }; const g = BACKGROUNDS[d.v]; if (g.featList) b.magic.bg = { list: g.featList, cant: [], spell: null, ab: g.featList === "mag" ? "int" : "sag" }; const pri = CLASSES[b.cls] ? PRIORITY[b.cls] : ABK; const sorted = g.ab.slice().sort((x, y) => pri.indexOf(x) - pri.indexOf(y)); b.bonus.p2 = sorted[0]; b.bonus.p1 = sorted[1]; b.skillsClass = b.skillsClass.filter((k) => !g.skills.includes(k)); } break;
-    case "setSpecies": if (b.species !== d.v) { b.species = d.v; b.sChoice = null; b.skillsSpecies = []; b.humanFeat = null; b.size = SPECIES[d.v].size.startsWith("Petite") ? "Petite" : "Moyenne"; } break;
+    case "setSpecies": if (b.species !== d.v) { b.species = d.v; b.sChoice = null; b.skillsSpecies = []; b.humanFeat = null; b.size = d.v === "gnome" || d.v === "halfelin" ? K("Petite") : K("Moyenne"); } break;
     case "setSChoice": b.sChoice = d.v; break;
     case "setSize": b.size = d.v; break;
     case "setSAb": b.sSpellAb = d.v; break;
@@ -3154,7 +3168,7 @@ async function act(a, d, el) {
     }
     case "qty": { const it = ch.p.inv.find((i) => i.uid === d.u); it.q += +d.d; if (it.q <= 0) ch.p.inv = ch.p.inv.filter((i) => i.uid !== d.u); saveSoon(ch); break; }
     case "addItem": { const v = $("#newItem").value.trim(); if (!v) { toast("Saisissez le nom de l’objet."); return; } ch.p.inv.push({ uid: uid(), ref: null, n: v, q: 1, eq: false }); saveSoon(ch); break; }
-    case "addRef": { const v = $("#newRef").value; const it = itemFrom([v, 1]); ch.p.inv.push(it); saveSoon(ch); toast(it.n + " ajouté"); break; }
+    case "addRef": { const v = $("#newRef").value; const it = itemFrom([v, 1]); ch.p.inv.push(it); saveSoon(ch); toast(itemName(it) + " ajouté"); break; }
     case "gold": { const n = Math.abs(parseInt($("#goldAmt").value, 10) || 0); if (!n) { toast("Saisissez un montant."); return; } ch.p.gold = Math.max(0, ch.p.gold + n * +d.d); saveSoon(ch); break; }
     case "delAsk": S.modal = { k: "del" }; break;
     case "delDo": if (ch.adv && typeof FB !== "undefined" && FB.ok) { try { await FB.members(ch.adv).doc(FB.uid + "_" + ch.id).delete(); } catch (e) { } } await Store.del(ch.id); S.chars = S.chars.filter((c) => c.id !== ch.id); S.modal = null; S.view = "home"; toast("Personnage supprimé"); break;
@@ -3282,7 +3296,7 @@ async function boot() {
 }
 function exampleCharacter() {
   const b = newBuild();
-  Object.assign(b, { name: "Ysolde (exemple)", level: 3, cls: "clerc", species: "nain", bg: "acolyte", langs: ["Nain", "Draconique"], align: "Loyal bon" });
+  Object.assign(b, { name: "Ysolde (exemple)", level: 3, cls: "clerc", species: "nain", bg: "acolyte", langs: [K("Nain"), K("Draconique")], align: K("Loyal bon") });
   b.bonus = { mode: "21", p2: "sag", p1: "cha" };
   assignStandard(b);
   b.skillsClass = ["mede", "hist"];
@@ -3392,7 +3406,7 @@ function tabAdventure(ch) {
   return `<div class="cols">
     <section class="panel"><div class="adv-head"><div><span class="eyebrow">Aventure</span><h3 class="ph">${esc(doc ? doc.name : "Chargement…")}</h3></div><span class="code-chip">${esc(ch.adv)}</span></div>
       <p class="lbl">Le groupe</p>
-      <div class="party-mini">${mem.length ? mem.map(({ m, s }) => `<div class="pm ${m.charId === ch.id ? "me" : ""}"><div class="pm-top"><b>${esc(m.name)}</b><span class="mute small">${CLASSES[m.b.cls] ? CLASSES[m.b.cls].n : ""} ${m.b.level}</span></div>${hpBar(m.p.hp, s.hpMax)}<span class="mute small">${m.p.hp}/${s.hpMax} PV${m.p.cond && m.p.cond.length ? " · " + m.p.cond.map(esc).join(", ") : ""}</span></div>`).join("") : '<p class="mute small">Personne pour l’instant.</p>'}</div>
+      <div class="party-mini">${mem.length ? mem.map(({ m, s }) => `<div class="pm ${m.charId === ch.id ? "me" : ""}"><div class="pm-top"><b>${esc(m.name)}</b><span class="mute small">${CLASSES[m.b.cls] ? CLASSES[m.b.cls].n : ""} ${m.b.level}</span></div>${hpBar(m.p.hp, s.hpMax)}<span class="mute small">${m.p.hp}/${s.hpMax} PV${m.p.cond && m.p.cond.length ? " · " + m.p.cond.map((x) => esc(COND_L[x] || x)).join(", ") : ""}</span></div>`).join("") : '<p class="mute small">Personne pour l’instant.</p>'}</div>
       <div class="row-btns"><button class="btn small ghost danger" data-a="advLeave">Quitter l’aventure</button></div>
     </section>
     <section class="panel"><h3 class="ph">Initiative</h3>
@@ -3444,7 +3458,7 @@ function gmParty() {
       <div class="pc-hp"><div class="pc-hpnum"><b>${p.hp}</b>/${s.hpMax}${p.temp ? ` <span class="temp">+${p.temp}</span>` : ""}</div>${hpBar(p.hp, s.hpMax)}</div>
       <div class="pc-stats"><div><span class="lbl">CA</span><b>${s.ac}</b></div><div><span class="lbl">Init.</span><b>${sg(s.init)}</b></div><div><span class="lbl">Perc.</span><b>${10 + s.perc}</b></div><div><span class="lbl">Vit.</span><b>${fmtM(s.speed)}</b></div>${s.casting ? `<div><span class="lbl">DD</span><b>${s.casting.dc}</b></div>` : ""}</div>
       ${down ? `<p class="pc-alert">À terre · réussites ${p.ds ? p.ds.s : 0}/3 · échecs ${p.ds ? p.ds.f : 0}/3</p>` : ""}
-      ${p.cond && p.cond.length ? `<div class="pc-cond">${p.cond.map((x) => `<span>${esc(x)}</span>`).join("")}</div>` : ""}
+      ${p.cond && p.cond.length ? `<div class="pc-cond">${p.cond.map((x) => `<span>${esc(COND_L[x] || x)}</span>`).join("")}</div>` : ""}
       ${p.conc && SPELLS[p.conc] ? `<p class="pc-conc">Concentration : ${SPELLS[p.conc].n}</p>` : ""}
       ${slots ? `<div class="pc-slots">${slots}</div>` : ""}
       <button class="btn small ghost" data-a="gmDetail" data-id="${esc(m.id)}">Voir la fiche</button>
@@ -3458,17 +3472,17 @@ function gmDetailModal(m) {
   const b = m.b, p = m.p;
   const byLv = {};
   s.spells.forEach((x) => (byLv[x.l] = byLv[x.l] || []).push(x.n));
-  return `<h3>${esc(b.name)}</h3><p class="mute">${SPECIES[b.species].n} · ${CLASSES[b.cls].n} ${b.level}${s.sub ? " · " + esc(s.sub) : ""} · ${esc(b.align)}</p>
+  return `<h3>${esc(b.name)}</h3><p class="mute">${SPECIES[b.species].n} · ${CLASSES[b.cls].n} ${b.level}${s.sub ? " · " + esc(s.sub) : ""} · ${esc(ALIGN_L[b.align] || b.align)}</p>
     <div class="ro-abil">${ABK.map((k) => { const sv = s.saves.find((x) => x.k === k); return `<div><span class="lbl">${ABIL[k].s}</span><b>${sg(s.m[k])}</b><small>${s.ab[k]} · JS ${sg(sv.v)}${sv.pr ? "●" : ""}</small></div>`; }).join("")}</div>
     <dl class="facts"><div><dt>PV</dt><dd>${p.hp}/${s.hpMax}${p.temp ? " (+" + p.temp + " temp.)" : ""} · dés de vie ${b.level - (p.hdUsed || 0)}/${b.level}</dd></div>
       <div><dt>Défense</dt><dd>CA ${s.ac} (${esc(s.acNote)}) · initiative ${sg(s.init)} · vitesse ${fmtM(s.speed)}</dd></div>
-      <div><dt>Sens</dt><dd>Perception passive ${10 + s.perc}${s.darkvision ? " · vision dans le noir " + s.darkvision + " m" : ""}</dd></div>
+      <div><dt>Sens</dt><dd>Perception passive ${10 + s.perc}${s.darkvision ? " · vision dans le noir " + fmtM(s.darkvision) : ""}</dd></div>
       <div><dt>Compétences maîtrisées</dt><dd>${s.skills.filter((k) => k.pr).map((k) => k.n + " " + sg(k.v) + (k.pr === 2 ? " (exp.)" : "")).join(", ") || "—"}</dd></div>
       <div><dt>Attaques</dt><dd>${s.attacks.map((a) => `${esc(a.n)} ${sg(a.hit)} (${esc(a.dmg)})`).join(" · ")}</dd></div>
       ${s.casting ? `<div><dt>Sorts</dt><dd>DD ${s.casting.dc} · attaque ${sg(s.casting.atk)}</dd></div>` : ""}
       ${Object.keys(byLv).sort((x, y) => x - y).map((l) => `<div><dt>${l == 0 ? "Tours de magie" : "Niveau " + l}</dt><dd>${byLv[l].join(", ")}</dd></div>`).join("")}
       <div><dt>Ressources</dt><dd>${s.resources.map((r) => `${r.n} ${r.max - ((p.res || {})[r.k] || 0)}/${r.max}`).join(" · ") || "—"}</dd></div>
-      <div><dt>Inventaire</dt><dd>${(p.inv || []).map((i) => (i.q > 1 ? i.q + "× " : "") + esc(i.n) + (i.eq ? " ✓" : "")).join(", ")} · ${p.gold} po</dd></div>
+      <div><dt>Inventaire</dt><dd>${(p.inv || []).map((i) => (i.q > 1 ? i.q + "× " : "") + esc(itemName(i)) + (i.eq ? " ✓" : "")).join(", ")} · ${p.gold} po</dd></div>
       <div><dt>Langues</dt><dd>${s.langs.map(esc).join(", ")}</dd></div>
       ${b.details.histoire ? `<div><dt>Histoire</dt><dd>${esc(b.details.histoire)}</dd></div>` : ""}
       ${p.notes ? `<div><dt>Notes du joueur</dt><dd>${esc(p.notes)}</dd></div>` : ""}
@@ -3846,7 +3860,7 @@ function accountStart() { if (Account.user()) syncAccount(); }
 
 /* Forge des Héros — page Compte et réglages : thème, langue, support, version */
 
-const APP_VERSION = "1.6.0";
+const APP_VERSION = "1.7.0";
 
 /* ---------- Thème ---------- */
 const Theme = {
@@ -3914,7 +3928,8 @@ function accountSection() {
 function viewSettings() {
   const t = Theme.get();
   const themeOpt = (k, n, d) => `<button class="theme-opt ${t === k ? "on" : ""}" data-a="setTheme" data-v="${k}" aria-pressed="${t === k}"><span class="swatch sw-${k}"><i></i><i></i><i></i></span><b>${n}</b><span class="mute small">${d}</span></button>`;
-  const langs = [["fr", "Français", true], ["en", "English", false], ["de", "Deutsch", false], ["es", "Español", false]];
+  const multi = typeof window !== "undefined" && window.FORGE_PWA;
+  const langs = [[K("fr"), "Français", multi || LANG === "fr"], [K("en"), "English", multi], [K("de"), "Deutsch", false], [K("es"), "Español", false]];
   return `<header class="topbar">
     <button class="icon-btn" data-a="home" aria-label="Retour">${ICON.back}</button>
     <div class="tb-title"><strong>Compte et réglages</strong><span class="eyebrow">Forge des Héros ${APP_VERSION}</span></div>
@@ -3927,8 +3942,8 @@ function viewSettings() {
           <div class="theme-grid">${themeOpt("dark", "Sombre", "Taverne à la chandelle")}${themeOpt("light", "Clair", "Parchemin de jour")}${themeOpt("system", "Automatique", "Suit votre appareil")}</div>
         </section>
         <section class="panel set-sec"><h3 class="ph">Langue</h3>
-          <div class="chips">${langs.map(([k, n, ok]) => `<button class="chip ${k === "fr" ? "on" : ""}" ${ok ? "" : 'aria-disabled="true"'} data-a="${ok ? "noop" : "langSoon"}">${n}${ok ? "" : "<small>bientôt</small>"}</button>`).join("")}</div>
-          <p class="mute small">L’anglais, l’allemand et l’espagnol sont en préparation.</p>
+          <div class="chips">${langs.map(([k, n, ok]) => `<button class="chip ${k === LANG ? "on" : ""}" ${ok ? "" : 'aria-disabled="true"'} data-a="${ok ? "setLang" : "langSoon"}" data-v="${k}" aria-pressed="${k === LANG}">${n}${ok ? "" : `<small>${k === "en" ? "app installée" : "bientôt"}</small>`}</button>`).join("")}</div>
+          <p class="mute small">L’allemand et l’espagnol sont en préparation.</p>
         </section>
         <section class="panel set-sec"><h3 class="ph">Support</h3>
           <p class="mute small">Votre message arrive directement chez le créateur de l’app.</p>
@@ -3965,7 +3980,13 @@ async function settingsAct(a, d) {
   switch (a) {
     case "openSettings": S.view = "account"; S.acc = { mode: "in" }; S.modal = null; window.scrollTo(0, 0); return true;
     case "setTheme": Theme.set(d.v); return true;
-    case "langSoon": toast("Cette langue arrive bientôt."); return false;
+    case "langSoon": toast(d.v === "en" ? "L’anglais est disponible dans l’app installée." : "Cette langue arrive bientôt."); return false;
+    case "setLang": {
+      if (d.v === LANG) return false;
+      try { localStorage.setItem("forge-lang", d.v); } catch (e) { }
+      location.href = LANG === "fr" ? "en/" : "../";
+      return false;
+    }
     case "noop": return false;
     case "accOutAsk": S.acc = Object.assign({}, S.acc, { confirmOut: true }); return true;
     case "accOutCancel": S.acc = { mode: "in" }; return true;
