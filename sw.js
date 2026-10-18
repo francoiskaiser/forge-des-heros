@@ -1,5 +1,5 @@
 /* Forge des Héros — service worker : fonctionne hors ligne après la première visite */
-const VERSION = "forge-v3";
+const VERSION = "forge-v4";
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-maskable.png", "./apple-touch-icon.png", "./firebase-config.js"];
 
 self.addEventListener("install", (e) => {

@@ -4,8 +4,11 @@ Une seule fois, par le propriétaire de l'app. Environ 10 minutes. Gratuit (offr
 
 1. **Créer le projet** — console.firebase.google.com → *Créer un projet* → nom `forge-des-heros`
    → désactiver Google Analytics → *Créer*.
-2. **Connexion anonyme** — menu *Créer* (Build) → *Authentication* → *Commencer* →
-   onglet *Sign-in method* → *Anonyme* → activer → *Enregistrer*.
+2. **Modes de connexion** — menu *Créer* (Build) → *Authentication* → *Commencer* →
+   onglet *Sign-in method*. Activez :
+   - **Anonyme** (utilisé avant connexion) ;
+   - **Adresse e-mail/Mot de passe** (première option seulement) ;
+   - **Google** (choisissez votre e-mail comme adresse d'assistance).
 3. **Autoriser votre site** — toujours dans *Authentication* → onglet *Paramètres* →
    *Domaines autorisés* → *Ajouter un domaine* → `VOTRE-PSEUDO.github.io`.
 4. **Base de données** — *Créer* → *Firestore Database* → *Créer une base de données* →
