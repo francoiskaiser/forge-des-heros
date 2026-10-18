@@ -1,6 +1,6 @@
 # Historique des versions — Forge des Héros
 
-Chaque version correspond à un « tag » Git. Pour revenir en arrière, voir la section en bas.
+Chaque version correspond à un commit Git dont le message commence par son numéro. Pour revenir en arrière, voir la section en bas.
 
 ## 1.6.0 — 18 octobre 2026
 - Page **Compte et réglages** (bouton en haut à droite de l'accueil).
