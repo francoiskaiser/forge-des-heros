@@ -2,6 +2,12 @@
 
 Chaque version correspond à un commit Git dont le message commence par son numéro. Pour revenir en arrière, voir la section en bas.
 
+## 1.8.0 — 19 octobre 2026
+- **Contenu maison partagé par l'aventure** : sous-classes, historiques, dons, sorts et objets à ajouter depuis l'onglet Aventure d'une fiche ou l'écran du MJ. Ils apparaissent dans le créateur et sur les fiches de tous les membres (nouvelles règles Firestore nécessaires).
+- **Bestiaire du SRD 5.2** dans l'écran du MJ : 330+ créatures en français, recherche, blocs de statistiques avec jets cliquables, ajout direct au combat (PV moyens ou lancés).
+- **Objets magiques** du SRD dans l'inventaire : recherche, description, harmonisation (3 maximum).
+- **109 sorts du SRD ajoutés** (Maléfice, Châtiment ardent, Orbe chromatique, Appel de familier…) : 341 sorts au total.
+
 ## 1.7.1 — 18 octobre 2026
 - Champ **Divinité ou foi** dans l'identité du personnage (mis en avant pour les clercs et les paladins), visible dans les notes et par le MJ.
 

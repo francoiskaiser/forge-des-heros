@@ -29,6 +29,24 @@ service cloud.firestore {
         || (resource.data.get('claim', '') != '' && request.resource.data.get('claimProof', '') == resource.data.claim
             && request.resource.data.gm == request.auth.uid));
 
+      // Contenu maison : lu par tous ceux qui ont le code ; modifiable par son auteur ou le MJ
+      match /homebrew/{hid} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null
+          && exists(/databases/$(database)/documents/adventures/$(code))
+          && request.resource.data.by == request.auth.uid
+          && request.resource.data.n is string && request.resource.data.n.size() <= 120
+          && request.resource.data.d is string && request.resource.data.d.size() <= 6000
+          && request.resource.data.type in ['sub', 'bg', 'feat', 'spell', 'item'];
+        allow update: if request.auth != null
+          && (resource.data.by == request.auth.uid || get(/databases/$(database)/documents/adventures/$(code)).data.gm == request.auth.uid)
+          && request.resource.data.by == resource.data.by
+          && request.resource.data.n is string && request.resource.data.n.size() <= 120
+          && request.resource.data.d is string && request.resource.data.d.size() <= 6000;
+        allow delete: if request.auth != null
+          && (resource.data.by == request.auth.uid || get(/databases/$(database)/documents/adventures/$(code)).data.gm == request.auth.uid);
+      }
+
       match /members/{memberId} {
         allow read: if request.auth != null;
         allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;

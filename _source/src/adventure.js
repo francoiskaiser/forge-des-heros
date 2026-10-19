@@ -40,6 +40,7 @@ const Live = {
     this.code = code;
     this.unsub.push(FB.adv(code).onSnapshot((d) => { this.doc = d.exists ? d.data() : null; liveRender(); }, () => { }));
     this.unsub.push(FB.members(code).onSnapshot((q) => { this.members = q.docs.map((d) => ({ id: d.id, ...d.data() })); liveRender(); }, () => { }));
+    if (typeof HB !== "undefined") this.unsub.push(FB.adv(code).collection("homebrew").onSnapshot((q) => { HB.set(code, q.docs.map((d) => d.data()), this.doc && this.doc.name); liveRender(); }, () => { }));
   },
   stop() { this.unsub.forEach((u) => u()); this.unsub = []; this.code = null; this.doc = null; this.members = []; },
 };
@@ -93,7 +94,7 @@ function tabAdventure(ch) {
     <section class="panel"><div class="adv-head"><div><span class="eyebrow">Aventure</span><h3 class="ph">${esc(doc ? doc.name : "Chargement…")}</h3></div><span class="code-chip">${esc(ch.adv)}</span></div>
       <p class="lbl">Le groupe</p>
       <div class="party-mini">${mem.length ? mem.map(({ m, s }) => `<div class="pm ${m.charId === ch.id ? "me" : ""}"><div class="pm-top"><b>${esc(m.name)}</b><span class="mute small">${CLASSES[m.b.cls] ? CLASSES[m.b.cls].n : ""} ${m.b.level}</span></div>${hpBar(m.p.hp, s.hpMax)}<span class="mute small">${m.p.hp}/${s.hpMax} PV${m.p.cond && m.p.cond.length ? " · " + m.p.cond.map((x) => esc(COND_L[x] || x)).join(", ") : ""}</span></div>`).join("") : '<p class="mute small">Personne pour l’instant.</p>'}</div>
-      <div class="row-btns"><button class="btn small ghost danger" data-a="advLeave">Quitter l’aventure</button></div>
+      <div class="row-btns"><button class="btn small" data-a="hbOpen" data-code="${esc(ch.adv)}">Contenu maison${HB.defs(ch.adv).length ? " (" + HB.defs(ch.adv).length + ")" : ""}</button><button class="btn small ghost danger" data-a="advLeave">Quitter l’aventure</button></div>
     </section>
     <section class="panel"><h3 class="ph">Initiative</h3>
       ${ord.list.length ? `<p class="mute small">Round ${ord.round}</p><ol class="init-ro">${ord.list.map((e, i) => `<li class="${i === ord.turn ? "now" : ""} ${e.kind}"><span class="iv">${e.v}</span><b>${esc(e.name)}</b>${i === ord.turn ? '<span class="turn-tag">à son tour</span>' : ""}</li>`).join("")}</ol>` : '<p class="mute small">Le MJ n’a pas encore lancé de combat.</p>'}
@@ -117,15 +118,15 @@ function viewGM() {
   Live.watch(code);
   const doc = Live.doc;
   if (doc && doc.gm !== FB.uid) return `<header class="topbar"><button class="icon-btn" data-a="home" aria-label="Retour">${ICON.back}</button><div class="tb-title"><strong>Accès refusé</strong></div></header><main class="sheet"><p class="mute">Seul le maître du jeu qui a créé cette aventure peut ouvrir cet écran, depuis l’appareil où il l’a créée.</p></main>`;
-  const tabs = [["groupe", "Groupe"], ["init", "Initiative"], ["notes", "Notes"]];
-  const body = { groupe: gmParty, init: gmInit, notes: gmNotes }[S.gmTab || "groupe"](doc);
+  const tabs = [["groupe", "Groupe"], ["init", "Initiative"], ["bestiaire", "Bestiaire"], ["notes", "Notes"]];
+  const body = { groupe: gmParty, init: gmInit, bestiaire: gmBestiary, notes: gmNotes }[S.gmTab || "groupe"](doc);
   return `<header class="topbar">
     <button class="icon-btn" data-a="home" aria-label="Retour">${ICON.back}</button>
     <div class="tb-title"><strong>${esc(doc ? doc.name : "Chargement…")}</strong><span class="eyebrow">Écran du maître du jeu</span></div>
     <button class="code-chip big" data-a="copyCode" title="Copier le code">${esc(code)}</button>
   </header>
   <main class="sheet">
-    <nav class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" class="tab ${(S.gmTab || "groupe") === k ? "on" : ""}" data-a="gmTab" data-v="${k}">${n}</button>`).join("")}</nav>
+    <nav class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" class="tab ${(S.gmTab || "groupe") === k ? "on" : ""}" data-a="gmTab" data-v="${k}">${n}</button>`).join("")}<button class="tab" data-a="hbOpen" data-code="${esc(code)}">Contenu maison${HB.defs(code).length ? " (" + HB.defs(code).length + ")" : ""}</button></nav>
     <section class="tab-body">${body}</section>
   </main>`;
 }
@@ -145,7 +146,7 @@ function gmParty() {
       <div class="pc-stats"><div><span class="lbl">CA</span><b>${s.ac}</b></div><div><span class="lbl">Init.</span><b>${sg(s.init)}</b></div><div><span class="lbl">Perc.</span><b>${10 + s.perc}</b></div><div><span class="lbl">Vit.</span><b>${fmtM(s.speed)}</b></div>${s.casting ? `<div><span class="lbl">DD</span><b>${s.casting.dc}</b></div>` : ""}</div>
       ${down ? `<p class="pc-alert">À terre · réussites ${p.ds ? p.ds.s : 0}/3 · échecs ${p.ds ? p.ds.f : 0}/3</p>` : ""}
       ${p.cond && p.cond.length ? `<div class="pc-cond">${p.cond.map((x) => `<span>${esc(COND_L[x] || x)}</span>`).join("")}</div>` : ""}
-      ${p.conc && SPELLS[p.conc] ? `<p class="pc-conc">Concentration : ${SPELLS[p.conc].n}</p>` : ""}
+      ${p.conc && SPELLS[p.conc] ? `<p class="pc-conc">Concentration : ${esc(SPELLS[p.conc].n)}</p>` : ""}
       ${slots ? `<div class="pc-slots">${slots}</div>` : ""}
       <button class="btn small ghost" data-a="gmDetail" data-id="${esc(m.id)}">Voir la fiche</button>
     </article>`;
@@ -157,8 +158,8 @@ function gmDetailModal(m) {
   if (!s) return "<p>Fiche illisible.</p>";
   const b = m.b, p = m.p;
   const byLv = {};
-  s.spells.forEach((x) => (byLv[x.l] = byLv[x.l] || []).push(x.n));
-  return `<h3>${esc(b.name)}</h3><p class="mute">${SPECIES[b.species].n} · ${CLASSES[b.cls].n} ${b.level}${s.sub ? " · " + esc(s.sub) : ""} · ${esc(ALIGN_L[b.align] || b.align)}</p>
+  s.spells.forEach((x) => (byLv[x.l] = byLv[x.l] || []).push(esc(x.n)));
+  return `<h3>${esc(b.name)}</h3><p class="mute">${SPECIES[b.species].n} · ${CLASSES[b.cls].n} ${b.level}${BACKGROUNDS[b.bg] ? " · " + esc(BACKGROUNDS[b.bg].n) : ""}${s.sub ? " · " + esc(s.sub) : ""} · ${esc(ALIGN_L[b.align] || b.align)}</p>
     <div class="ro-abil">${ABK.map((k) => { const sv = s.saves.find((x) => x.k === k); return `<div><span class="lbl">${ABIL[k].s}</span><b>${sg(s.m[k])}</b><small>${s.ab[k]} · JS ${sg(sv.v)}${sv.pr ? "●" : ""}</small></div>`; }).join("")}</div>
     <dl class="facts"><div><dt>PV</dt><dd>${p.hp}/${s.hpMax}${p.temp ? " (+" + p.temp + " temp.)" : ""} · dés de vie ${b.level - (p.hdUsed || 0)}/${b.level}</dd></div>
       <div><dt>Défense</dt><dd>CA ${s.ac} (${esc(s.acNote)}) · initiative ${sg(s.init)} · vitesse ${fmtM(s.speed)}</dd></div>
@@ -188,7 +189,7 @@ function gmInit(doc) {
     if (e.kind === "monstre") hp = `<span class="ihp">${e.hp}/${e.max}</span>${hpBar(e.hp, e.max)}<div class="ihp-btns"><button class="mini dmg" data-a="monHp" data-id="${e.id}" data-d="-1" aria-label="Dégâts">−</button><input class="mon-amt" id="mon-${e.id}" type="number" inputmode="numeric" placeholder="PV"><button class="mini heal" data-a="monHp" data-id="${e.id}" data-d="1" aria-label="Soins">+</button></div>`;
     return `<li class="irow ${i === ord.turn ? "now" : ""} ${e.kind} ${e.kind === "monstre" && e.hp <= 0 ? "dead" : ""}">
       <div class="iv-ctl"><button class="mini" data-a="initAdj" data-id="${e.id}" data-d="1" aria-label="Augmenter">▲</button><span class="iv">${e.v}</span><button class="mini" data-a="initAdj" data-id="${e.id}" data-d="-1" aria-label="Diminuer">▼</button></div>
-      <div class="i-main"><b>${esc(e.name)}</b>${e.kind === "monstre" ? `<span class="mute small">CA ${e.ac}</span>` : ""}<div class="i-hp">${hp}</div></div>
+      <div class="i-main"><b>${esc(e.name)}</b>${e.kind === "monstre" ? `<span class="mute small">CA ${e.ac}${e.mk ? ` · <button class="linkish" data-a="monView" data-k="${esc(e.mk)}">voir la fiche</button>` : ""}</span>` : ""}<div class="i-hp">${hp}</div></div>
       <button class="icon-btn" data-a="initDel" data-id="${e.id}" aria-label="Retirer">${ICON.close}</button>
     </li>`;
   }).join("");
@@ -200,6 +201,7 @@ function gmInit(doc) {
       <button class="btn" data-a="initParty">${ICON.d20} Lancer l’initiative du groupe</button>
       <p class="mute small">Lance d20 + initiative pour chaque personnage du groupe et remplace leurs entrées.</p>
       <h4>Ajouter des monstres</h4>
+      <p class="mute small">Depuis le <button class="linkish" data-a="gmTab" data-v="bestiaire">bestiaire du SRD</button> (statistiques complètes), ou à la main :</p>
       <label class="field"><span>Nom</span><input id="monName" placeholder="Ex. Gobelin"></label>
       <div class="mon-grid">
         <label class="field"><span>Nombre</span><input id="monN" type="number" inputmode="numeric" value="1" min="1" max="20"></label>
@@ -229,6 +231,8 @@ async function saveInit(mutator) {
 function sortedIds(it) { return it.list.slice().sort((a, b) => b.v - a.v || (b.dex || 0) - (a.dex || 0)).map((e) => e.id); }
 
 async function advAct(a, d, el) {
+  if (typeof hbAct === "function" && (await hbAct(a, d, el))) return true;
+  if (typeof srdAct === "function" && (await srdAct(a, d, el))) return true;
   if (typeof accAct === "function" && (await accAct(a, d, el))) return true;
   const ch = curChar();
   switch (a) {
@@ -276,6 +280,8 @@ async function advAct(a, d, el) {
       try {
         const q = await FB.members(S.gmCode).get();
         await Promise.all(q.docs.map((x) => x.ref.delete()));
+        const h = await FB.adv(S.gmCode).collection("homebrew").get();
+        await Promise.all(h.docs.map((x) => x.ref.delete()));
         await FB.adv(S.gmCode).delete();
       } catch (e) { }
       GmList.remove(S.gmCode); Live.stop(); S.modal = null; S.view = "home"; toast("Aventure supprimée");
@@ -319,9 +325,13 @@ async function advAct(a, d, el) {
 function advModal(m) {
   const am = typeof accountModal === "function" ? accountModal(m) : null;
   if (am) return am;
+  const hm = typeof hbModal === "function" ? hbModal(m) : null;
+  if (hm) return hm;
+  const sm = typeof srdModal === "function" ? srdModal(m) : null;
+  if (sm) return sm;
   if (m.k === "advCreate") return `<h3>Nouvelle aventure</h3><p class="mute">Vous en serez le maître du jeu. Un code sera créé pour vos joueurs.</p><label class="field big"><span>Nom de l’aventure</span><input id="advName" placeholder="Ex. La Mine perdue" autocomplete="off"></label><div class="row-btns"><button class="btn primary" data-a="advCreate">Créer</button></div>`;
   if (m.k === "gmDetail") { const mm = Live.members.find((x) => x.id === m.id); return mm ? gmDetailModal(mm) : "<p>Ce personnage a quitté le groupe.</p>"; }
-  if (m.k === "advDelete") return `<h3>Supprimer l’aventure ?</h3><p>Le groupe, l’initiative et vos notes seront effacés. Les fiches des joueurs restent sur leurs appareils.</p><div class="row-btns"><button class="btn dmgb" data-a="advDelete">Supprimer définitivement</button><button class="btn ghost" data-a="closeModal">Annuler</button></div>`;
+  if (m.k === "advDelete") return `<h3>Supprimer l’aventure ?</h3><p>Le groupe, l’initiative, le contenu maison et vos notes seront effacés. Les fiches des joueurs restent sur leurs appareils.</p><div class="row-btns"><button class="btn dmgb" data-a="advDelete">Supprimer définitivement</button><button class="btn ghost" data-a="closeModal">Annuler</button></div>`;
   return null;
 }
 

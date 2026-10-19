@@ -626,6 +626,77 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
 
 .deity-hint { margin: 0 0 10px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--ember); background: var(--emberbg); color: var(--ink); font-size: .9rem; }
 
+/* Contenu maison */
+.hb-tag { display: inline-block; margin-left: .45em; padding: .05em .5em; border-radius: 999px; font: 700 .64rem/1.5 var(--f-body); letter-spacing: .08em; text-transform: uppercase; color: var(--arc); background: var(--arcbg); vertical-align: middle; }
+.hb-page { max-width: 980px; }
+.hb-intro p { margin: 0 0 .4em; max-width: 70ch; }
+.hb-filter { margin: 14px 0; }
+.hb-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.hb-card { display: grid; gap: 6px; align-content: start; padding: 14px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); min-width: 0; }
+.hb-top { display: flex; align-items: baseline; gap: .6em; flex-wrap: wrap; }
+.hb-top b { font-size: 1.05rem; overflow-wrap: anywhere; }
+.hb-type { font-size: .68rem; text-transform: uppercase; letter-spacing: .1em; color: var(--arc); }
+.hb-desc { margin: 0; font-size: .92rem; color: var(--ink); overflow-wrap: anywhere; white-space: pre-line; }
+.hb-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.hb-foot .row-btns { margin: 0; }
+.hb-form { max-width: 760px; }
+.hb-form .chips { margin-bottom: 4px; }
+.hb-feat { padding: 10px 12px; margin-bottom: 10px; border: 1px dashed var(--line2); border-radius: 12px; }
+.hb-feat-top { display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; gap: 10px; align-items: end; }
+.hb-feat-top .icon-btn { margin-bottom: 12px; }
+.field select { background: var(--bg2); border: 1px solid var(--line2); border-radius: 9px; padding: .6em .75em; width: 100%; color: var(--ink); }
+.feat .hb-tag { margin-left: .6em; }
+
+/* Bestiaire */
+.mon-filters { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 12px; }
+.mon-list { display: grid; gap: 6px; margin-top: 10px; }
+.mon-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "n cr" "t v"; gap: 2px 12px; text-align: left; padding: 10px 12px; border-radius: 10px; background: var(--bg2); border: 1px solid var(--line); }
+.mon-row:hover { border-color: var(--ember); }
+.mon-row b { grid-area: n; overflow-wrap: anywhere; }
+.mon-row > .mute { grid-area: t; }
+.mon-cr { grid-area: cr; font-weight: 700; color: var(--ember2); white-space: nowrap; }
+.mon-vit { grid-area: v; font-size: .85rem; color: var(--mute); white-space: nowrap; }
+.modal:has(.statblock) { width: min(680px, calc(100vw - 24px)); }
+.statblock h3 { margin-bottom: 0; }
+.sb-sub { margin: 0 0 12px; font-style: italic; }
+.sb-vit { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 10px; }
+.sb-vit > div { display: grid; justify-items: center; gap: 2px; padding: 8px 4px; border-radius: 10px; background: var(--bg2); border: 1px solid var(--line); text-align: center; }
+.sb-vit b { font-size: 1.35rem; line-height: 1.1; }
+.sb-vit small { font-size: .74rem; color: var(--mute); overflow-wrap: anywhere; }
+.sb-speed { margin: 0 0 10px; }
+.sb-speed .lbl { margin-right: .5em; }
+.sb-roll { display: inline; padding: 0 .3em; border-radius: 6px; font: inherit; font-weight: 700; color: var(--ember2); background: var(--emberbg); border: 0; cursor: pointer; }
+.sb-roll:hover { background: var(--ember); color: var(--onember); }
+.sb-roll.dmg { color: var(--dmgink); background: var(--bloodbg); }
+.sb-roll.dmg:hover { background: var(--blood); color: var(--onember); }
+.sb-roll.big { font-size: 1.35rem; line-height: 1.1; }
+.sb-h { margin: 16px 0 6px; padding-bottom: 4px; border-bottom: 1px solid var(--ember); color: var(--ember2); font-family: var(--f-display); font-weight: 400; font-size: 1.15rem; }
+.sb-p { margin: 0 0 8px; line-height: 1.55; }
+.sb-facts > div { grid-template-columns: 130px 1fr; }
+.mon-add { display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; gap: 12px; align-items: end; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line2); }
+.mon-add .field { margin: 0; }
+.linkish { display: inline; padding: 0; border: 0; background: none; color: var(--ember2); text-decoration: underline; text-underline-offset: 2px; font: inherit; cursor: pointer; }
+
+/* Objets magiques */
+.mi-list { display: grid; gap: 6px; }
+.mi-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; text-align: left; padding: 9px 12px; border-radius: 10px; background: var(--bg2); border: 1px solid var(--line); }
+.mi-row:hover { border-color: var(--arc); }
+.mi-row b { overflow-wrap: anywhere; }
+.mi-row .mute { grid-column: 1; }
+.mi-plus { grid-row: 1 / span 2; grid-column: 2; align-self: center; color: var(--arc); }
+.mi-plus svg { width: 18px; height: 18px; }
+.item.magic .it-name b { color: var(--arc); }
+.it-open { text-align: left; background: none; border: 0; padding: 0; cursor: pointer; }
+.it-desc { grid-column: 1 / -1; padding: 10px 12px; border-radius: 10px; background: var(--bg2); font-size: .92rem; line-height: 1.55; }
+.eq.att { color: var(--arc); font-size: .95rem; }
+.eq.att.on { background: var(--arcbg); border-color: var(--arc); }
+@media (max-width: 560px) {
+  .mon-filters { grid-template-columns: minmax(0, 1fr); }
+  .sb-vit { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sb-facts > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .mon-add { grid-template-columns: minmax(0, 1fr); }
+}
+
 </style>
 </head>
 <body>
@@ -872,6 +943,8 @@ const FEATS = {
   initie: { n: "Magic Initiate", d: "You learn two cantrips and one level 1 spell from one list (Cleric, Druid, or Wizard). You can cast that spell once per Long Rest without a slot, or with your spell slots.", magic: true },
   sauvage: { n: "Savage Attacker", d: "Once per turn when you hit with a weapon, you can roll its damage dice twice and use either roll." },
   doue: { n: "Skillful", d: "You gain proficiency in three skills of your choice.", skills: 3 },
+  // Don général (niveau 4 et plus, à la place d’une amélioration de caractéristique)
+  lutteur: { n: "Grappler", cat: "general", ab: ["for", "dex"], d: "+1 to Strength or Dexterity (max 20). When you hit with an Unarmed Strike as part of the Attack action, you can both deal damage and grapple (once per turn). Advantage on attacks against a creature you're grappling, and moving it costs no extra movement if it's your size or smaller." },
 };
 
 /* ---------- Historiques ---------- */
@@ -1361,7 +1434,7 @@ const EPIC_BOONS = {
   voyage: { n: "Boon of Dimensional Travel", d: "After you take the Attack or Magic action, you can teleport up to 30 feet to a space you can see." },
   destin: { n: "Boon of Fate", d: "When a creature within 60 feet makes a D20 Test, you can roll 2d4 and add or subtract it. Regained on Initiative or a Short Rest." },
   offensive: { n: "Boon of Irresistible Offense", d: "Your Bludgeoning, Piercing, and Slashing damage ignores Resistance. On a natural 20, extra damage equal to the increased ability score." },
-  rappel: { n: "Boon of Spell Recall", d: "Once per Long Rest, you cast a prepared level 1–4 spell without expending a slot." },
+  rappel: { n: "Boon of Spell Recall", d: "When you cast a spell with a level 1–4 slot, roll 1d4: if the roll equals the slot's level, the slot isn't expended." },
   vision: { n: "Boon of Truesight", d: "You gain Truesight out to 60 feet." },
 };
 
@@ -1712,6 +1785,119 @@ Object.assign(SPELLS, {
   guerisongroupe: { n: "Mass Heal", l: 9, e: "abj", t: A, p: "60 feet", c: "V, S", du: "Instantaneous", cl: [CL], heal: "700", d: "You divide up to 700 HP among creatures you can see, who are also cured of several ailments." },
 });
 
+/* Forge des Héros — sorts du SRD 5.2 (Wizards of the Coast LLC, CC-BY-4.0), résumés non officiels. Fichier généré par tools/spells3.js. */
+Object.assign(SPELLS, {
+  elementalisme: {"n":"Elementalism","l":0,"e":"tra","t":"Action","p":"30 feet","c":"V, S","du":"Instantaneous","cl":["druide","ensorceleur","magicien"],"d":"Minor elemental effects in a 5-foot Cube: a breeze that closes a door, dust or a word traced in sand, harmless embers and scented smoke that light a candle, a fine mist, or a small sculpture of earth or ice."},
+  decharge_sorciere: {"n":"Sorcerous Burst","l":0,"e":"evo","t":"Action","p":"120 feet","c":"V, S","du":"Instantaneous","cl":["ensorceleur"],"atk":"dist","dmg":"1d8","ty":"force","sc":1,"d":"Ranged spell attack: 1d8 Acid, Cold, Fire, Lightning, Poison, Psychic or Thunder damage (your choice). On an 8, roll another d8 and add it (up to your spellcasting modifier in extra dice)."},
+  feu_follet_stellaire: {"n":"Starry Wisp","l":0,"e":"evo","t":"Action","p":"60 feet","c":"V, S","du":"Instantaneous","cl":["barde","druide"],"atk":"dist","dmg":"1d8","ty":"radiant","sc":1,"d":"Ranged spell attack: 1d8 Radiant damage. Until the end of your next turn, the target sheds Dim Light in a 10-foot radius and can't benefit from the Invisible condition."},
+  orbe_chromatique: {"n":"Chromatic Orb","l":1,"e":"evo","t":"Action","p":"90 feet","c":"V, S, M","du":"Instantaneous","cl":["ensorceleur","magicien"],"atk":"dist","dmg":"3d8","ty":"feu","up":"+1d8 and one more leap per level","d":"Ranged spell attack: 3d8 Acid, Cold, Fire, Lightning, Poison or Thunder damage (your choice). If two d8s match, the orb leaps to another target within 30 feet. Requires a 50 GP diamond."},
+  couleurs_dansantes: {"n":"Color Spray","l":1,"e":"ill","t":"Action","p":"15-foot Cone","c":"V, S, M","du":"Instantaneous","cl":["barde","ensorceleur","magicien"],"sv":"con","d":"A dazzling spray of light: each creature in the Cone succeeds on a Constitution save or has the Blinded condition until the end of your next turn."},
+  creation_destruction_eau: {"n":"Create or Destroy Water","l":1,"e":"tra","t":"Action","p":"30 feet","c":"V, S, M","du":"Instantaneous","cl":["clerc","druide"],"up":"+10 gallons or Cube +5 ft. per level","d":"Creates up to 10 gallons of clean water (or rain in a 30-foot Cube that douses flames), or destroys as much water, or the fog in a 30-foot Cube."},
+  detection_mal_bien: {"n":"Detect Evil and Good","l":1,"e":"div","t":"Action","p":"Self","c":"V, S","du":"10 minutes","co":true,"cl":["clerc","paladin"],"d":"You sense the location of Aberrations, Celestials, Elementals, Fey, Fiends and Undead within 30 feet, and any Hallow effect. Blocked by 1 foot of stone or a thin sheet of lead."},
+  detection_poison: {"n":"Detect Poison and Disease","l":1,"e":"div","t":"Action","p":"Self","c":"V, S, M","du":"10 minutes","co":true,"ri":true,"cl":["clerc","druide","paladin","rodeur"],"d":"You sense the location and kind of poisons, venomous creatures and magical contagions within 30 feet."},
+  murmures_dissonants: {"n":"Dissonant Whispers","l":1,"e":"enc","t":"Action","p":"60 feet","c":"V","du":"Instantaneous","cl":["barde"],"sv":"sag","dmg":"3d6","ty":"psy","up":"+1d6 per slot level","d":"Wisdom save: 3d6 Psychic damage and the target must use its Reaction to move as far from you as it can (half damage only on a success)."},
+  frappe_pieges: {"n":"Ensnaring Strike","l":1,"e":"inv","t":"Bonus Action, after hitting","p":"Self","c":"V","du":"1 minute","co":true,"cl":["rodeur"],"sv":"for","dmg":"1d6","ty":"perforant","up":"+1d6 per slot level","d":"After you hit, vines grasp the target: Strength save (Advantage if Large or bigger) or it is Restrained and takes 1d6 Piercing damage at the start of each of its turns. A Strength (Athletics) check against your DC frees it."},
+  appel_familier: {"n":"Find Familiar","l":1,"e":"inv","t":"1 hour","p":"10 feet","c":"V, S, M","du":"Instantaneous","ri":true,"cl":["magicien"],"d":"You gain a familiar (cat, owl, raven, rat, spider… any CR 0 Beast) that is a Celestial, Fey or Fiend. Telepathy within 100 feet, and you can see and hear through it. It can deliver your touch spells. 10 GP of incense."},
+  disque_flottant: {"n":"Floating Disk","l":1,"e":"inv","t":"Action","p":"30 feet","c":"V, S, M","du":"1 hour","ri":true,"cl":["magicien"],"d":"A 3-foot disk of force floats 3 feet off the ground and carries up to 500 pounds. It follows you, staying within 20 feet."},
+  malefice: {"n":"Hex","l":1,"e":"enc","t":"Bonus Action","p":"90 feet","c":"V, S, M","du":"1 hour","co":true,"cl":["occultiste"],"dmg":"1d6","ty":"necro","d":"You curse a creature: +1d6 Necrotic damage when you hit it with an attack, and Disadvantage on checks with one ability of your choice. If it drops to 0 HP, you can move the curse as a Bonus Action. Lasts longer at higher levels."},
+  fou_rire: {"n":"Hideous Laughter","l":1,"e":"enc","t":"Action","p":"30 feet","c":"V, S, M","du":"1 minute","co":true,"cl":["barde","occultiste","magicien"],"sv":"sag","up":"+1 target per slot level","d":"Wisdom save or the target is Prone and Incapacitated, laughing helplessly. It repeats the save at the end of each of its turns and when it takes damage (with Advantage)."},
+  couteau_glace: {"n":"Ice Knife","l":1,"e":"inv","t":"Action","p":"60 feet","c":"S, M","du":"Instantaneous","cl":["druide","ensorceleur","magicien"],"atk":"dist","dmg":"1d10","ty":"perforant","up":"+1d6 Cold per level","d":"Ranged spell attack: 1d10 Piercing damage. Hit or miss, the shard explodes: the target and each creature within 5 feet succeed on a Dexterity save or take 2d6 Cold damage."},
+  ecriture_illusoire: {"n":"Illusory Script","l":1,"e":"ill","t":"1 minute","p":"Touch","c":"S, M","du":"10 days","ri":true,"cl":["barde","occultiste","magicien"],"d":"A text only you and creatures you designate can read; to everyone else it looks unintelligible or says something else. 10 GP of ink."},
+  purification_nourriture: {"n":"Purify Food and Drink","l":1,"e":"tra","t":"Action","p":"10 feet","c":"V, S","du":"Instantaneous","ri":true,"cl":["clerc","druide","paladin"],"d":"Removes poison and rot from nonmagical food and drink in a 5-foot-radius Sphere."},
+  chatiment_ardent: {"n":"Searing Smite","l":1,"e":"evo","t":"Bonus Action, after hitting","p":"Self","c":"V","du":"1 minute","cl":["paladin"],"dmg":"1d6","ty":"feu","up":"+1d6 per slot level","d":"After a melee hit: +1d6 Fire damage. At the start of each of its turns, the target takes 1d6 Fire damage, then makes a Constitution save; a success ends the spell."},
+  fleche_acide: {"n":"Acid Arrow","l":2,"e":"evo","t":"Action","p":"90 feet","c":"V, S, M","du":"Instantaneous","cl":["magicien"],"atk":"dist","dmg":"4d4","ty":"acide","up":"+1d4 (initial and delayed) per level","d":"Ranged spell attack: 4d4 Acid damage, then 2d4 more at the end of its next turn. On a miss, half the initial damage only."},
+  messager_animal: {"n":"Animal Messenger","l":2,"e":"enc","t":"Action","p":"30 feet","c":"V, S, M","du":"24 hours","ri":true,"cl":["barde","druide","rodeur"],"up":"+48 hours per level","d":"A Tiny Beast carries a 25-word message to a place you have visited and a recipient you describe, traveling about 25 miles a day (50 if it flies)."},
+  verrou_arcanique: {"n":"Arcane Lock","l":2,"e":"abj","t":"Action","p":"Touch","c":"V, S, M","du":"Until dispelled","cl":["magicien"],"d":"Magically locks a door, window or chest. Only you, creatures you designate, or a password can open it. 25 GP of gold dust."},
+  aura_magique_arcaniste: {"n":"Arcanist's Magic Aura","l":2,"e":"ill","t":"Action","p":"Touch","c":"V, S, M","du":"24 hours","cl":["magicien"],"d":"Mask: spells treat a creature as a different creature type. False Aura: an object appears magical, nonmagical or of another school to detection spells. Permanent after 30 days."},
+  flamme_eternelle: {"n":"Continual Flame","l":2,"e":"evo","t":"Action","p":"Touch","c":"V, S, M","du":"Until dispelled","cl":["clerc","druide","magicien"],"d":"A heatless flame springs from an object: Bright Light in a 20-foot radius and Dim Light for 20 more feet. It can't be smothered. 50 GP of ruby dust."},
+  detection_pensees: {"n":"Detect Thoughts","l":2,"e":"div","t":"Action","p":"Self","c":"V, S, M","du":"1 minute","co":true,"cl":["barde","ensorceleur","magicien"],"sv":"sag","d":"You sense thinking minds within 30 feet. As a Magic action, you read one creature's surface thoughts; you can probe deeper (Wisdom save)."},
+  souffle_dragon: {"n":"Dragon's Breath","l":2,"e":"tra","t":"Bonus Action","p":"Touch","c":"V, S, M","du":"1 minute","co":true,"cl":["ensorceleur","magicien"],"sv":"dex","dmg":"3d6","ty":"feu","up":"+1d6 per slot level","d":"A willing creature can use a Magic action to exhale a 15-foot Cone of Acid, Cold, Fire, Lightning or Poison: Dexterity save, 3d6 damage (half on a success)."},
+  agrandir_retrecir: {"n":"Enlarge/Reduce","l":2,"e":"tra","t":"Action","p":"30 feet","c":"V, S, M","du":"1 minute","co":true,"cl":["barde","druide","ensorceleur","magicien"],"sv":"con","d":"Enlarge: the target grows one size, has Advantage on Strength checks and saves, and deals +1d4 weapon damage. Reduce: the opposite (Disadvantage, −1d4). Constitution save if unwilling."},
+  discours_captivant: {"n":"Enthrall","l":2,"e":"enc","t":"Action","p":"60 feet","c":"V, S","du":"1 minute","co":true,"cl":["barde","occultiste"],"sv":"sag","d":"Chosen creatures make a Wisdom save (automatic success if you're fighting them) or take a −10 penalty to Wisdom (Perception) checks and Passive Perception."},
+  detection_pieges: {"n":"Find Traps","l":2,"e":"div","t":"Action","p":"120 feet","c":"V, S","du":"Instantaneous","cl":["clerc","druide","rodeur"],"d":"You learn whether a trap is within range and line of sight, and its general nature, but not its exact location."},
+  lame_flamme: {"n":"Flame Blade","l":2,"e":"evo","t":"Bonus Action","p":"Self","c":"V, S, M","du":"10 minutes","co":true,"cl":["druide","ensorceleur"],"atk":"cac","dmg":"3d6","ty":"feu","up":"+1d6 per slot level","d":"A fiery blade in your free hand. As a Magic action, melee spell attack: 3d6 + your spellcasting modifier Fire damage. Bright Light in a 10-foot radius."},
+  doux_repos: {"n":"Gentle Repose","l":2,"e":"nec","t":"Action","p":"Touch","c":"V, S, M","du":"10 days","ri":true,"cl":["clerc","paladin","magicien"],"d":"A corpse is protected from decay and can't become Undead. These days don't count toward resurrection spell time limits."},
+  bourrasque: {"n":"Gust of Wind","l":2,"e":"evo","t":"Action","p":"60-foot Line","c":"V, S, M","du":"1 minute","co":true,"cl":["druide","rodeur","ensorceleur","magicien"],"sv":"for","d":"A 60-foot by 10-foot Line of wind: Strength save or pushed 15 feet. Moving toward you costs double. Disperses gas and puts out open flames."},
+  deverrouillage: {"n":"Knock","l":2,"e":"tra","t":"Action","p":"60 feet","c":"V","du":"Instantaneous","cl":["barde","ensorceleur","magicien"],"d":"Opens one lock, manacles or a stuck door. Suppresses Arcane Lock for 10 minutes. A loud knock is audible up to 300 feet away."},
+  localisation_animaux: {"n":"Locate Animals or Plants","l":2,"e":"div","t":"Action","p":"Self","c":"V, S, M","du":"Instantaneous","ri":true,"cl":["barde","druide","rodeur"],"d":"You learn the direction and distance to the closest Beast or plant of the named kind within 5 miles."},
+  localisation_objet: {"n":"Locate Object","l":2,"e":"div","t":"Action","p":"Self","c":"V, S, M","du":"10 minutes","co":true,"cl":["barde","clerc","druide","paladin","rodeur","magicien"],"d":"You sense the direction of a familiar object, or the nearest object of a given kind, within 1,000 feet. Blocked by lead."},
+  bouche_magique: {"n":"Magic Mouth","l":2,"e":"ill","t":"1 minute","p":"30 feet","c":"V, S, M","du":"Until dispelled","ri":true,"cl":["barde","magicien"],"d":"An object recites a 25-word message when a trigger you set occurs. 10 GP of jade dust."},
+  pointe_mentale: {"n":"Mind Spike","l":2,"e":"div","t":"Action","p":"120 feet","c":"S","du":"1 hour","co":true,"cl":["ensorceleur","occultiste","magicien"],"sv":"sag","dmg":"3d8","ty":"psy","up":"+1d8 per slot level","d":"Wisdom save: 3d8 Psychic damage (half on a success). On a failure, you know its location for the duration; it can't hide from you."},
+  force_fantasmagorique: {"n":"Phantasmal Force","l":2,"e":"ill","t":"Action","p":"60 feet","c":"V, S, M","du":"1 minute","co":true,"cl":["barde","ensorceleur","magicien"],"sv":"int","dmg":"2d8","ty":"psy","d":"Intelligence save or the target perceives an illusion (10-foot Cube) it believes is real. It can take 2d8 Psychic damage per turn from it. An Intelligence (Investigation) check sees through it."},
+  protection_poison: {"n":"Protection from Poison","l":2,"e":"abj","t":"Action","p":"Touch","c":"V, S","du":"1 hour","cl":["clerc","druide","paladin","rodeur"],"d":"Ends the Poisoned condition. For 1 hour: Advantage on saves against being Poisoned and Resistance to Poison damage."},
+  corde_enchantee: {"n":"Rope Trick","l":2,"e":"tra","t":"Action","p":"Touch","c":"V, S, M","du":"1 hour","cl":["magicien"],"d":"A rope rises to an Invisible extradimensional space that holds up to eight Medium creatures. Nothing can pass in or out except by the rope."},
+  voir_invisible: {"n":"See Invisibility","l":2,"e":"div","t":"Action","p":"Self","c":"V, S, M","du":"1 hour","cl":["barde","ensorceleur","magicien"],"d":"You see Invisible creatures and objects, and you can see into the Ethereal Plane."},
+  chatiment_lumineux: {"n":"Shining Smite","l":2,"e":"tra","t":"Bonus Action, after hitting","p":"Self","c":"V","du":"1 minute","co":true,"cl":["paladin"],"dmg":"2d6","ty":"radiant","up":"+1d6 per slot level","d":"After a melee hit: +2d6 Radiant damage. The target sheds Bright Light in a 5-foot radius, attacks against it have Advantage, and it can't benefit from the Invisible condition."},
+  croissance_epines: {"n":"Spike Growth","l":2,"e":"tra","t":"Action","p":"150 feet","c":"V, S, M","du":"10 minutes","co":true,"cl":["druide","rodeur"],"dmg":"2d4","ty":"perforant","d":"The ground in a 20-foot-radius Sphere sprouts camouflaged spikes: Difficult Terrain, and 2d4 Piercing damage for every 5 feet traveled."},
+  lien_protecteur: {"n":"Warding Bond","l":2,"e":"abj","t":"Action","p":"Touch","c":"V, S, M","du":"1 hour","cl":["clerc","paladin"],"d":"The target gains +1 to AC and saves and Resistance to all damage while within 60 feet of you; you take the same damage it takes. Two 50 GP platinum rings."},
+  animation_morts: {"n":"Animate Dead","l":3,"e":"nec","t":"1 minute","p":"10 feet","c":"V, S, M","du":"Instantaneous","cl":["clerc","magicien"],"up":"+2 Undead per level","d":"Bones or a corpse rise as a Skeleton or Zombie that you command (Bonus Action, 60 feet). Control lasts 24 hours; recast to keep it."},
+  clignotement: {"n":"Blink","l":3,"e":"tra","t":"Action","p":"Self","c":"V, S","du":"1 minute","cl":["ensorceleur","magicien"],"d":"At the end of each of your turns, roll 1d6: on a 4–6, you vanish to the Ethereal Plane until the start of your next turn."},
+  clairvoyance: {"n":"Clairvoyance","l":3,"e":"div","t":"10 minutes","p":"1 mile","c":"V, S, M","du":"10 minutes","co":true,"cl":["barde","clerc","ensorceleur","magicien"],"d":"An invisible sensor in a familiar or obvious location: you see or hear through it. 100 GP focus."},
+  creation_nourriture: {"n":"Create Food and Water","l":3,"e":"inv","t":"Action","p":"30 feet","c":"V, S","du":"Instantaneous","cl":["clerc","paladin"],"d":"Creates 45 pounds of bland but nourishing food and 30 gallons of fresh water, enough for fifteen people for 24 hours."},
+  forme_gazeuse: {"n":"Gaseous Form","l":3,"e":"tra","t":"Action","p":"Touch","c":"V, S, M","du":"1 hour","co":true,"cl":["ensorceleur","occultiste","magicien"],"up":"+1 target per slot level","d":"The target becomes mist: Fly Speed 10 feet (hover), Resistance to Bludgeoning, Piercing and Slashing, Advantage on Str, Dex and Con saves, and passes through cracks. It can't attack or cast spells."},
+  glyphe_garde: {"n":"Glyph of Warding","l":3,"e":"abj","t":"1 hour","p":"Touch","c":"V, S, M","du":"Until dispelled or triggered","cl":["barde","clerc","magicien"],"sv":"dex","dmg":"5d8","ty":"feu","up":"+1d8 per slot level","d":"A nearly invisible glyph triggers on a condition you set: explosive rune (Dexterity save, 5d8 Acid, Cold, Fire, Lightning or Thunder damage in 20 feet) or a stored spell. 200 GP of diamond."},
+  cercle_magique: {"n":"Magic Circle","l":3,"e":"abj","t":"1 minute","p":"10 feet","c":"V, S, M","du":"1 hour","cl":["clerc","paladin","occultiste","magicien"],"up":"+1 hour per level","d":"A 10-foot-radius Cylinder that chosen Celestials, Elementals, Fey, Fiends or Undead can't enter; they have Disadvantage against creatures inside. Can be reversed to trap them."},
+  image_majeure: {"n":"Major Image","l":3,"e":"ill","t":"Action","p":"120 feet","c":"V, S, M","du":"10 minutes","co":true,"cl":["barde","ensorceleur","occultiste","magicien"],"d":"A realistic illusion (20-foot Cube) with sound, smell and temperature. You move it as a Magic action. Permanent if cast at level 4 or higher."},
+  fusion_pierre: {"n":"Meld into Stone","l":3,"e":"tra","t":"Action","p":"Touch","c":"V, S","du":"8 hours","ri":true,"cl":["clerc","druide","rodeur"],"d":"You merge into stone, undetectable. You can cast spells on yourself. If the stone is destroyed, you are expelled and take 6d6 Force damage."},
+  antidetection: {"n":"Nondetection","l":3,"e":"abj","t":"Action","p":"Touch","c":"V, S, M","du":"8 hours","cl":["barde","rodeur","magicien"],"d":"A creature, object or place can't be targeted by Divination spells or perceived through scrying sensors. 25 GP of diamond dust."},
+  monture_fantome: {"n":"Phantom Steed","l":3,"e":"ill","t":"1 minute","p":"30 feet","c":"V, S","du":"1 hour","ri":true,"cl":["magicien"],"d":"A quasi-real horse with saddle appears: Speed 100 feet, it travels 13 miles an hour. It vanishes if it takes damage."},
+  protection_energie: {"n":"Protection from Energy","l":3,"e":"abj","t":"Action","p":"Touch","c":"V, S","du":"1 hour","co":true,"cl":["clerc","druide","rodeur","ensorceleur","magicien"],"d":"A willing creature gains Resistance to Acid, Cold, Fire, Lightning or Thunder damage (your choice)."},
+  delivrance_maledictions: {"n":"Remove Curse","l":3,"e":"abj","t":"Action","p":"Touch","c":"V, S","du":"Instantaneous","cl":["clerc","paladin","occultiste","magicien"],"d":"Ends all curses on a creature or object. A cursed item stays cursed, but Attunement ends so it can be removed."},
+  communication_distance: {"n":"Sending","l":3,"e":"div","t":"Action","p":"Unlimited","c":"V, S, M","du":"Instantaneous","cl":["barde","clerc","magicien"],"d":"You send a 25-word message to a known creature at any distance; it can reply at once. 5% failure to another plane."},
+  communication_plantes: {"n":"Speak with Plants","l":3,"e":"tra","t":"Action","p":"Self","c":"V, S","du":"10 minutes","cl":["barde","druide","rodeur"],"d":"Plants in a 30-foot Emanation tell you what they've sensed in the past day, follow simple commands, and you can create or remove plant-based Difficult Terrain."},
+  petite_hutte: {"n":"Tiny Hut","l":3,"e":"evo","t":"1 minute","p":"Self","c":"V, S, M","du":"8 hours","ri":true,"cl":["barde","magicien"],"d":"A 10-foot dome shelters you, comfortable and dry. Only creatures inside at casting can pass; spells of level 3 or lower can't get through."},
+  caresse_vampirique: {"n":"Vampiric Touch","l":3,"e":"nec","t":"Action","p":"Self","c":"V, S","du":"1 minute","co":true,"cl":["ensorceleur","occultiste","magicien"],"atk":"cac","dmg":"3d6","ty":"necro","up":"+1d6 per slot level","d":"Melee spell attack: 3d6 Necrotic damage and you regain half as HP. You can repeat it each turn as a Magic action."},
+  respiration_aquatique: {"n":"Water Breathing","l":3,"e":"tra","t":"Action","p":"30 feet","c":"V, S, M","du":"24 hours","ri":true,"cl":["druide","rodeur","ensorceleur","magicien"],"d":"Up to ten willing creatures can breathe underwater."},
+  marche_onde: {"n":"Water Walk","l":3,"e":"tra","t":"Action","p":"30 feet","c":"V, S, M","du":"1 hour","ri":true,"cl":["clerc","druide","rodeur","ensorceleur"],"d":"Up to ten creatures walk on water, mud, snow, quicksand or lava as if on solid ground."},
+  mur_vent: {"n":"Wind Wall","l":3,"e":"evo","t":"Action","p":"120 feet","c":"V, S, M","du":"1 minute","co":true,"cl":["druide","rodeur"],"sv":"for","dmg":"4d8","ty":"contondant","d":"A 50-foot wall of wind: Strength save, 4d8 Bludgeoning damage (half on a success). It blocks gases, small flyers and ordinary projectiles."},
+  charme_monstre: {"n":"Charm Monster","l":4,"e":"enc","t":"Action","p":"30 feet","c":"V, S","du":"1 hour","cl":["barde","druide","ensorceleur","occultiste","magicien"],"sv":"sag","up":"+1 target per slot level","d":"Wisdom save (Advantage if you're fighting it) or the creature is Charmed and Friendly until you or your allies harm it."},
+  contrainte: {"n":"Compulsion","l":4,"e":"enc","t":"Action","p":"30 feet","c":"V, S","du":"1 minute","co":true,"cl":["barde"],"sv":"sag","d":"Wisdom save or targets are Charmed: as a Bonus Action you choose a direction and they must move that way on their turn."},
+  invocation_elementaires_mineurs: {"n":"Conjure Minor Elementals","l":4,"e":"inv","t":"Action","p":"Self","c":"V, S","du":"10 minutes","co":true,"cl":["druide","magicien"],"dmg":"2d8","ty":"feu","up":"+1d8 per slot level","d":"Elemental spirits swirl in a 15-foot Emanation: your attacks deal +2d8 Acid, Cold, Fire or Lightning damage to creatures in it, and it is Difficult Terrain for your enemies."},
+  invocation_etres_sylvestres: {"n":"Conjure Woodland Beings","l":4,"e":"inv","t":"Action","p":"Self","c":"V, S","du":"10 minutes","co":true,"cl":["druide","rodeur"],"sv":"sag","dmg":"5d8","ty":"force","up":"+1d8 per slot level","d":"Nature spirits surround you (10-foot Emanation): a creature that enters or ends its turn there makes a Wisdom save, 5d8 Force damage (half on a success). Disengage as a Bonus Action."},
+  domination_bete: {"n":"Dominate Beast","l":4,"e":"enc","t":"Action","p":"60 feet","c":"V, S","du":"1 minute","co":true,"cl":["druide","rodeur","ensorceleur"],"sv":"sag","d":"Wisdom save or the Beast is Charmed and obeys your telepathic commands. It repeats the save when it takes damage. Lasts longer at higher levels."},
+  fabrication: {"n":"Fabricate","l":4,"e":"tra","t":"10 minutes","p":"120 feet","c":"V, S","du":"Instantaneous","cl":["magicien"],"d":"Turns raw materials into a finished product (bridge, rope, clothes) up to Large size, or Medium for metal and stone."},
+  chien_fidele: {"n":"Faithful Hound","l":4,"e":"inv","t":"Action","p":"30 feet","c":"V, S, M","du":"8 hours","cl":["magicien"],"sv":"dex","dmg":"4d8","ty":"force","d":"An invisible phantom hound barks if an intruder comes within 30 feet without the password. At the start of your turns, it bites an enemy within 5 feet: Dexterity save or 4d8 Force damage."},
+  insecte_geant: {"n":"Giant Insect","l":4,"e":"inv","t":"Action","p":"60 feet","c":"V, S","du":"10 minutes","co":true,"cl":["druide"],"d":"You summon a giant centipede, spider or wasp (Giant Insect stat block: AC 11 + level, 30 HP + 10 per level above 4). It acts right after you."},
+  terrain_hallucinatoire: {"n":"Hallucinatory Terrain","l":4,"e":"ill","t":"10 minutes","p":"300 feet","c":"V, S, M","du":"24 hours","cl":["barde","druide","occultiste","magicien"],"d":"Natural terrain in a 150-foot Cube looks like another kind: a field becomes a swamp, a cliff a gentle slope. Touch is unchanged."},
+  sanctuaire_prive: {"n":"Private Sanctum","l":4,"e":"abj","t":"10 minutes","p":"120 feet","c":"V, S, M","du":"24 hours","cl":["magicien"],"up":"+100 ft. per side per level","d":"An area (5- to 100-foot Cube) warded as you choose against sound, sight, Divination and teleportation."},
+  coffre_secret: {"n":"Secret Chest","l":4,"e":"inv","t":"Action","p":"Touch","c":"V, S, M","du":"Until dispelled","cl":["magicien"],"d":"You hide a chest and its contents on the Ethereal Plane and recall it as a Magic action using its miniature replica. 5,000 GP chest."},
+  sphere_vitriolique: {"n":"Vitriolic Sphere","l":4,"e":"evo","t":"Action","p":"150 feet","c":"V, S, M","du":"Instantaneous","cl":["ensorceleur","magicien"],"sv":"dex","dmg":"10d4","ty":"acide","up":"+2d4 per slot level","d":"A ball of acid bursts (20-foot Sphere): Dexterity save, 10d4 Acid damage then 5d4 more at the end of its next turn (half the initial damage only on a success)."},
+  bouclier_antivie: {"n":"Antilife Shell","l":5,"e":"abj","t":"Action","p":"Self","c":"V, S","du":"1 hour","co":true,"cl":["druide"],"d":"A 10-foot barrier around you keeps creatures other than Undead and Constructs from passing through or reaching you in melee."},
+  contact_autre_plan: {"n":"Contact Other Plane","l":5,"e":"div","t":"1 minute","p":"Self","c":"V","du":"1 minute","ri":true,"cl":["occultiste","magicien"],"dmg":"6d6","ty":"psy","d":"DC 15 Intelligence save: on a success, ask an otherworldly entity five questions (one-word answers). On a failure, 6d6 Psychic damage and Incapacitated until a Long Rest."},
+  contagion: {"n":"Contagion","l":5,"e":"nec","t":"Action","p":"Touch","c":"V, S","du":"7 days","cl":["clerc","druide"],"sv":"con","dmg":"11d8","ty":"necro","d":"Constitution save or 11d8 Necrotic damage and Poisoned, with Disadvantage on saves of a chosen ability. Three failures: it lasts 7 days."},
+  creation: {"n":"Creation","l":5,"e":"ill","t":"1 minute","p":"30 feet","c":"V, S, M","du":"Special","cl":["ensorceleur","magicien"],"up":"Cube +5 ft. per level","d":"You create a nonliving object (5-foot Cube) from shadow; its duration depends on the material (12 hours for stone, 1 minute for gold)."},
+  sanctification: {"n":"Hallow","l":5,"e":"abj","t":"24 hours","p":"Touch","c":"V, S, M","du":"Until dispelled","cl":["clerc"],"d":"A 60-foot-radius area that chosen creature types can't enter, with an extra effect (courage, light, darkness, silence, tongues, resistance or vulnerability to a damage type…). 1,000 GP of incense."},
+  double_illusoire: {"n":"Mislead","l":5,"e":"ill","t":"Action","p":"Self","c":"S","du":"1 hour","co":true,"cl":["barde","occultiste","magicien"],"d":"You turn Invisible and an illusory double appears. You move it, make it speak, and sense through it. Invisibility ends if you attack or cast a spell."},
+  lien_planaire: {"n":"Planar Binding","l":5,"e":"abj","t":"1 hour","p":"60 feet","c":"V, S, M","du":"24 hours","cl":["barde","clerc","druide","occultiste","magicien"],"sv":"cha","d":"Charisma save or a Celestial, Elemental, Fey or Fiend is bound to serve you and follow your commands. Lasts longer at higher levels. 1,000 GP jewel."},
+  reincarnation: {"n":"Reincarnate","l":5,"e":"nec","t":"1 hour","p":"Touch","c":"V, S, M","du":"Instantaneous","cl":["druide"],"d":"A Humanoid dead no longer than 10 days returns in a new body of a random species (1d10). 1,000 GP of oils."},
+  invocation_dragon: {"n":"Summon Dragon","l":5,"e":"inv","t":"Action","p":"60 feet","c":"V, S, M","du":"1 hour","co":true,"cl":["magicien"],"d":"A Draconic Spirit (AC 14 + level, 50 HP + 10 per level above 5, Fly 60 feet) fights for you with bites and a breath weapon. It acts right after you."},
+  lien_telepathique: {"n":"Telepathic Bond","l":5,"e":"div","t":"Action","p":"30 feet","c":"V, S, M","du":"1 hour","ri":true,"cl":["barde","magicien"],"d":"Up to eight willing creatures communicate telepathically at any distance on the same plane."},
+  invocation_fee: {"n":"Conjure Fey","l":6,"e":"inv","t":"Action","p":"60 feet","c":"V, S","du":"10 minutes","co":true,"cl":["druide"],"atk":"cac","dmg":"3d12","ty":"psy","up":"+1d12 per level","d":"A fey spirit appears and attacks (melee spell attack): 3d12 + your spellcasting modifier Psychic damage, and the target is Frightened. Teleport it 30 feet as a Bonus Action to attack again."},
+  contingence: {"n":"Contingency","l":6,"e":"abj","t":"10 minutes","p":"Self","c":"V, S, M","du":"10 days","cl":["magicien"],"d":"You pair a spell of level 5 or lower that can target you with a trigger; it takes effect as soon as the trigger occurs. 1,500 GP statuette."},
+  interdiction: {"n":"Forbiddance","l":6,"e":"abj","t":"10 minutes","p":"Touch","c":"V, S, M","du":"1 day","ri":true,"cl":["clerc"],"dmg":"5d10","ty":"radiant","d":"A large area is warded against teleportation and planar travel. Chosen creature types that enter or start their turn there take 5d10 Radiant or Necrotic damage. 1,000 GP of ruby dust."},
+  sphere_glaciale: {"n":"Freezing Sphere","l":6,"e":"evo","t":"Action","p":"300 feet","c":"V, S, M","du":"Instantaneous","cl":["ensorceleur","magicien"],"sv":"con","dmg":"10d6","ty":"froid","up":"+1d6 per slot level","d":"A frigid globe explodes (60-foot Sphere): Constitution save, 10d6 Cold damage (half on a success). Freezes water. You can hold it to throw later."},
+  garde_et_protection: {"n":"Guards and Wards","l":6,"e":"abj","t":"1 hour","p":"Touch","c":"V, S, M","du":"24 hours","cl":["barde","magicien"],"d":"Wards a building: fog-filled corridors, locked and hidden doors, webbed stairs, and an extra effect of your choice. 10 GP silver rod."},
+  convocation_instantanee: {"n":"Instant Summons","l":6,"e":"inv","t":"1 minute","p":"Touch","c":"V, S, M","du":"Until dispelled","ri":true,"cl":["magicien"],"d":"You mark an object of 10 pounds or less; crushing the sapphire brings it to your hand from anywhere. 1,000 GP sapphire."},
+  possession: {"n":"Magic Jar","l":6,"e":"nec","t":"1 minute","p":"Self","c":"V, S, M","du":"Until dispelled","cl":["magicien"],"sv":"cha","d":"Your soul moves into a container, from which it can try to possess a Humanoid within 100 feet (Charisma save). 500 GP container."},
+  glissement_terrain: {"n":"Move Earth","l":6,"e":"tra","t":"Action","p":"120 feet","c":"V, S, M","du":"2 hours","co":true,"cl":["druide","ensorceleur","magicien"],"d":"You reshape dirt, sand or clay in a 40-foot square: raise, dig, form a wall or pillar. Each change takes 10 minutes."},
+  allie_planaire: {"n":"Planar Ally","l":6,"e":"inv","t":"10 minutes","p":"60 feet","c":"V, S","du":"Instantaneous","cl":["clerc"],"d":"An entity you know sends a Celestial, Elemental or Fiend; it performs a service in exchange for negotiated payment."},
+  illusion_programmee: {"n":"Programmed Illusion","l":6,"e":"ill","t":"Action","p":"120 feet","c":"V, S, M","du":"Until dispelled","cl":["barde","magicien"],"d":"An illusion (30-foot Cube) up to 5 minutes long plays when a trigger occurs, then resets after 10 minutes. 25 GP of jade dust."},
+  voyage_plantes: {"n":"Transport via Plants","l":6,"e":"inv","t":"Action","p":"10 feet","c":"V, S","du":"1 minute","cl":["druide"],"d":"A large plant becomes a passage to another plant you've seen, at any distance on the same plane."},
+  mur_epines: {"n":"Wall of Thorns","l":6,"e":"inv","t":"Action","p":"120 feet","c":"V, S, M","du":"10 minutes","co":true,"cl":["druide"],"sv":"dex","dmg":"7d8","ty":"perforant","up":"+1d8 per slot level","d":"A wall of thorny brush (60 feet long or a 20-foot circle): Dexterity save, 7d8 Piercing damage (half on a success). Moving through costs 4 times the movement and deals 7d8 Slashing."},
+  marche_vent: {"n":"Wind Walk","l":6,"e":"tra","t":"1 minute","p":"30 feet","c":"V, S, M","du":"8 hours","cl":["druide"],"d":"You and up to ten creatures become clouds: Fly Speed 300 feet, Resistance to physical damage. Reverting takes 1 minute."},
+  invocation_celeste: {"n":"Conjure Celestial","l":7,"e":"inv","t":"Action","p":"90 feet","c":"V, S","du":"10 minutes","co":true,"cl":["clerc"],"sv":"dex","dmg":"6d12","ty":"radiant","heal":"4d12","up":"+1d12 per level","d":"A pillar of light (10-foot-radius Cylinder): each creature in it regains 4d12 + your spellcasting modifier HP, or makes a Dexterity save against 6d12 Radiant damage. Move it 30 feet on your turn."},
+  manoir_magnifique: {"n":"Magnificent Mansion","l":7,"e":"inv","t":"1 minute","p":"300 feet","c":"V, S, M","du":"24 hours","cl":["barde","magicien"],"d":"A door leads to a furnished extradimensional dwelling with a feast for a hundred and invisible servants. 15 GP miniature door."},
+  mirage_arcanique: {"n":"Mirage Arcane","l":7,"e":"ill","t":"10 minutes","p":"Sight","c":"V, S","du":"10 days","cl":["barde","druide","magicien"],"d":"Terrain up to 1 mile square looks and even feels like another kind: it can create or remove Difficult Terrain and add false structures."},
+  sequestre: {"n":"Sequester","l":7,"e":"tra","t":"Action","p":"Touch","c":"V, S, M","du":"Until dispelled","cl":["magicien"],"d":"A creature or object becomes Invisible and undetectable by Divination; a creature sleeps without aging until a condition you choose. 5,000 GP of gem dust."},
+  simulacre: {"n":"Simulacrum","l":7,"e":"ill","t":"12 hours","p":"Touch","c":"V, S, M","du":"Until dispelled","cl":["magicien"],"d":"You create a snow duplicate of a Beast or Humanoid: same statistics with half the HP, and it obeys you. 1,500 GP of ruby dust."},
+  antipathie_sympathie: {"n":"Antipathy/Sympathy","l":8,"e":"enc","t":"1 hour","p":"60 feet","c":"V, S, M","du":"10 days","cl":["barde","druide","magicien"],"sv":"sag","d":"An object or creature repels (Frightened) or attracts (Charmed) a chosen kind of creature that comes within 120 feet (Wisdom save)."},
+  embrouillamini: {"n":"Befuddlement","l":8,"e":"enc","t":"Action","p":"150 feet","c":"V, S, M","du":"Instantaneous","cl":["barde","druide","occultiste","magicien"],"sv":"int","dmg":"10d12","ty":"psy","d":"Intelligence save or 10d12 Psychic damage, and the target can't cast spells or take the Magic action (new save every 30 days). Half damage only on a success."},
+  clone: {"n":"Clone","l":8,"e":"nec","t":"1 hour","p":"Touch","c":"V, S, M","du":"Instantaneous","cl":["magicien"],"d":"An inert duplicate grows in 120 days; if the creature dies, its soul moves into it. 1,000 GP diamond and 2,000 GP vessel."},
+  eloquence: {"n":"Glibness","l":8,"e":"enc","t":"Action","p":"Self","c":"V","du":"1 hour","cl":["barde","occultiste"],"d":"You can replace your Charisma check rolls with 15, and magic that detects lies says you are truthful."},
+  tsunami: {"n":"Tsunami","l":8,"e":"inv","t":"1 minute","p":"1 mile","c":"V, S","du":"6 rounds","co":true,"cl":["druide"],"sv":"for","dmg":"6d10","ty":"contondant","d":"A 300-foot wall of water: Strength save, 6d10 Bludgeoning damage (half on a success). It moves 50 feet each turn and strikes again (5d10)."},
+  ennemi_subconscient: {"n":"Weird","l":9,"e":"ill","t":"Action","p":"120 feet","c":"V, S","du":"1 minute","co":true,"cl":["occultiste","magicien"],"sv":"sag","dmg":"10d10","ty":"psy","d":"Chosen creatures in a 30-foot Sphere make a Wisdom save: 10d10 Psychic damage and Frightened (half on a success). Each turn, another failure deals 5d10."},
+});
+
 /* Forge des Héros — moteur de règles (fonctions pures) */
 
 const mod = (s) => Math.floor((s - 10) / 2);
@@ -1739,7 +1925,7 @@ function newBuild() {
     skillsClass: [], skillsSpecies: [], skilled: [], skillsLore: [], skillPrimal: null, expertise: [],
     humanFeat: null, magic: { bg: { list: "clr", cant: [], spell: null, ab: "sag" }, human: { list: "clr", cant: [], spell: null, ab: "sag" } },
     opts: { style: null, style2: null, order: null, strike: null, dragon: null, mastery: [], inv: [], meta: [], prey: null, land: null, lore2: [], arcanum: {}, asis: {}, boon: { id: null, a: null } },
-    cant: [], prep: [], gear: { cls: "A", bg: "A" }, langs: [], align: "Neutral",
+    cant: [], prep: [], gear: { cls: "A", bg: "A" }, langs: [], align: "Neutral", subHb: null,
     details: { age: "", taille: "", divinite: "", apparence: "", personnalite: "", ideaux: "", liens: "", defauts: "", histoire: "" },
     created: Date.now(),
   };
@@ -1756,12 +1942,17 @@ const MI_NAME = { clr: "Cleric", drd: "Druid", mag: "Wizard" };
 
 function featsOf(b) {
   const out = [];
-  if (b.bg) out.push({ id: BACKGROUNDS[b.bg].feat, src: "bg" });
+  if (b.bg && BACKGROUNDS[b.bg]) out.push({ id: BACKGROUNDS[b.bg].feat, src: "bg" });
   if (b.species === "humain" && b.humanFeat) out.push({ id: b.humanFeat, src: "human" });
-  return out;
+  activeAsiLevels(b).forEach((lv) => { const a = b.opts.asis[lv]; if (a && a.mode === "feat" && a.feat) out.push({ id: a.feat, src: "asi" + lv }); });
+  return out.filter((f) => FEATS[f.id]);
 }
 
 function subActive(b) { return b.level >= 3; }
+/* Sous-classe : celle du SRD, ou une sous-classe maison (b.subHb) */
+function hbSub(b) { const h = b.subHb && typeof HBSUB !== "undefined" && HBSUB[b.subHb]; return h && h.cls === b.cls ? h : null; }
+function srdSub(b) { return !b.subHb; }
+function subName(b) { const c = CLASSES[b.cls]; if (!c) return null; const h = hbSub(b); return h ? h.n : srdSub(b) ? c.sub.n : null; }
 
 function migrate(b) {
   const o = b.opts;
@@ -1772,6 +1963,8 @@ function migrate(b) {
   if (!o.arcanum) o.arcanum = {};
   ["style2", "strike", "dragon"].forEach((k) => { if (!(k in o)) o[k] = null; });
   if (b.details && !("divinite" in b.details)) b.details.divinite = "";
+  if (!("subHb" in b)) b.subHb = null;
+  if (b.hb && typeof hbRegister === "function") Object.values(b.hb).forEach((d) => hbRegister(d, false));
   return b;
 }
 function asiAt(b, lv) { if (!b.opts.asis[lv]) b.opts.asis[lv] = { mode: "2", a: null, b: null }; return b.opts.asis[lv]; }
@@ -1803,6 +1996,7 @@ function abilities(b) {
     if (!a) return;
     if (a.mode === "2" && a.a) out[a.a] = Math.min(20, out[a.a] + 2);
     if (a.mode === "11") { if (a.a) out[a.a] = Math.min(20, out[a.a] + 1); if (a.b && a.b !== a.a) out[a.b] = Math.min(20, out[a.b] + 1); }
+    if (a.mode === "feat" && a.feat && FEATS[a.feat] && a.a && (FEATS[a.feat].ab || []).includes(a.a)) out[a.a] = Math.min(20, out[a.a] + 1);
   });
   if (b.level >= 19 && b.opts.boon.a) out[b.opts.boon.a] = Math.min(30, out[b.opts.boon.a] + 1);
   if (b.level >= 20 && b.cls === "barbare") ["for", "con"].forEach((k) => (out[k] = Math.max(out[k], Math.min(25, out[k] + 4))));
@@ -1818,11 +2012,11 @@ function classSkillPool(b) {
 
 function profSkills(b) {
   const s = new Set();
-  if (b.bg) BACKGROUNDS[b.bg].skills.forEach((k) => s.add(k));
+  if (b.bg && BACKGROUNDS[b.bg]) BACKGROUNDS[b.bg].skills.forEach((k) => s.add(k));
   b.skillsClass.forEach((k) => s.add(k));
   b.skillsSpecies.forEach((k) => s.add(k));
   featsOf(b).forEach((f) => { if (f.id === "doue") b.skilled.forEach((k) => s.add(k)); });
-  if (b.cls === "barde" && b.level >= 3) b.skillsLore.forEach((k) => s.add(k));
+  if (b.cls === "barde" && b.level >= 3 && srdSub(b)) b.skillsLore.forEach((k) => s.add(k));
   if (b.cls === "barbare" && b.level >= 3 && b.skillPrimal) s.add(b.skillPrimal);
   return s;
 }
@@ -1892,8 +2086,9 @@ function grantedSpells(b) {
   if (c) {
     if (c.always) Object.entries(c.always).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: "Class", ab: c.sab, always: true, free: b.cls === "paladin" ? "smite" : b.cls === "rodeur" ? "ennemi" : null })); });
     if (b.cls === "druide") out.push({ id: "comanimaux", src: "Druidic", ab: c.sab, always: true });
-    if (subActive(b) && c.sub.spells) Object.entries(c.sub.spells).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: c.sub.n, ab: c.sab, always: true })); });
-    if (b.cls === "druide" && subActive(b) && b.opts.land) Object.entries(LAND_SPELLS[b.opts.land].s).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: "Circle of the Land", ab: c.sab, always: true })); });
+    const hs = hbSub(b), subSpells = hs ? hs.spells : srdSub(b) ? c.sub.spells : null;
+    if (subActive(b) && subSpells) Object.entries(subSpells).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: subName(b), ab: c.sab || "sag", always: true })); });
+    if (b.cls === "druide" && subActive(b) && srdSub(b) && b.opts.land) Object.entries(LAND_SPELLS[b.opts.land].s).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: "Circle of the Land", ab: c.sab, always: true })); });
   }
   if (sp) {
     const opt = sp.choice && b.sChoice && sp.choice.opts[b.sChoice];
@@ -1902,7 +2097,7 @@ function grantedSpells(b) {
     });
     if (sp.extraSpells) sp.extraSpells.forEach((id) => out.push({ id, src: sp.n, ab: b.sSpellAb, always: true }));
   }
-  if (b.cls === "barde" && b.level >= 6) b.opts.lore2.forEach((id) => out.push({ id, src: "Magical Discoveries", ab: "cha", always: true }));
+  if (b.cls === "barde" && b.level >= 6 && srdSub(b)) b.opts.lore2.forEach((id) => out.push({ id, src: "Magical Discoveries", ab: "cha", always: true }));
   if (b.cls === "occultiste") Object.entries(b.opts.arcanum).forEach(([lv, id]) => { if (id && b.level >= ARCANUM_LV[lv]) out.push({ id, src: "Mystic Arcanum", ab: "cha", always: true, free: "arc_" + lv }); });
   featsOf(b).forEach((f) => {
     if (f.id !== "initie") return;
@@ -1931,25 +2126,25 @@ function hpMax(b, ab) {
   let hp = Math.max(1, c.hd + cm);
   for (let l = 2; l <= b.level; l++) hp += Math.max(1, c.hd / 2 + 1 + cm);
   hp += speciesHPBonus(b);
-  if (b.cls === "ensorceleur" && b.level >= 3) hp += b.level;
+  if (b.cls === "ensorceleur" && b.level >= 3 && srdSub(b)) hp += b.level;
   return hp;
 }
 
 function resources(b, ab) {
-  const L = b.level, pb = pbOf(L), r = [];
+  const L = b.level, pb = pbOf(L), r = [], std = srdSub(b);
   const add = (k, n, max, reset, note) => max > 0 && r.push({ k, n, max, reset, note });
   switch (b.cls) {
-    case "barbare": add("rage", "Rage", L >= 17 ? 6 : L >= 12 ? 5 : L >= 6 ? 4 : L >= 3 ? 3 : 2, "short1", "+" + rageDmg(L) + " damage"); if (L >= 11) add("relent", "Relentless Rage (DC 10, +5 per use)", 1, "short"); if (L >= 14) add("intim", "Intimidating Presence", 1, "long"); if (L >= 15) add("persist", "Persistent Rage", 1, "long"); break;
+    case "barbare": add("rage", "Rage", L >= 17 ? 6 : L >= 12 ? 5 : L >= 6 ? 4 : L >= 3 ? 3 : 2, "short1", "+" + rageDmg(L) + " damage"); if (L >= 11) add("relent", "Relentless Rage (DC 10, +5 per use)", 1, "short"); if (L >= 14 && std) add("intim", "Intimidating Presence", 1, "long"); if (L >= 15) add("persist", "Persistent Rage", 1, "long"); break;
     case "barde": add("insp", "Bardic Inspiration", Math.max(1, mod(ab.cha)), L >= 5 ? "short" : "long", bardDie(L)); break;
     case "clerc": if (L >= 2) add("cd", "Channel Divinity", L >= 18 ? 4 : L >= 6 ? 3 : 2, "short1"); if (L >= 10) add("interv", "Divine Intervention", 1, "long"); break;
-    case "druide": if (L >= 2) add("ws", "Wild Shape", L >= 17 ? 4 : L >= 6 ? 3 : 2, "short1"); if (L >= 6 && b.opts.land) add("natrec", "Natural Recovery", 1, "long"); break;
+    case "druide": if (L >= 2) add("ws", "Wild Shape", L >= 17 ? 4 : L >= 6 ? 3 : 2, "short1"); if (L >= 6 && std && b.opts.land) add("natrec", "Natural Recovery", 1, "long"); break;
     case "guerrier": add("sw", "Second Wind", L >= 10 ? 4 : L >= 4 ? 3 : 2, "short1", "1d10+" + L); if (L >= 2) add("surge", "Action Surge", L >= 17 ? 2 : 1, "short"); if (L >= 9) add("indom", "Indomitable", L >= 17 ? 3 : L >= 13 ? 2 : 1, "long", "+" + L); break;
-    case "moine": if (L >= 2) add("focus", "Focus Points", L, "short"); if (L >= 2) add("meta", "Uncanny Metabolism", 1, "long"); if (L >= 6) add("whole", "Wholeness of Body", Math.max(1, mod(ab.sag)), "long"); break;
-    case "paladin": add("loh", "Lay on Hands (HP)", 5 * L, "long", "pool"); if (L >= 2) add("smite", "Free Divine Smite", 1, "long"); if (L >= 3) add("cd", "Channel Divinity", L >= 11 ? 3 : 2, "short1"); if (L >= 5) add("steed", "Free Find Steed", 1, "long"); if (L >= 20) add("nimbe", "Holy Nimbus", 1, "long"); break;
+    case "moine": if (L >= 2) add("focus", "Focus Points", L, "short"); if (L >= 2) add("meta", "Uncanny Metabolism", 1, "long"); if (L >= 6 && std) add("whole", "Wholeness of Body", Math.max(1, mod(ab.sag)), "long"); break;
+    case "paladin": add("loh", "Lay on Hands (HP)", 5 * L, "long", "pool"); if (L >= 2) add("smite", "Free Divine Smite", 1, "long"); if (L >= 3) add("cd", "Channel Divinity", L >= 11 ? 3 : 2, "short1"); if (L >= 5) add("steed", "Free Find Steed", 1, "long"); if (L >= 20 && std) add("nimbe", "Holy Nimbus", 1, "long"); break;
     case "rodeur": add("ennemi", "Free Hunter's Mark", L >= 17 ? 6 : L >= 13 ? 5 : L >= 9 ? 4 : L >= 5 ? 3 : 2, "long", L >= 20 ? "d10" : "d6"); if (L >= 10) add("tireless", "Tireless", Math.max(1, mod(ab.sag)), "long"); if (L >= 14) add("veil", "Nature’s Veil", Math.max(1, mod(ab.sag)), "long"); break;
     case "roublard": if (L >= 20) add("luck", "Stroke of Luck", 1, "short"); break;
-    case "ensorceleur": add("innate", "Innate Sorcery", 2, "long"); if (L >= 2) add("sp", "Sorcery Points", L, "long"); if (L >= 5) add("sorcrest", "Sorcerous Restoration", 1, "long"); if (L >= 14) add("wings", "Dragon Wings", 1, "long"); break;
-    case "occultiste": if (L >= 2) add("cunning", "Magical Cunning", 1, "long"); if (L >= 6) add("darkluck", "Dark One's Own Luck", Math.max(1, mod(ab.cha)), "long", "1d10"); if (L >= 9) add("patron", "Contact Patron", 1, "long"); if (L >= 14) add("hurl", "Hurl Through Hell", 1, "long", "8d10"); break;
+    case "ensorceleur": add("innate", "Innate Sorcery", 2, "long"); if (L >= 2) add("sp", "Sorcery Points", L, "long"); if (L >= 5) add("sorcrest", "Sorcerous Restoration", 1, "long"); if (L >= 14 && std) add("wings", "Dragon Wings", 1, "long"); break;
+    case "occultiste": if (L >= 2) add("cunning", "Magical Cunning", 1, "long"); if (L >= 6 && std) add("darkluck", "Dark One's Own Luck", Math.max(1, mod(ab.cha)), "long", "1d10"); if (L >= 9) add("patron", "Contact Patron", 1, "long"); if (L >= 14 && std) add("hurl", "Hurl Through Hell", 1, "long", "8d10"); break;
     case "magicien": add("arcrec", "Arcane Recovery", 1, "long"); break;
   }
   switch (b.species) {
@@ -1963,8 +2158,7 @@ function resources(b, ab) {
   featsOf(b).forEach((f) => { if (f.id === "initie" && b.magic[f.src].spell) add("mi_" + f.src, SPELLS[b.magic[f.src].spell].n + " (free)", 1, "long"); });
   if (b.cls === "occultiste") Object.entries(b.opts.arcanum).forEach(([lv, id]) => { if (id && L >= ARCANUM_LV[lv]) add("arc_" + lv, SPELLS[id].n + " (arcanum)", 1, "long"); });
   if (L >= 19 && b.opts.boon.id === "destin") add("boonfate", "Boon of Fate", 1, "short", "2d4");
-  if (L >= 19 && b.opts.boon.id === "rappel") add("boonrecall", "Spell Recall", 1, "long");
-  if (b.cls === "barde" && L >= 3) r.forEach((x) => { if (x.k === "insp") x.note += " · Cutting Words"; });
+  if (b.cls === "barde" && L >= 3 && std) r.forEach((x) => { if (x.k === "insp") x.note += " · Cutting Words"; });
   return r;
 }
 
@@ -1983,16 +2177,20 @@ function features(b) {
     const opt = sp.choice && b.sChoice && sp.choice.opts[b.sChoice];
     if (opt) out.push({ n: sp.choice.label + " : " + opt.n, d: opt.d || ("Damage type: " + DMG[opt.t] + "."), src: sp.n });
   }
-  if (c) for (let l = 1; l <= b.level; l++) (c.feats[l] || []).forEach(([n, d]) => out.push({ n, d, src: c.n + " " + l, lvl: l }));
-  featsOf(b).forEach((f) => out.push({ n: FEATS[f.id].n, d: FEATS[f.id].d, src: f.src === "bg" ? "Background" : "Human" }));
+  const hs = hbSub(b);
+  if (c) for (let l = 1; l <= b.level; l++) {
+    (c.feats[l] || []).forEach(([n, d]) => { if (b.subHb && isSubFeat(b.cls, n)) return; out.push({ n, d, src: c.n + " " + l, lvl: l }); });
+    if (hs && l >= 3) hs.feats.filter((f) => f.l === l).forEach((f) => out.push({ n: f.n + " (" + hs.n + ")", d: f.d, src: c.n + " " + l, lvl: l }));
+  }
+  featsOf(b).forEach((f) => out.push({ n: FEATS[f.id].n, d: FEATS[f.id].d, src: f.src === "bg" ? "Background" : f.src === "human" ? "Human" : "Feat (lvl " + f.src.slice(3) + ")" }));
   if (b.opts.style && FIGHTING_STYLES[b.opts.style]) out.push({ n: "Style: " + FIGHTING_STYLES[b.opts.style].n, d: FIGHTING_STYLES[b.opts.style].d, src: c.n });
-  if (b.cls === "guerrier" && b.level >= 7 && b.opts.style2 && FIGHTING_STYLES[b.opts.style2]) out.push({ n: "Style: " + FIGHTING_STYLES[b.opts.style2].n, d: FIGHTING_STYLES[b.opts.style2].d, src: "Champion" });
+  if (b.cls === "guerrier" && b.level >= 7 && srdSub(b) && b.opts.style2 && FIGHTING_STYLES[b.opts.style2]) out.push({ n: "Style: " + FIGHTING_STYLES[b.opts.style2].n, d: FIGHTING_STYLES[b.opts.style2].d, src: "Champion" });
   const so = STRIKE_OPTS[b.cls];
   if (so && b.level >= so.lvl && b.opts.strike && so.opts[b.opts.strike]) out.push({ n: so.label + " : " + so.opts[b.opts.strike].n, d: so.opts[b.opts.strike].d, src: c.n });
-  if (b.cls === "ensorceleur" && b.level >= 6 && b.opts.dragon) out.push({ n: "Affinity: " + DMG[b.opts.dragon], d: "Resistance to " + DMG[b.opts.dragon] + "; + your CHA modifier to damage of this type from your spells.", src: "Draconic Sorcery" });
+  if (b.cls === "ensorceleur" && b.level >= 6 && srdSub(b) && b.opts.dragon) out.push({ n: "Affinity: " + DMG[b.opts.dragon], d: "Resistance to " + DMG[b.opts.dragon] + "; + your CHA modifier to damage of this type from your spells.", src: "Draconic Sorcery" });
   if (b.level >= 19 && b.opts.boon.id) out.push({ n: EPIC_BOONS[b.opts.boon.id].n, d: EPIC_BOONS[b.opts.boon.id].d, src: "Epic Boon" });
-  if (b.cls === "rodeur" && b.level >= 3 && b.opts.prey) out.push({ n: b.opts.prey === "colosse" ? "Colossus Slayer" : "Horde Breaker", d: b.opts.prey === "colosse" ? "Once per turn, +1d8 damage against a creature that is missing any of its Hit Points." : "Once per turn, an extra attack against another creature within 5 feet of the original target.", src: "Hunter" });
-  if (b.cls === "druide" && b.level >= 3 && b.opts.land) out.push({ n: "Land: " + LAND_SPELLS[b.opts.land].n, d: "Circle spells are always prepared.", src: "Circle of the Land" });
+  if (b.cls === "rodeur" && b.level >= 3 && srdSub(b) && b.opts.prey) out.push({ n: b.opts.prey === "colosse" ? "Colossus Slayer" : "Horde Breaker", d: b.opts.prey === "colosse" ? "Once per turn, +1d8 damage against a creature that is missing any of its Hit Points." : "Once per turn, an extra attack against another creature within 5 feet of the original target.", src: "Hunter" });
+  if (b.cls === "druide" && b.level >= 3 && srdSub(b) && b.opts.land) out.push({ n: "Land: " + LAND_SPELLS[b.opts.land].n, d: "Circle spells are always prepared.", src: "Circle of the Land" });
   b.opts.inv.forEach((k) => INVOCATIONS[k] && out.push({ n: INVOCATIONS[k].n, d: INVOCATIONS[k].d, src: "Invocation" }));
   b.opts.meta.forEach((k) => METAMAGIC[k] && out.push({ n: METAMAGIC[k].n, d: METAMAGIC[k].d, src: "Metamagic" }));
   return out;
@@ -2000,7 +2198,7 @@ function features(b) {
 
 function compute(b, p) {
   const c = CLASSES[b.cls], sp = SPECIES[b.species], bg = BACKGROUNDS[b.bg];
-  const L = b.level, pb = pbOf(L);
+  const L = b.level, pb = pbOf(L), std = srdSub(b);
   const ab = abilities(b), m = {};
   ABK.forEach((k) => (m[k] = mod(ab[k])));
   const feats = featsOf(b).map((f) => f.id);
@@ -2031,12 +2229,12 @@ function compute(b, p) {
   let ac, acNote;
   if (armor) {
     ac = armor.ac + Math.min(m.dex, armor.dex); acNote = armor.n;
-    if ((b.opts.style === "defense" && (b.cls === "guerrier" || b.cls === "paladin" || b.cls === "rodeur")) || (b.cls === "guerrier" && L >= 7 && b.opts.style2 === "defense")) ac += 1;
+    if ((b.opts.style === "defense" && (b.cls === "guerrier" || b.cls === "paladin" || b.cls === "rodeur")) || (b.cls === "guerrier" && L >= 7 && std && b.opts.style2 === "defense")) ac += 1;
   } else {
     const opts = [{ v: 10 + m.dex, n: "Unarmored" }];
     if (b.cls === "barbare") opts.push({ v: 10 + m.dex + m.con, n: "Unarmored Defense" });
     if (b.cls === "moine" && !eqShield) opts.push({ v: 10 + m.dex + m.sag, n: "Unarmored Defense" });
-    if (b.cls === "ensorceleur" && L >= 3) opts.push({ v: 10 + m.dex + m.cha, n: "Draconic Resilience" });
+    if (b.cls === "ensorceleur" && L >= 3 && std) opts.push({ v: 10 + m.dex + m.cha, n: "Draconic Resilience" });
     const best = opts.sort((x, y) => y.v - x.v)[0];
     ac = best.v; acNote = best.n;
   }
@@ -2058,8 +2256,8 @@ function compute(b, p) {
   // Attaques
   const attacks = [];
   const maDie = martialDie(L);
-  const archery = b.opts.style === "archerie" || (b.cls === "guerrier" && L >= 7 && b.opts.style2 === "archerie");
-  const crit = b.cls === "guerrier" ? (L >= 15 ? 18 : L >= 3 ? 19 : 20) : 20;
+  const archery = b.opts.style === "archerie" || (b.cls === "guerrier" && L >= 7 && std && b.opts.style2 === "archerie");
+  const crit = b.cls === "guerrier" && std ? (L >= 15 ? 18 : L >= 3 ? 19 : 20) : 20;
   inv.filter((i) => i.eq && i.ref && i.ref.startsWith("w:")).forEach((i) => {
     const w = WEAPONS[i.ref.slice(2)];
     if (!w) return;
@@ -2092,8 +2290,8 @@ function compute(b, p) {
   const dmgBonus = (s) => {
     let v = 0, why = [];
     if (s.l === 0 && potent && s.cl.includes(b.cls)) { v += m.sag; why.push("Potent Spellcasting"); }
-    if (b.cls === "magicien" && L >= 10 && s.e === "evo" && s.l > 0 && s.cl.includes("magicien")) { v += m.int; why.push("Empowered Evocation"); }
-    if (b.cls === "ensorceleur" && L >= 6 && b.opts.dragon && s.ty === b.opts.dragon) { v += m.cha; why.push("Elemental Affinity"); }
+    if (b.cls === "magicien" && L >= 10 && std && s.e === "evo" && s.l > 0 && s.cl.includes("magicien")) { v += m.int; why.push("Empowered Evocation"); }
+    if (b.cls === "ensorceleur" && L >= 6 && std && b.opts.dragon && s.ty === b.opts.dragon) { v += m.cha; why.push("Elemental Affinity"); }
     if (b.cls === "occultiste" && s.id === "dechargeocculte" && b.opts.inv.includes("dechiree")) { v += m.cha; why.push("Agonizing Blast"); }
     return { v, why };
   };
@@ -2126,7 +2324,7 @@ function compute(b, p) {
       weapons: c ? c.weapons.map((w) => ({ simple: "Simple weapons", guerre: "Martial weapons", guerreLegere: "Martial weapons with the Light property", guerreFinesse: "Martial weapons (Finesse or Light)" })[w]).join(", ") + ((b.cls === "clerc" && b.opts.order === "protecteur") || (b.cls === "druide" && b.opts.order === "gardien") ? ", martial weapons" : "") : "",
       tools: [c && c.tools !== "—" ? c.tools : null, bg ? bg.tool : null].filter(Boolean).join(", ") || "None",
     },
-    sub: c && L >= 3 ? c.sub.n : null,
+    sub: c && L >= 3 ? subName(b) : null,
   };
 }
 
@@ -2143,6 +2341,7 @@ function itemName(i) {
   if (i.ref && i.ref.startsWith("w:") && WEAPONS[i.ref.slice(2)]) return WEAPONS[i.ref.slice(2)].n;
   if (i.ref && i.ref.startsWith("a:") && ARMORS[i.ref.slice(2)]) return ARMORS[i.ref.slice(2)].n;
   if (i.ref && i.ref.startsWith("g:") && GEAR[i.ref.slice(2)]) return GEAR[i.ref.slice(2)];
+  if (i.ref && i.ref.startsWith("mi:") && typeof MAGIC_ITEMS !== "undefined" && MAGIC_ITEMS[i.ref.slice(3)]) return MAGIC_ITEMS[i.ref.slice(3)].n;
   return i.n;
 }
 function startingInventory(b) {
@@ -2182,11 +2381,16 @@ function issues(b) {
   if (!sp) out.origine.push("Choose a species");
   if (sp && sp.choice && !b.sChoice) out.origine.push(sp.choice.label);
   if (!bg) out.origine.push("Choose a background");
+  if (c && b.subHb && !hbSub(b)) out.classe.push("Homebrew subclass not found");
   if (bg && b.bonus.mode === "21" && (!b.bonus.p2 || !b.bonus.p1 || b.bonus.p1 === b.bonus.p2)) out.carac.push("Assign your background bonuses");
   if (b.method === "points") { const spent = ABK.reduce((t, k) => t + (PB_COST[b.base[k]] ?? 99), 0); if (spent > 27) out.carac.push("Too many points spent"); }
   if (b.method === "roll" && !b.rolled) out.carac.push("Roll the dice");
   migrate(b);
-  activeAsiLevels(b).forEach((lv) => { const a = b.opts.asis[lv]; if (!a || !a.a || (a.mode === "11" && (!a.b || a.b === a.a))) out.carac.push("Ability Score Improvement (lvl. " + lv + ")"); });
+  activeAsiLevels(b).forEach((lv) => {
+    const a = b.opts.asis[lv];
+    if (a && a.mode === "feat") { const f = FEATS[a.feat]; if (!f || ((f.ab || []).length && !a.a)) out.carac.push("Feat (lvl " + lv + ")"); return; }
+    if (!a || !a.a || (a.mode === "11" && (!a.b || a.b === a.a))) out.carac.push("Ability Score Improvement (lvl. " + lv + ")");
+  });
   if (b.level >= 19 && (!b.opts.boon.id || !b.opts.boon.a)) out.carac.push("Epic Boon (lvl. 19)");
   if (c) {
     const need = c.skills.n;
@@ -2196,22 +2400,22 @@ function issues(b) {
     if (b.species === "humain" && !b.humanFeat) out.options.push("Origin feat (Human)");
     featsOf(b).forEach((f) => { if (f.id === "initie") { const mm = b.magic[f.src]; if (mm.cant.length < 2 || !mm.spell) out.options.push("Magic Initiate spells"); } });
     const ex = expertiseCount(b); if (b.expertise.length < ex) out.options.push(`Expertise (${b.expertise.length}/${ex})`);
-    if (b.cls === "barde" && b.level >= 3 && b.skillsLore.length < 3) out.options.push("College of Lore skills");
+    if (b.cls === "barde" && b.level >= 3 && srdSub(b) && b.skillsLore.length < 3) out.options.push("College of Lore skills");
     if (b.cls === "barbare" && b.level >= 3 && !b.skillPrimal) out.options.push("Primal Knowledge");
     if (c.mastery && b.opts.mastery.length < c.mastery) out.options.push(`Weapon Mastery (${b.opts.mastery.length}/${c.mastery})`);
     if ((b.cls === "guerrier" || (["paladin", "rodeur"].includes(b.cls) && b.level >= 2)) && !b.opts.style) out.options.push("Fighting Style");
     if ((b.cls === "clerc" || b.cls === "druide") && !b.opts.order) out.options.push(b.cls === "clerc" ? "Divine Order" : "Primal Order");
     if (b.cls === "occultiste" && b.opts.inv.length < c.inv[b.level - 1]) out.options.push(`Invocations (${b.opts.inv.length}/${c.inv[b.level - 1]})`);
     if (b.cls === "ensorceleur" && b.level >= 2 && b.opts.meta.length < metaCount(b)) out.options.push(`Metamagic (${b.opts.meta.length}/${metaCount(b)})`);
-    if (b.cls === "ensorceleur" && b.level >= 6 && !b.opts.dragon) out.options.push("Elemental Affinity");
-    if (b.cls === "guerrier" && b.level >= 7 && !b.opts.style2) out.options.push("Second Fighting Style");
+    if (b.cls === "ensorceleur" && b.level >= 6 && srdSub(b) && !b.opts.dragon) out.options.push("Elemental Affinity");
+    if (b.cls === "guerrier" && b.level >= 7 && srdSub(b) && !b.opts.style2) out.options.push("Second Fighting Style");
     if (STRIKE_OPTS[b.cls] && b.level >= STRIKE_OPTS[b.cls].lvl && !b.opts.strike) out.options.push(STRIKE_OPTS[b.cls].label);
-    if (b.cls === "rodeur" && b.level >= 3 && !b.opts.prey) out.options.push("Hunter’s Prey");
-    if (b.cls === "druide" && b.level >= 3 && !b.opts.land) out.options.push("Land type");
+    if (b.cls === "rodeur" && b.level >= 3 && srdSub(b) && !b.opts.prey) out.options.push("Hunter’s Prey");
+    if (b.cls === "druide" && b.level >= 3 && srdSub(b) && !b.opts.land) out.options.push("Land type");
     if (c.caster) {
       if (b.cant.length < cantripCount(b)) out.sorts.push(`Cantrips (${b.cant.length}/${cantripCount(b)})`);
       if (b.prep.length < prepCount(b)) out.sorts.push(`Prepared spells (${b.prep.length}/${prepCount(b)})`);
-      if (b.cls === "barde" && b.level >= 6 && b.opts.lore2.length < 2) out.sorts.push(`Magical Discoveries (${b.opts.lore2.length}/2)`);
+      if (b.cls === "barde" && b.level >= 6 && srdSub(b) && b.opts.lore2.length < 2) out.sorts.push(`Magical Discoveries (${b.opts.lore2.length}/2)`);
       if (b.cls === "occultiste") Object.entries(ARCANUM_LV).forEach(([sl, lv]) => { if (b.level >= lv && !b.opts.arcanum[sl]) out.sorts.push("Arcanum of level " + sl); });
     }
   }
@@ -2299,6 +2503,7 @@ const Store = {
   },
   async put(ch) {
     ch.updated = Date.now();
+    if (typeof hbEmbed === "function") hbEmbed(ch.b);
     if (typeof cloudPut === "function") cloudPut(ch);
     if (typeof pushMember === "function") pushMember(ch);
     if (this.mode === "cloud") {
@@ -2344,6 +2549,7 @@ function render() {
   else if (S.view === "sheet") app.innerHTML = viewSheet();
   else if (S.view === "gm") app.innerHTML = viewGM();
   else if (S.view === "account") app.innerHTML = viewSettings();
+  else if (S.view === "hb") app.innerHTML = viewHB();
   $("#overlay").innerHTML = (S.modal ? viewModal() : "") + (S.tray ? viewTray() : "");
   $("#rollbar").innerHTML = viewRollbar();
   document.body.classList.toggle("noscroll", !!S.modal || S.tray);
@@ -2425,7 +2631,7 @@ function viewSummary(b) {
   return `<div class="sum-card">
     <div class="sum-top"><span class="sigil big">${c ? classSigil(b.cls) : "?"}</span>
       <div><div class="sum-name">${esc(b.name || "Unnamed hero")}</div>
-      <div class="mute small">${sp ? sp.n : "Species?"} · ${c ? c.n : "Class?"} ${b.level}${bg ? " · " + bg.n : ""}</div></div></div>
+      <div class="mute small">${sp ? sp.n : "Species?"} · ${c ? c.n : "Class?"} ${b.level}${bg ? " · " + esc(bg.n) : ""}</div></div></div>
     <div class="sum-abil">${ABK.map((k) => `<div><span class="lbl">${ABIL[k].s}</span><b>${sg(mod(ab[k]))}</b><span class="mute small">${ab[k]}</span></div>`).join("")}</div>
     ${s ? `<div class="sum-vitals"><div><span class="lbl">HP</span><b>${s.hpMax}</b></div><div><span class="lbl">AC</span><b>${s.ac}</b></div><div><span class="lbl">Speed</span><b>${fmtM(s.speed)}</b></div><div><span class="lbl">Proficiency</span><b>${sg(s.pb)}</b></div></div>` : ""}
     ${s && s.casting ? `<div class="sum-cast"><span>Spell save DC <b>${s.casting.dc}</b></span><span>Attack <b>${sg(s.casting.atk)}</b></span></div>` : ""}
@@ -2447,8 +2653,17 @@ function stepClass(b) {
   const c = CLASSES[b.cls];
   let detail = "";
   if (c) {
-    const feats = [];
-    for (let l = 1; l <= MAXLV; l++) (c.feats[l] || []).forEach(([n, d]) => feats.push(`<details class="feat ${l > b.level ? "locked" : ""}" ${l <= b.level && l === 1 ? "open" : ""}><summary><span class="lv">Lvl. ${l}</span>${n}</summary><p>${d}</p></details>`));
+    const feats = [], hs = hbSub(b);
+    for (let l = 1; l <= MAXLV; l++) {
+      (c.feats[l] || []).forEach(([n, d]) => { if (b.subHb && isSubFeat(b.cls, n)) return; feats.push(`<details class="feat ${l > b.level ? "locked" : ""}" ${l <= b.level && l === 1 ? "open" : ""}><summary><span class="lv">Lvl. ${l}</span>${n}</summary><p>${d}</p></details>`); });
+      if (hs) hs.feats.filter((f) => f.l === l).forEach((f) => feats.push(`<details class="feat ${l > b.level ? "locked" : ""}"><summary><span class="lv">Lvl. ${l}</span>${esc(f.n)}${hbTag(hs)}</summary><p>${esc(f.d)}</p></details>`));
+    }
+    const subs = Object.entries(HBSUB).filter(([, x]) => x.cls === b.cls);
+    const subPick = `<section class="panel"><h4>Subclass (level 3)</h4><div class="opt-grid">
+      <button class="opt ${!b.subHb ? "on" : ""}" data-a="setSub" data-v=""><b>${c.sub.n}</b><span>${c.sub.d}</span></button>
+      ${subs.map(([k, x]) => `<button class="opt ${b.subHb === k ? "on" : ""}" data-a="setSub" data-v="${k}"><b>${esc(x.n)}${hbTag(x)}</b><span>${esc(x.d || x.feats.map((f) => f.n).join(", "))}</span></button>`).join("")}
+      ${b.subHb && !hs ? `<button class="opt on" data-a="setSub" data-v=""><b>Homebrew subclass not found</b><span>It was removed from the adventure. Tap to go back to ${c.sub.n}.</span></button>` : ""}
+    </div>${!subs.length && typeof FB !== "undefined" && FB.ok ? `<p class="mute small">Have other subclasses in your books? Add them in <b>Homebrew content</b>, from a sheet's Adventure tab or the GM screen.</p>` : ""}</section>`;
     detail = `<section class="panel detail">
       <h3>${c.n}</h3>
       <dl class="facts">
@@ -2458,8 +2673,8 @@ function stepClass(b) {
         <div><dt>Armor</dt><dd>${compute(b, { inv: [] }).profs.armor}</dd></div>
         <div><dt>Weapons</dt><dd>${compute(b, { inv: [] }).profs.weapons}</dd></div>
         <div><dt>Skills</dt><dd>${c.skills.n} of your choice ${c.skills.from === "all" ? "from all skills" : "from " + c.skills.from.map((k) => SKILLS[k].n).join(", ")}</dd></div>
-        <div><dt>Subclass (lvl. 3)</dt><dd>${c.sub.n} — ${c.sub.d}</dd></div>
       </dl>
+      ${subPick}
       <h4>Features</h4><div class="feats">${feats.join("")}</div>
       <p class="mute small">Greyed-out features arrive at a higher level than the one chosen.</p>
     </section>`;
@@ -2471,9 +2686,9 @@ function stepClass(b) {
 function stepOrigin(b) {
   const bgs = Object.entries(BACKGROUNDS).map(([k, g]) => `
     <button class="pick-card ${b.bg === k ? "on" : ""}" data-a="setBg" data-v="${k}">
-      <span class="pc-head"><span class="pc-name">${g.n}</span></span>
-      <span class="pc-tag">${g.desc}</span>
-      <span class="pc-list"><span><b>Abilities</b> ${g.ab.map((a) => ABIL[a].s).join(", ")}</span><span><b>Feat</b> ${FEATS[g.feat].n}${g.featList ? " (" + MI_NAME[g.featList] + ")" : ""}</span><span><b>Skills</b> ${g.skills.map((s) => SKILLS[s].n).join(", ")}</span><span><b>Tools</b> ${g.tool}</span></span>
+      <span class="pc-head"><span class="pc-name">${g.hb ? esc(g.n) : g.n}</span>${hbTag(g)}</span>
+      <span class="pc-tag">${g.hb ? esc(g.desc) : g.desc}</span>
+      <span class="pc-list"><span><b>Abilities</b> ${g.ab.map((a) => ABIL[a].s).join(", ")}</span><span><b>Feat</b> ${FEATS[g.feat] ? esc(FEATS[g.feat].n) : "—"}${g.featList ? " (" + MI_NAME[g.featList] + ")" : ""}</span><span><b>Skills</b> ${g.skills.map((s) => SKILLS[s].n).join(", ")}</span><span><b>Tools</b> ${g.hb ? esc(g.tool) : g.tool}</span></span>
     </button>`).join("");
   const sps = Object.entries(SPECIES).map(([k, s]) => `
     <button class="pick-card ${b.species === k ? "on" : ""}" data-a="setSpecies" data-v="${k}">
@@ -2513,7 +2728,7 @@ function stepAbilities(b) {
     const pri = CLASSES[b.cls] && CLASSES[b.cls].prim.includes(k);
     return `<div class="ab-row ${pri ? "pri" : ""}"><span class="ab-name">${ABIL[k].n}${pri ? "<span class=\"tagp\">primary</span>" : ""}</span>${ctrl}<span class="ab-bonus">${bonus ? "+" + bonus : "·"}</span>${b.level >= 4 ? `<span class="ab-bonus">${asi > 0 ? "+" + asi : "·"}</span>` : ""}<span class="ab-total">${ab[k]}</span><span class="ab-mod">${sg(mod(ab[k]))}</span></div>`;
   }).join("");
-  const bonusUi = bg ? `<section class="panel"><h4>Background bonuses (${bg.n})</h4>
+  const bonusUi = bg ? `<section class="panel"><h4>Background bonuses (${esc(bg.n)})</h4>
     <div class="chips">${chip("+2 and +1", b.bonus.mode === "21", "setBonusMode", 'data-v="21"')}${chip("+1 to three", b.bonus.mode === "111", "setBonusMode", 'data-v="111"')}</div>
     ${b.bonus.mode === "21" ? `<div class="bonus-pick"><span>+2</span><div class="chips">${bg.ab.map((a) => chip(ABIL[a].n, b.bonus.p2 === a, "setP2", `data-v="${a}"`)).join("")}</div></div>
     <div class="bonus-pick"><span>+1</span><div class="chips">${bg.ab.filter((a) => a !== b.bonus.p2).map((a) => chip(ABIL[a].n, b.bonus.p1 === a, "setP1", `data-v="${a}"`)).join("")}</div></div>` : `<p class="mute small">+1 to ${bg.ab.map((a) => ABIL[a].n).join(", ")}.</p>`}
@@ -2521,9 +2736,9 @@ function stepAbilities(b) {
   const asiUi = activeAsiLevels(b).map((lv) => {
     const a = asiAt(b, lv), dl = `data-lv="${lv}"`;
     return `<section class="panel"><h4>Ability Score Improvement (level ${lv})</h4>
-    <div class="chips">${chip("+2 to one", a.mode === "2", "setAsiMode", 'data-v="2" ' + dl)}${chip("+1 to two", a.mode === "11", "setAsiMode", 'data-v="11" ' + dl)}</div>
-    <div class="bonus-pick"><span>${a.mode === "2" ? "+2" : "+1"}</span><div class="chips">${ABK.map((x) => chip(ABIL[x].s, a.a === x, "setAsiA", `data-v="${x}" ${dl}`)).join("")}</div></div>
-    ${a.mode === "11" ? `<div class="bonus-pick"><span>+1</span><div class="chips">${ABK.filter((x) => x !== a.a).map((x) => chip(ABIL[x].s, a.b === x, "setAsiB", `data-v="${x}" ${dl}`)).join("")}</div></div>` : ""}
+    <div class="chips">${chip("+2 to one", a.mode === "2", "setAsiMode", 'data-v="2" ' + dl)}${chip("+1 to two", a.mode === "11", "setAsiMode", 'data-v="11" ' + dl)}${chip("A feat", a.mode === "feat", "setAsiMode", 'data-v="feat" ' + dl)}</div>
+    ${a.mode === "feat" ? asiFeatUi(b, a, lv) : `<div class="bonus-pick"><span>${a.mode === "2" ? "+2" : "+1"}</span><div class="chips">${ABK.map((x) => chip(ABIL[x].s, a.a === x, "setAsiA", `data-v="${x}" ${dl}`)).join("")}</div></div>
+    ${a.mode === "11" ? `<div class="bonus-pick"><span>+1</span><div class="chips">${ABK.filter((x) => x !== a.a).map((x) => chip(ABIL[x].s, a.b === x, "setAsiB", `data-v="${x}" ${dl}`)).join("")}</div></div>` : ""}`}
   </section>`;
   }).join("") + (b.level >= 19 ? `<section class="panel"><h4>Epic Boon (level 19)</h4><p class="mute small">An Epic Boon feat and +1 to one ability score, up to 30.</p>
     <div class="opt-grid">${Object.entries(EPIC_BOONS).map(([k, x]) => `<button class="opt ${b.opts.boon.id === k ? "on" : ""}" data-a="boon" data-v="${k}"><b>${x.n}</b><span>${x.d}</span></button>`).join("")}</div>
@@ -2534,6 +2749,15 @@ function stepAbilities(b) {
   </section>
   <section class="panel abil-table"><div class="ab-row head"><span>Ability</span><span>Base</span><span>Bkg.</span>${b.level >= 4 ? "<span>Levels</span>" : ""}<span>Total</span><span>Mod.</span></div>${rows}</section>
   ${bonusUi}${asiUi}`;
+}
+
+function asiFeatUi(b, a, lv) {
+  const taken = new Set(featsOf(b).filter((f) => f.src !== "asi" + lv).map((f) => f.id));
+  const list = Object.entries(FEATS).filter(([k, f]) => f.cat === "general" && !taken.has(k));
+  const f = FEATS[a.feat], dl = `data-lv="${lv}"`;
+  return `<p class="mute small">A general feat instead of the improvement.${typeof FB !== "undefined" && FB.ok ? " Add feats from your books in an adventure's homebrew content." : ""}</p>
+    <div class="opt-grid">${list.map(([k, x]) => `<button class="opt ${a.feat === k ? "on" : ""}" data-a="setAsiFeat" data-v="${k}" ${dl}><b>${esc(x.n)}${hbTag(x)}</b><span>${x.pre ? "<i>Prerequisite: " + esc(x.pre) + "</i> · " : ""}${esc(x.d)}</span></button>`).join("")}</div>
+    ${f && (f.ab || []).length ? `<div class="bonus-pick"><span>+1</span><div class="chips">${f.ab.map((x) => chip(ABIL[x].s, a.a === x, "setAsiA", `data-v="${x}" ${dl}`)).join("")}</div></div>` : ""}`;
 }
 
 function skillChips(b, pool, selected, max, act, lockSet) {
@@ -2553,9 +2777,9 @@ function magicPicker(b, src) {
     ${src === "human" ? `<div class="chips">${Object.entries(MI_NAME).map(([k, n]) => chip("List " + n, m.list === k, "miList", `data-src="${src}" data-v="${k}"`)).join("")}</div>` : `<p class="mute small">Spell list: ${MI_NAME[m.list]}</p>`}
     <div class="bonus-pick"><span>Ability.</span><div class="chips">${["int", "sag", "cha"].map((a) => chip(ABIL[a].n, m.ab === a, "miAb", `data-src="${src}" data-v="${a}"`)).join("")}</div></div>
     <p class="lbl">Two cantrips (${m.cant.length}/2)</p>
-    <div class="chips">${cants.map((id) => chip(SPELLS[id].n, m.cant.includes(id), "miCant", `data-src="${src}" data-v="${id}"`, !m.cant.includes(id) && m.cant.length >= 2 ? 'aria-disabled="true"' : "")).join("")}</div>
+    <div class="chips">${cants.map((id) => chip(esc(SPELLS[id].n), m.cant.includes(id), "miCant", `data-src="${src}" data-v="${id}"`, !m.cant.includes(id) && m.cant.length >= 2 ? 'aria-disabled="true"' : "")).join("")}</div>
     <p class="lbl">One level 1 spell</p>
-    <div class="chips">${l1.map((id) => chip(SPELLS[id].n, m.spell === id, "miSpell", `data-src="${src}" data-v="${id}"`)).join("")}</div></div>`;
+    <div class="chips">${l1.map((id) => chip(esc(SPELLS[id].n), m.spell === id, "miSpell", `data-src="${src}" data-v="${id}"`)).join("")}</div></div>`;
 }
 
 function stepOptions(b) {
@@ -2568,12 +2792,13 @@ function stepOptions(b) {
     ${bg ? `<p class="mute small">Already granted by your background: ${bg.skills.map((k) => SKILLS[k].n).join(", ")}.</p>` : ""}
     ${skillChips(b, classSkillPool(b), b.skillsClass, c.skills.n, "skClass", fromOthers(b.skillsClass))}</section>`);
   if (sp && sp.skillPick) out.push(`<section class="panel"><h4>Species skill (${sp.n})</h4>${skillChips(b, sp.skillPick.from === "all" ? SKK : sp.skillPick.from, b.skillsSpecies, sp.skillPick.n, "skSpecies", fromOthers(b.skillsSpecies))}</section>`);
-  if (sp && sp.bonusFeat) out.push(`<section class="panel"><h4>Origin feat (Human)</h4><div class="opt-grid">${Object.entries(FEATS).map(([k, f]) => `<button class="opt ${b.humanFeat === k ? "on" : ""}" data-a="humanFeat" data-v="${k}"><b>${f.n}</b><span>${f.d}</span></button>`).join("")}</div></section>`);
+  if (sp && sp.bonusFeat) out.push(`<section class="panel"><h4>Origin feat (Human)</h4><div class="opt-grid">${Object.entries(FEATS).filter(([, f]) => f.cat !== "general").map(([k, f]) => `<button class="opt ${b.humanFeat === k ? "on" : ""}" data-a="humanFeat" data-v="${k}"><b>${esc(f.n)}${hbTag(f)}</b><span>${esc(f.d)}</span></button>`).join("")}</div></section>`);
   featsOf(b).forEach((f) => {
     if (f.id === "doue") out.push(`<section class="panel"><h4>Skilled feat — ${b.skilled.length}/3</h4>${skillChips(b, SKK, b.skilled, 3, "skSkilled", fromOthers(b.skilled))}</section>`);
     if (f.id === "initie") out.push(`<section class="panel">${magicPicker(b, f.src)}</section>`);
   });
-  if (b.cls === "barde" && b.level >= 3) out.push(`<section class="panel"><h4>College of Lore: three skills — ${b.skillsLore.length}/3</h4>${skillChips(b, SKK, b.skillsLore, 3, "skLore", fromOthers(b.skillsLore))}</section>`);
+  const std = srdSub(b);
+  if (b.cls === "barde" && b.level >= 3 && std) out.push(`<section class="panel"><h4>College of Lore: three skills — ${b.skillsLore.length}/3</h4>${skillChips(b, SKK, b.skillsLore, 3, "skLore", fromOthers(b.skillsLore))}</section>`);
   if (b.cls === "barbare" && b.level >= 3) out.push(`<section class="panel"><h4>Primal Knowledge: one Barbarian skill</h4>${skillChips(b, c.skills.from, b.skillPrimal ? [b.skillPrimal] : [], 1, "skPrimal", fromOthers(b.skillPrimal ? [b.skillPrimal] : []))}</section>`);
   const ex = expertiseCount(b);
   if (ex) out.push(`<section class="panel"><h4>Expertise — ${b.expertise.length}/${ex}</h4><p class="mute small">Proficiency bonus doubled.</p><div class="chips">${expertisePool(b).map((k) => chip(SKILLS[k].n, b.expertise.includes(k), "expertise", `data-v="${k}"`, !b.expertise.includes(k) && b.expertise.length >= ex ? 'aria-disabled="true"' : "")).join("")}</div></section>`);
@@ -2596,13 +2821,13 @@ function stepOptions(b) {
     out.push(`<section class="panel"><h4>Eldritch Invocations — ${b.opts.inv.length}/${n}</h4><div class="opt-grid">${Object.entries(INVOCATIONS).filter(([, v]) => v.lv <= b.level).map(([k, v]) => `<button class="opt ${b.opts.inv.includes(k) ? "on" : ""}" data-a="inv" data-v="${k}" ${!b.opts.inv.includes(k) && b.opts.inv.length >= n ? 'aria-disabled="true"' : ""}><b>${v.n}</b><span>${v.d}</span></button>`).join("")}</div></section>`);
   }
   if (b.cls === "ensorceleur" && b.level >= 2) { const mc = metaCount(b); out.push(`<section class="panel"><h4>Metamagic — ${b.opts.meta.length}/${mc}</h4><div class="opt-grid">${Object.entries(METAMAGIC).map(([k, v]) => `<button class="opt ${b.opts.meta.includes(k) ? "on" : ""}" data-a="meta" data-v="${k}" ${!b.opts.meta.includes(k) && b.opts.meta.length >= mc ? 'aria-disabled="true"' : ""}><b>${v.n}</b><span>${v.d}</span></button>`).join("")}</div></section>`); }
-  if (b.cls === "ensorceleur" && b.level >= 6) out.push(`<section class="panel"><h4>Elemental Affinity: damage type</h4><p class="mute small">The one from your draconic ancestry.</p><div class="chips">${[K("acide"), K("froid"), K("feu"), K("foudre"), K("poison")].map((t) => chip(DMG[t][0].toUpperCase() + DMG[t].slice(1), b.opts.dragon === t, "dragon", `data-v="${t}"`)).join("")}</div></section>`);
-  if (b.cls === "guerrier" && b.level >= 7) out.push(`<section class="panel"><h4>Second Fighting Style (Champion)</h4><div class="opt-grid">${Object.entries(FIGHTING_STYLES).filter(([k]) => k !== b.opts.style).map(([k, f]) => `<button class="opt ${b.opts.style2 === k ? "on" : ""}" data-a="style2" data-v="${k}"><b>${f.n}</b><span>${f.d}</span></button>`).join("")}</div></section>`);
+  if (b.cls === "ensorceleur" && b.level >= 6 && std) out.push(`<section class="panel"><h4>Elemental Affinity: damage type</h4><p class="mute small">The one from your draconic ancestry.</p><div class="chips">${[K("acide"), K("froid"), K("feu"), K("foudre"), K("poison")].map((t) => chip(DMG[t][0].toUpperCase() + DMG[t].slice(1), b.opts.dragon === t, "dragon", `data-v="${t}"`)).join("")}</div></section>`);
+  if (b.cls === "guerrier" && b.level >= 7 && std) out.push(`<section class="panel"><h4>Second Fighting Style (Champion)</h4><div class="opt-grid">${Object.entries(FIGHTING_STYLES).filter(([k]) => k !== b.opts.style).map(([k, f]) => `<button class="opt ${b.opts.style2 === k ? "on" : ""}" data-a="style2" data-v="${k}"><b>${f.n}</b><span>${f.d}</span></button>`).join("")}</div></section>`);
   if (STRIKE_OPTS[b.cls] && b.level >= STRIKE_OPTS[b.cls].lvl) { const so = STRIKE_OPTS[b.cls]; out.push(`<section class="panel"><h4>${so.label} (level ${so.lvl})</h4><div class="opt-grid">${Object.entries(so.opts).map(([k, o]) => `<button class="opt ${b.opts.strike === k ? "on" : ""}" data-a="strike" data-v="${k}"><b>${o.n}</b><span>${o.d}</span></button>`).join("")}</div></section>`); }
-  if (b.cls === "rodeur" && b.level >= 3) out.push(`<section class="panel"><h4>Hunter’s Prey</h4><div class="opt-grid">
+  if (b.cls === "rodeur" && b.level >= 3 && std) out.push(`<section class="panel"><h4>Hunter’s Prey</h4><div class="opt-grid">
     <button class="opt ${b.opts.prey === "colosse" ? "on" : ""}" data-a="prey" data-v="colosse"><b>Colossus Slayer</b><span>Once per turn, +1d8 damage against a wounded target.</span></button>
     <button class="opt ${b.opts.prey === "horde" ? "on" : ""}" data-a="prey" data-v="horde"><b>Horde Breaker</b><span>One extra attack against another creature near the target.</span></button></div></section>`);
-  if (b.cls === "druide" && b.level >= 3) out.push(`<section class="panel"><h4>Circle of the Land: your land</h4><div class="opt-grid">${Object.entries(LAND_SPELLS).map(([k, l]) => `<button class="opt ${b.opts.land === k ? "on" : ""}" data-a="land" data-v="${k}"><b>${l.n}</b><span>${Object.values(l.s).flat().map((id) => SPELLS[id].n).join(", ")}</span></button>`).join("")}</div></section>`);
+  if (b.cls === "druide" && b.level >= 3 && std) out.push(`<section class="panel"><h4>Circle of the Land: your land</h4><div class="opt-grid">${Object.entries(LAND_SPELLS).map(([k, l]) => `<button class="opt ${b.opts.land === k ? "on" : ""}" data-a="land" data-v="${k}"><b>${l.n}</b><span>${Object.values(l.s).flat().map((id) => SPELLS[id].n).join(", ")}</span></button>`).join("")}</div></section>`);
   out.push(`<section class="panel"><h4>Languages — ${b.langs.length}/2</h4><p class="mute small">You speak Common and two other languages.</p><div class="chips">${LANGS.map((l) => chip(LANG_L[l], b.langs.includes(l), "lang", `data-v="${esc(l)}"`, !b.langs.includes(l) && b.langs.length >= 2 ? 'aria-disabled="true"' : "")).join("")}</div></section>`);
   return out.join("");
 }
@@ -2613,7 +2838,7 @@ function spellRow(id, on, act, disabled, locked, src) {
   return `<div class="spell-row ${on ? "on" : ""} ${locked ? "lock" : ""}">
     <button class="sr-main" data-a="${locked ? "toggleSpell" : act}" data-v="${id}" ${disabled && !on && !locked ? 'aria-disabled="true"' : ""} aria-pressed="${on}">
       <span class="sr-check">${on || locked ? ICON.check : ""}</span>
-      <span class="sr-name">${s.n}${s.co ? '<i class="tagc" title="Concentration">C</i>' : ""}${s.ri ? "<i class=\"tagc\" title=\"Ritual\">R</i>" : ""}</span>
+      <span class="sr-name">${esc(s.n)}${s.co ? '<i class="tagc" title="Concentration">C</i>' : ""}${s.ri ? "<i class=\"tagc\" title=\"Ritual\">R</i>" : ""}${hbTag(s)}</span>
       <span class="sr-meta">${src ? esc(src) : SC[s.e]}</span>
     </button>
     <button class="sr-info" data-a="toggleSpell" data-v="${id}" aria-label="Details" aria-expanded="${open}">${open ? "−" : "i"}</button>
@@ -2621,7 +2846,8 @@ function spellRow(id, on, act, disabled, locked, src) {
   </div>`;
 }
 function spellDetail(s) {
-  return `<dl class="spell-facts"><div><dt>Spellcasting</dt><dd>${s.t}</dd></div><div><dt>Range</dt><dd>${s.p}</dd></div><div><dt>Components</dt><dd>${s.c}</dd></div><div><dt>Duration</dt><dd>${s.co ? "Concentration, " : ""}${s.du}</dd></div></dl><p>${s.d}</p>${s.up ? `<p class="mute small">Higher levels: ${s.up}</p>` : ""}`;
+  const e = s.hb ? esc : (x) => x;
+  return `<dl class="spell-facts"><div><dt>Spellcasting</dt><dd>${e(s.t)}</dd></div><div><dt>Range</dt><dd>${e(s.p)}</dd></div><div><dt>Components</dt><dd>${e(s.c)}</dd></div><div><dt>Duration</dt><dd>${s.co ? "Concentration, " : ""}${e(s.du)}</dd></div></dl><p>${e(s.d)}</p>${s.up ? `<p class="mute small">Higher levels: ${e(s.up)}</p>` : ""}`;
 }
 
 function stepSpells(b) {
@@ -2636,7 +2862,7 @@ function stepSpells(b) {
   const lvTabs = ["all", ...Array.from({ length: max }, (_, i) => i + 1)].map((l) => chip(l === "all" ? "All" : "Level " + l, S.spellLvl == l, "spellLvl", `data-v="${l}"`)).join("");
   const pool = [];
   for (let l = 1; l <= max; l++) if (S.spellLvl === "all" || S.spellLvl == l) pool.push(`<p class="lvl-sep">Level ${l}</p>` + classSpellPool(b, l).filter((id) => !gIds.has(id)).map((id) => spellRow(id, b.prep.includes(id), "pickPrep", b.prep.length >= np)).join(""));
-  if (b.cls === "barde" && b.level >= 6) {
+  if (b.cls === "barde" && b.level >= 6 && srdSub(b)) {
     const lp = []; for (let l = 0; l <= max; l++) lp.push(...Object.keys(SPELLS).filter((id) => SPELLS[id].l === l && !SPELLS[id].cl.includes("barde") && SPELLS[id].cl.some((x) => ["clerc", "druide", "magicien"].includes(x)) && !gIds.has(id) || b.opts.lore2.includes(id) && SPELLS[id].l === l));
     const uniq = [...new Set(lp)].sort((x, y) => SPELLS[x].l - SPELLS[y].l || SPELLS[x].n.localeCompare(SPELLS[y].n, "fr"));
     html += `<section class="panel"><h4>Magical Discoveries — ${b.opts.lore2.length}/2</h4><p class="mute small">Two Cleric, Druid, or Wizard spells, always prepared.</p>${uniq.map((id) => spellRow(id, b.opts.lore2.includes(id), "lore2", b.opts.lore2.length >= 2, false, SPELLS[id].l ? "lvl. " + SPELLS[id].l : "cantrip")).join("")}</section>`;
@@ -2651,7 +2877,7 @@ function stepSpells(b) {
 
 function gearList(list) {
   return `<ul class="gear">${list.map(([ref, q]) => {
-    const n = ref.startsWith("w:") ? WEAPONS[ref.slice(2)].n : ref.startsWith("a:") ? ARMORS[ref.slice(2)].n : GEAR[ref];
+    const n = ref.startsWith("w:") ? WEAPONS[ref.slice(2)].n : ref.startsWith("a:") ? ARMORS[ref.slice(2)].n : GEAR[ref] || esc(ref);
     return `<li>${q && q > 1 ? `<b>${q}×</b> ` : ""}${n}</li>`;
   }).join("")}</ul>`;
 }
@@ -2663,7 +2889,7 @@ function stepEquip(b) {
   clsOpts.push([c.gearB ? "C" : "B", "Gold only", `<p class="gold big">${c.goldB} gp</p><p class="mute small">Buy your equipment yourself.</p>`]);
   const st = startingInventory(b);
   return `<section class="block"><h3 class="bh">${c.n}</h3><div class="opt-grid">${clsOpts.map(([k, n, h]) => `<button class="opt tall ${b.gear.cls === k ? "on" : ""}" data-a="gearCls" data-v="${k}"><b>${n}</b>${h}</button>`).join("")}</div></section>
-  <section class="block"><h3 class="bh">${bg.n}</h3><div class="opt-grid">
+  <section class="block"><h3 class="bh">${esc(bg.n)}</h3><div class="opt-grid">
     <button class="opt tall ${b.gear.bg === "A" ? "on" : ""}" data-a="gearBg" data-v="A"><b>Background equipment</b>${gearList(bg.gear)}<p class="gold">+ ${bg.gold} gp</p></button>
     <button class="opt tall ${b.gear.bg === "B" ? "on" : ""}" data-a="gearBg" data-v="B"><b>Gold only</b><p class="gold big">50 gp</p></button></div></section>
   <section class="panel"><h4>Your starting pack</h4><p class="mute small">${st.inv.length} items · ${st.gold} gp. Weapons and your best proficient armor are equipped automatically.</p></section>`;
@@ -2760,7 +2986,7 @@ function tabActions(ch, s) {
   const cantHtml = cantrips.map((x) => {
     const dice = x.dmg ? scaleCantrip(x, b.level) : null;
     return `<div class="atk spell">
-      <div class="atk-name"><b>${x.n}</b><span class="mute small">${x.p} · cantrip</span></div>
+      <div class="atk-name"><b>${esc(x.n)}</b><span class="mute small">${esc(x.p)} · cantrip</span></div>
       ${x.atk ? `<button class="rb hit" data-a="r20" data-l="${esc(x.n)} — attaque" data-m="${x.atk}">${sg(x.atk)}</button>` : `<span class="rb dc">DC ${x.dc}<small>${ABIL[x.sv].s}</small></span>`}
       ${dice ? `<button class="rb dmg" data-a="rDmg" data-l="${esc(x.n)} — ${DMG[x.ty]}" data-e="${dice}${x.dmgBonus ? (x.dmgBonus > 0 ? "+" : "") + x.dmgBonus : ""}">${dice}${x.dmgBonus ? sg(x.dmgBonus) : ""}<small>${x.beams ? beams(b.level) + " beam" + (beams(b.level) > 1 ? "s" : "") : DMG[x.ty]}</small></button>` : ""}
     </div>`;
@@ -2774,13 +3000,13 @@ function tabActions(ch, s) {
   if (b.cls === "druide" && b.level >= 7 && b.opts.strike === "primale") extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Frappe primale" data-e="${b.level >= 15 ? "2d8" : "1d8"}">Primal Strike ${b.level >= 15 ? "2d8" : "1d8"}</button>`);
   if (b.cls === "paladin" && b.level >= 11) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Frappes radieuses" data-e="1d8">Radiant Strikes +1d8</button>`);
   if (b.cls === "barbare" && b.level >= 9) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Frappe brutale" data-e="${b.level >= 17 ? "2d10" : "1d10"}">Brutal Strike ${b.level >= 17 ? "2d10" : "1d10"}</button>`);
-  if (b.cls === "moine" && b.level >= 6) extras.push(`<button class="rb heal wide" data-a="rHeal" data-l="Plénitude du corps" data-e="${s.maDie}+${s.m.sag}">Wholeness of Body ${s.maDie}${sg(s.m.sag)}</button>`);
+  if (b.cls === "moine" && b.level >= 6 && srdSub(b)) extras.push(`<button class="rb heal wide" data-a="rHeal" data-l="Plénitude du corps" data-e="${s.maDie}+${s.m.sag}">Wholeness of Body ${s.maDie}${sg(s.m.sag)}</button>`);
   if (b.cls === "rodeur" && b.level >= 10) extras.push(`<button class="rb heal wide" data-a="rHeal" data-l="Infatigable (PV temporaires)" data-e="1d8+${s.m.sag}">Tireless 1d8${sg(s.m.sag)}</button>`);
   if (b.cls === "clerc" && b.level >= 2) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Étincelle divine" data-e="1d8+${s.m.sag}">Divine Spark 1d8${sg(s.m.sag)}</button>`);
   if (b.species === "drakeide") extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Souffle (JS Dex DD ${8 + s.m.con + s.pb})" data-e="${b.level >= 5 ? "2d10" : "1d10"}">Breath Weapon ${b.level >= 5 ? "2d10" : "1d10"} · DC ${8 + s.m.con + s.pb}</button>`);
   if (b.cls === "rodeur" || s.spells.some((x) => x.id === "marquechasseur")) { const hm = b.cls === "rodeur" && b.level >= 20 ? "1d10" : "1d6"; extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Marque du chasseur" data-e="${hm}">Hunter’s Mark +${hm}</button>`); }
-  if (b.cls === "rodeur" && b.opts.prey === "colosse" && b.level >= 3) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Tueur de colosses" data-e="1d8">Colossus Slayer +1d8</button>`);
-  if (b.cls === "barbare" && b.level >= 3) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Frénésie" data-e="${s.rageDmg}d6">Frenzy ${s.rageDmg}d6</button>`);
+  if (b.cls === "rodeur" && srdSub(b) && b.opts.prey === "colosse" && b.level >= 3) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Tueur de colosses" data-e="1d8">Colossus Slayer +1d8</button>`);
+  if (b.cls === "barbare" && b.level >= 3 && srdSub(b)) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Frénésie" data-e="${s.rageDmg}d6">Frenzy ${s.rageDmg}d6</button>`);
   return `<div class="cols">
     <section class="panel"><h3 class="ph">Attacks</h3><p class="mute small">Attacks per action: ${s.apa}${s.crit < 20 ? " · critical on " + s.crit + "-20" : ""}${b.cls === "moine" ? " · Martial Arts " + s.maDie.slice(1) : ""}</p>
       ${atk}${cantHtml}${extras.length ? `<div class="extras">${extras.join("")}</div>` : ""}</section>
@@ -2830,7 +3056,7 @@ function tabSpells(ch, s) {
     const heal = x.heal ? x.heal + (x.id === "simulacredevie" ? "" : (x.mod >= 0 ? "+" : "") + x.mod) : null;
     return `<div class="spell-row sheet-spell ${p.conc === x.id ? "conc" : ""}">
       <button class="sr-main" data-a="toggleSpell" data-v="${x.id}" aria-expanded="${open}">
-        <span class="sr-name">${x.n}${x.co ? '<i class="tagc" title="Concentration">C</i>' : ""}${x.ri ? "<i class=\"tagc\" title=\"Ritual\">R</i>" : ""}</span>
+        <span class="sr-name">${esc(x.n)}${x.co ? '<i class="tagc" title="Concentration">C</i>' : ""}${x.ri ? "<i class=\"tagc\" title=\"Ritual\">R</i>" : ""}</span>
         <span class="sr-meta">${x.t} · ${x.p}${x.always ? " · " + esc(x.src) : ""}</span>
       </button>
       <div class="sr-acts">
@@ -2845,21 +3071,25 @@ function tabSpells(ch, s) {
   }).join("")).join("");
   return `<section class="panel">
     ${cast ? `<div class="cast-head"><div><span class="lbl">Ability</span><b>${ABIL[cast.ab].n}</b></div><div><span class="lbl">Spell save DC</span><b>${cast.dc}</b></div><div><span class="lbl">Spell attack</span><b>${sg(cast.atk)}</b></div></div><div class="slots">${slots}</div>` : ""}
-    ${p.conc ? `<div class="conc-bar">Concentration: <b>${SPELLS[p.conc].n}</b><button class="btn small ghost" data-a="endConc">End</button></div>` : ""}
+    ${p.conc ? `<div class="conc-bar">Concentration: <b>${SPELLS[p.conc] ? esc(SPELLS[p.conc].n) : ""}</b><button class="btn small ghost" data-a="endConc">End</button></div>` : ""}
     ${groups}
   </section>`;
 }
 
 function tabInventory(ch) {
   const p = ch.p;
+  if (typeof srdLoad === "function" && p.inv.some((i) => i.ref && i.ref.startsWith("mi:"))) srdLoad();
   const rows = p.inv.map((i) => {
     const w = i.ref && i.ref.startsWith("w:") && WEAPONS[i.ref.slice(2)];
     const a = i.ref && i.ref.startsWith("a:") && ARMORS[i.ref.slice(2)];
-    const sub = w ? `${w.d} ${DMG[w.t]}${w.p.length ? " · " + w.p.map((x) => WPROP[x]).join(", ") : ""}` : a ? (a.t === "bouclier" ? "+2 AC" : `AC ${a.ac}${a.dex === 99 ? " + Dex" : a.dex ? " + Dex (max 2)" : ""}`) : "";
-    return `<div class="item">
-      ${w || a ? `<button class="eq ${i.eq ? "on" : ""}" data-a="equip" data-u="${i.uid}" aria-pressed="${i.eq}" title="${i.eq ? "Equipped" : "Equip"}">${i.eq ? ICON.check : ""}</button>` : '<span class="eq none"></span>'}
-      <div class="it-name"><b>${esc(itemName(i))}</b>${sub ? `<span class="mute small">${sub}</span>` : ""}</div>
+    const mi = typeof miInfo === "function" ? miInfo(i) : null;
+    const sub = w ? `${w.d} ${DMG[w.t]}${w.p.length ? " · " + w.p.map((x) => WPROP[x]).join(", ") : ""}` : a ? (a.t === "bouclier" ? "+2 AC" : `AC ${a.ac}${a.dex === 99 ? " + Dex" : a.dex ? " + Dex (max 2)" : ""}`) : mi ? esc([mi.h, mi.r ? RAR_L[mi.r] || mi.r : "", mi.at ? "attunement" : ""].filter(Boolean).join(" · ")) : "";
+    const open = mi && S.openItem === i.uid;
+    return `<div class="item ${mi ? "magic" : ""}">
+      ${w || a ? `<button class="eq ${i.eq ? "on" : ""}" data-a="equip" data-u="${i.uid}" aria-pressed="${i.eq}" title="${i.eq ? "Equipped" : "Equip"}">${i.eq ? ICON.check : ""}</button>` : mi && mi.at ? `<button class="eq att ${i.att ? "on" : ""}" data-a="attune" data-u="${i.uid}" aria-pressed="${!!i.att}" title="${i.att ? "Attuned" : "Attune to the item"}">${i.att ? "✦" : ""}</button>` : '<span class="eq none"></span>'}
+      ${mi ? `<button class="it-name it-open" data-a="itemOpen" data-u="${i.uid}" aria-expanded="${open}"><b>${esc(itemName(i))}${mi.hb ? hbTag({ hb: 1 }) : ""}</b><span class="mute small">${sub}</span></button>` : `<div class="it-name"><b>${esc(itemName(i))}</b>${sub ? `<span class="mute small">${sub}</span>` : ""}</div>`}
       <div class="qty"><button class="mini" data-a="qty" data-u="${i.uid}" data-d="-1" aria-label="Less">−</button><b>${i.q}</b><button class="mini" data-a="qty" data-u="${i.uid}" data-d="1" aria-label="More">+</button></div>
+      ${open ? `<div class="it-desc">${mi.d == null ? (typeof srdWait === "function" ? srdWait("of the description") : "") : mi.d ? sbText(mi.d, itemName(i)) : "<span class=\"mute\">No description.</span>"}</div>` : ""}
     </div>`;
   }).join("");
   const addables = [...Object.entries(WEAPONS).map(([k, w]) => ["w:" + k, w.n + " (weapon)"]), ...Object.entries(ARMORS).map(([k, a]) => ["a:" + k, a.n + " (armor)"])].sort((x, y) => x[1].localeCompare(y[1], "fr"));
@@ -2868,6 +3098,7 @@ function tabInventory(ch) {
     <div class="add-item"><label class="field"><span>Add an item</span><input id="newItem" placeholder="E.g. Hempen rope (50 ft)"></label><button class="btn small" data-a="addItem">Add</button></div>
     <div class="add-item"><label class="field"><span>Add a weapon or armor</span><select id="newRef">${addables.map(([k, n]) => `<option value="${k}">${n}</option>`).join("")}</select></label><button class="btn small" data-a="addRef">Add</button></div>
   </section>
+  ${typeof invMagicPanel === "function" ? invMagicPanel(ch) : ""}
   <section class="panel"><h3 class="ph">Pouch</h3>
     <div class="gold-row"><b class="gold big">${p.gold} gp</b></div>
     <div class="add-item"><label class="field"><span>Amount (gp)</span><input id="goldAmt" type="number" inputmode="numeric" placeholder="10"></label><button class="btn small" data-a="gold" data-d="1">Gain</button><button class="btn small ghost" data-a="gold" data-d="-1">Spend</button></div>
@@ -2914,7 +3145,7 @@ function viewModal() {
     if (cast && cast.slots.type === "pact" && cast.slots.lvl >= sp.l) { const left = cast.slots.n - (ch.p.pact || 0); opts.push(`<button class="btn" data-a="castDo" data-v="${m.v}" data-lv="pact" ${left > 0 ? "" : "disabled"}>Pact slot, level ${cast.slots.lvl} <small>(${left}/${cast.slots.n})</small></button>`); }
     if (entry && entry.free) { const r = s.resources.find((x) => x.k === entry.free); if (r) { const left = r.max - (ch.p.res[r.k] || 0); opts.push(`<button class="btn ghost" data-a="castDo" data-v="${m.v}" data-lv="free" data-k="${r.k}" ${left > 0 ? "" : "disabled"}>Free <small>(${left}/${r.max} per rest)</small></button>`); } }
     if (sp.ri) opts.push(`<button class="btn ghost" data-a="castDo" data-v="${m.v}" data-lv="ritual">As a Ritual (+10 minutes, no slot)</button>`);
-    inner = `<h3>Thrown ${sp.n}</h3>${spellDetail(sp)}<div class="cast-opts">${opts.join("") || "<p class=\"mute\">No slot available for this spell.</p>"}</div>`;
+    inner = `<h3>Thrown ${esc(sp.n)}</h3>${spellDetail(sp)}<div class="cast-opts">${opts.join("") || "<p class=\"mute\">No slot available for this spell.</p>"}</div>`;
   } else if (m.k === "del") {
     inner = `<h3>Delete ${esc(ch.b.name)} ?</h3><p>The character will be permanently erased. Export it first if you want to keep it.</p><div class="row-btns"><button class="btn dmgb" data-a="delDo">Delete permanently</button><button class="btn ghost" data-a="closeModal">Cancel</button></div>`;
   } else if (m.k === "export") {
@@ -2998,7 +3229,7 @@ function setClass(b, k) {
   b.cls = k;
   b.skillsClass = []; b.expertise = []; b.skillsLore = []; b.skillPrimal = null;
   b.opts = { style: null, style2: null, order: null, strike: null, dragon: null, mastery: [], inv: [], meta: [], prey: null, land: null, lore2: [], arcanum: {}, asis: b.opts.asis || {}, boon: b.opts.boon || { id: null, a: null } };
-  b.cant = []; b.prep = []; b.gear.cls = "A";
+  b.cant = []; b.prep = []; b.gear.cls = "A"; b.subHb = null;
   if (b.method !== "points") assignStandard(b);
 }
 
@@ -3050,6 +3281,7 @@ async function act(a, d, el) {
     case "setP2": b.bonus.p2 = d.v; if (b.bonus.p1 === d.v) b.bonus.p1 = null; break;
     case "setP1": b.bonus.p1 = d.v; break;
     case "setAsiMode": b.opts.asis[d.lv] = { mode: d.v, a: null, b: null }; break;
+    case "setAsiFeat": { const x = asiAt(b, d.lv); x.feat = d.v; const f = FEATS[d.v]; x.a = f && f.ab && f.ab.length === 1 ? f.ab[0] : f && f.ab && f.ab.includes(x.a) ? x.a : null; x.b = null; break; }
     case "setAsiA": { const x = asiAt(b, d.lv); x.a = d.v; if (x.b === d.v) x.b = null; break; }
     case "setAsiB": asiAt(b, d.lv).b = d.v; break;
     case "boon": b.opts.boon.id = d.v; break;
@@ -3166,9 +3398,9 @@ async function act(a, d, el) {
     case "endConc": ch.p.conc = null; saveSoon(ch); break;
     case "equip": {
       const it = ch.p.inv.find((i) => i.uid === d.u);
-      if (!it) return;
+      if (!it || !it.ref) return;
       const isBody = it.ref.startsWith("a:") && it.ref !== "a:bouclier";
-      if (!it.eq && isBody) ch.p.inv.forEach((i) => { if (i.ref.startsWith("a:") && i.ref !== "a:bouclier") i.eq = false; });
+      if (!it.eq && isBody) ch.p.inv.forEach((i) => { if (i.ref && i.ref.startsWith("a:") && i.ref !== "a:bouclier") i.eq = false; });
       it.eq = !it.eq; saveSoon(ch); break;
     }
     case "qty": { const it = ch.p.inv.find((i) => i.uid === d.u); it.q += +d.d; if (it.q <= 0) ch.p.inv = ch.p.inv.filter((i) => i.uid !== d.u); saveSoon(ch); break; }
@@ -3285,6 +3517,7 @@ document.addEventListener("keydown", (e) => {
 /* ---------------- Démarrage ---------------- */
 async function boot() {
   render();
+  if (typeof HB !== "undefined") HB.boot();
   await Store.init();
   S.chars = (await Store.all()).map((c) => { migrate(c.b); return c; });
   S.loaded = true;
@@ -3297,7 +3530,7 @@ async function boot() {
     await Store.markSeeded();
   }
   render();
-  if (typeof FB !== "undefined") FB.init().then(() => { if (FB.ok) { S.chars.filter((c) => c.adv).forEach((c) => pushMember(c)); render(); if (typeof accountStart === "function") accountStart(); } else if (FB.err) render(); });
+  if (typeof FB !== "undefined") FB.init().then(() => { if (FB.ok) { S.chars.filter((c) => c.adv).forEach((c) => pushMember(c)); render(); if (typeof HB !== "undefined") HB.refresh().then(() => liveRender()); if (typeof accountStart === "function") accountStart(); } else if (FB.err) render(); });
 }
 function exampleCharacter() {
   const b = newBuild();
@@ -3359,6 +3592,7 @@ const Live = {
     this.code = code;
     this.unsub.push(FB.adv(code).onSnapshot((d) => { this.doc = d.exists ? d.data() : null; liveRender(); }, () => { }));
     this.unsub.push(FB.members(code).onSnapshot((q) => { this.members = q.docs.map((d) => ({ id: d.id, ...d.data() })); liveRender(); }, () => { }));
+    if (typeof HB !== "undefined") this.unsub.push(FB.adv(code).collection("homebrew").onSnapshot((q) => { HB.set(code, q.docs.map((d) => d.data()), this.doc && this.doc.name); liveRender(); }, () => { }));
   },
   stop() { this.unsub.forEach((u) => u()); this.unsub = []; this.code = null; this.doc = null; this.members = []; },
 };
@@ -3412,7 +3646,7 @@ function tabAdventure(ch) {
     <section class="panel"><div class="adv-head"><div><span class="eyebrow">Adventure</span><h3 class="ph">${esc(doc ? doc.name : "Loading…")}</h3></div><span class="code-chip">${esc(ch.adv)}</span></div>
       <p class="lbl">The party</p>
       <div class="party-mini">${mem.length ? mem.map(({ m, s }) => `<div class="pm ${m.charId === ch.id ? "me" : ""}"><div class="pm-top"><b>${esc(m.name)}</b><span class="mute small">${CLASSES[m.b.cls] ? CLASSES[m.b.cls].n : ""} ${m.b.level}</span></div>${hpBar(m.p.hp, s.hpMax)}<span class="mute small">${m.p.hp}/${s.hpMax} HP${m.p.cond && m.p.cond.length ? " · " + m.p.cond.map((x) => esc(COND_L[x] || x)).join(", ") : ""}</span></div>`).join("") : "<p class=\"mute small\">Nobody yet.</p>"}</div>
-      <div class="row-btns"><button class="btn small ghost danger" data-a="advLeave">Leave the adventure</button></div>
+      <div class="row-btns"><button class="btn small" data-a="hbOpen" data-code="${esc(ch.adv)}">Homebrew content${HB.defs(ch.adv).length ? " (" + HB.defs(ch.adv).length + ")" : ""}</button><button class="btn small ghost danger" data-a="advLeave">Leave the adventure</button></div>
     </section>
     <section class="panel"><h3 class="ph">Initiative</h3>
       ${ord.list.length ? `<p class="mute small">Round ${ord.round}</p><ol class="init-ro">${ord.list.map((e, i) => `<li class="${i === ord.turn ? "now" : ""} ${e.kind}"><span class="iv">${e.v}</span><b>${esc(e.name)}</b>${i === ord.turn ? "<span class=\"turn-tag\">their turn</span>" : ""}</li>`).join("")}</ol>` : "<p class=\"mute small\">The GM hasn’t started a combat yet.</p>"}
@@ -3436,15 +3670,15 @@ function viewGM() {
   Live.watch(code);
   const doc = Live.doc;
   if (doc && doc.gm !== FB.uid) return `<header class="topbar"><button class="icon-btn" data-a="home" aria-label="Back">${ICON.back}</button><div class="tb-title"><strong>Access denied</strong></div></header><main class="sheet"><p class="mute">Only the Game Master who created this adventure can open this screen.</p></main>`;
-  const tabs = [["groupe", "Party"], ["init", "Initiative"], ["notes", "Notes"]];
-  const body = { groupe: gmParty, init: gmInit, notes: gmNotes }[S.gmTab || "groupe"](doc);
+  const tabs = [["groupe", "Party"], ["init", "Initiative"], ["bestiaire", "Bestiary"], ["notes", "Notes"]];
+  const body = { groupe: gmParty, init: gmInit, bestiaire: gmBestiary, notes: gmNotes }[S.gmTab || "groupe"](doc);
   return `<header class="topbar">
     <button class="icon-btn" data-a="home" aria-label="Back">${ICON.back}</button>
     <div class="tb-title"><strong>${esc(doc ? doc.name : "Loading…")}</strong><span class="eyebrow">Game Master screen</span></div>
     <button class="code-chip big" data-a="copyCode" title="Copy the code">${esc(code)}</button>
   </header>
   <main class="sheet">
-    <nav class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" class="tab ${(S.gmTab || "groupe") === k ? "on" : ""}" data-a="gmTab" data-v="${k}">${n}</button>`).join("")}</nav>
+    <nav class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" class="tab ${(S.gmTab || "groupe") === k ? "on" : ""}" data-a="gmTab" data-v="${k}">${n}</button>`).join("")}<button class="tab" data-a="hbOpen" data-code="${esc(code)}">Homebrew content${HB.defs(code).length ? " (" + HB.defs(code).length + ")" : ""}</button></nav>
     <section class="tab-body">${body}</section>
   </main>`;
 }
@@ -3464,7 +3698,7 @@ function gmParty() {
       <div class="pc-stats"><div><span class="lbl">AC</span><b>${s.ac}</b></div><div><span class="lbl">Init.</span><b>${sg(s.init)}</b></div><div><span class="lbl">Perc.</span><b>${10 + s.perc}</b></div><div><span class="lbl">Spd.</span><b>${fmtM(s.speed)}</b></div>${s.casting ? `<div><span class="lbl">DC</span><b>${s.casting.dc}</b></div>` : ""}</div>
       ${down ? `<p class="pc-alert">Down · successes ${p.ds ? p.ds.s : 0}/3 · failures ${p.ds ? p.ds.f : 0}/3</p>` : ""}
       ${p.cond && p.cond.length ? `<div class="pc-cond">${p.cond.map((x) => `<span>${esc(COND_L[x] || x)}</span>`).join("")}</div>` : ""}
-      ${p.conc && SPELLS[p.conc] ? `<p class="pc-conc">Concentration: ${SPELLS[p.conc].n}</p>` : ""}
+      ${p.conc && SPELLS[p.conc] ? `<p class="pc-conc">Concentration: ${esc(SPELLS[p.conc].n)}</p>` : ""}
       ${slots ? `<div class="pc-slots">${slots}</div>` : ""}
       <button class="btn small ghost" data-a="gmDetail" data-id="${esc(m.id)}">View sheet</button>
     </article>`;
@@ -3476,8 +3710,8 @@ function gmDetailModal(m) {
   if (!s) return "<p>Unreadable sheet.</p>";
   const b = m.b, p = m.p;
   const byLv = {};
-  s.spells.forEach((x) => (byLv[x.l] = byLv[x.l] || []).push(x.n));
-  return `<h3>${esc(b.name)}</h3><p class="mute">${SPECIES[b.species].n} · ${CLASSES[b.cls].n} ${b.level}${s.sub ? " · " + esc(s.sub) : ""} · ${esc(ALIGN_L[b.align] || b.align)}</p>
+  s.spells.forEach((x) => (byLv[x.l] = byLv[x.l] || []).push(esc(x.n)));
+  return `<h3>${esc(b.name)}</h3><p class="mute">${SPECIES[b.species].n} · ${CLASSES[b.cls].n} ${b.level}${BACKGROUNDS[b.bg] ? " · " + esc(BACKGROUNDS[b.bg].n) : ""}${s.sub ? " · " + esc(s.sub) : ""} · ${esc(ALIGN_L[b.align] || b.align)}</p>
     <div class="ro-abil">${ABK.map((k) => { const sv = s.saves.find((x) => x.k === k); return `<div><span class="lbl">${ABIL[k].s}</span><b>${sg(s.m[k])}</b><small>${s.ab[k]} · Save ${sg(sv.v)}${sv.pr ? "●" : ""}</small></div>`; }).join("")}</div>
     <dl class="facts"><div><dt>HP</dt><dd>${p.hp}/${s.hpMax}${p.temp ? " (+" + p.temp + " temp.)" : ""} · Hit Dice ${b.level - (p.hdUsed || 0)}/${b.level}</dd></div>
       <div><dt>Defense</dt><dd>AC ${s.ac} (${esc(s.acNote)}) · initiative ${sg(s.init)} · speed ${fmtM(s.speed)}</dd></div>
@@ -3507,7 +3741,7 @@ function gmInit(doc) {
     if (e.kind === "monstre") hp = `<span class="ihp">${e.hp}/${e.max}</span>${hpBar(e.hp, e.max)}<div class="ihp-btns"><button class="mini dmg" data-a="monHp" data-id="${e.id}" data-d="-1" aria-label="Damage">−</button><input class="mon-amt" id="mon-${e.id}" type="number" inputmode="numeric" placeholder="HP"><button class="mini heal" data-a="monHp" data-id="${e.id}" data-d="1" aria-label="Cure Wounds">+</button></div>`;
     return `<li class="irow ${i === ord.turn ? "now" : ""} ${e.kind} ${e.kind === "monstre" && e.hp <= 0 ? "dead" : ""}">
       <div class="iv-ctl"><button class="mini" data-a="initAdj" data-id="${e.id}" data-d="1" aria-label="Increase">▲</button><span class="iv">${e.v}</span><button class="mini" data-a="initAdj" data-id="${e.id}" data-d="-1" aria-label="Decrease">▼</button></div>
-      <div class="i-main"><b>${esc(e.name)}</b>${e.kind === "monstre" ? `<span class="mute small">AC ${e.ac}</span>` : ""}<div class="i-hp">${hp}</div></div>
+      <div class="i-main"><b>${esc(e.name)}</b>${e.kind === "monstre" ? `<span class="mute small">AC ${e.ac}${e.mk ? ` · <button class="linkish" data-a="monView" data-k="${esc(e.mk)}">stat block</button>` : ""}</span>` : ""}<div class="i-hp">${hp}</div></div>
       <button class="icon-btn" data-a="initDel" data-id="${e.id}" aria-label="Remove">${ICON.close}</button>
     </li>`;
   }).join("");
@@ -3519,6 +3753,7 @@ function gmInit(doc) {
       <button class="btn" data-a="initParty">${ICON.d20} Roll party initiative</button>
       <p class="mute small">Rolls d20 + initiative for each party member and replaces their entries.</p>
       <h4>Add monsters</h4>
+      <p class="mute small">From the <button class="linkish" data-a="gmTab" data-v="bestiaire">SRD bestiary</button> (full statistics), or by hand:</p>
       <label class="field"><span>Name</span><input id="monName" placeholder="E.g. Goblin"></label>
       <div class="mon-grid">
         <label class="field"><span>Number</span><input id="monN" type="number" inputmode="numeric" value="1" min="1" max="20"></label>
@@ -3548,6 +3783,8 @@ async function saveInit(mutator) {
 function sortedIds(it) { return it.list.slice().sort((a, b) => b.v - a.v || (b.dex || 0) - (a.dex || 0)).map((e) => e.id); }
 
 async function advAct(a, d, el) {
+  if (typeof hbAct === "function" && (await hbAct(a, d, el))) return true;
+  if (typeof srdAct === "function" && (await srdAct(a, d, el))) return true;
   if (typeof accAct === "function" && (await accAct(a, d, el))) return true;
   const ch = curChar();
   switch (a) {
@@ -3595,6 +3832,8 @@ async function advAct(a, d, el) {
       try {
         const q = await FB.members(S.gmCode).get();
         await Promise.all(q.docs.map((x) => x.ref.delete()));
+        const h = await FB.adv(S.gmCode).collection("homebrew").get();
+        await Promise.all(h.docs.map((x) => x.ref.delete()));
         await FB.adv(S.gmCode).delete();
       } catch (e) { }
       GmList.remove(S.gmCode); Live.stop(); S.modal = null; S.view = "home"; toast("Adventure deleted");
@@ -3638,9 +3877,13 @@ async function advAct(a, d, el) {
 function advModal(m) {
   const am = typeof accountModal === "function" ? accountModal(m) : null;
   if (am) return am;
+  const hm = typeof hbModal === "function" ? hbModal(m) : null;
+  if (hm) return hm;
+  const sm = typeof srdModal === "function" ? srdModal(m) : null;
+  if (sm) return sm;
   if (m.k === "advCreate") return `<h3>New adventure</h3><p class="mute">You’ll be its Game Master. A code will be created for your players.</p><label class="field big"><span>Adventure name</span><input id="advName" placeholder="E.g. The Lost Mine" autocomplete="off"></label><div class="row-btns"><button class="btn primary" data-a="advCreate">Create</button></div>`;
   if (m.k === "gmDetail") { const mm = Live.members.find((x) => x.id === m.id); return mm ? gmDetailModal(mm) : "<p>This character left the party.</p>"; }
-  if (m.k === "advDelete") return `<h3>Delete the adventure?</h3><p>The party, initiative, and your notes will be erased. Players keep their own sheets.</p><div class="row-btns"><button class="btn dmgb" data-a="advDelete">Delete permanently</button><button class="btn ghost" data-a="closeModal">Cancel</button></div>`;
+  if (m.k === "advDelete") return `<h3>Delete the adventure?</h3><p>The party, initiative, homebrew content and your notes will be erased. Players' sheets stay on their devices.</p><div class="row-btns"><button class="btn dmgb" data-a="advDelete">Delete permanently</button><button class="btn ghost" data-a="closeModal">Cancel</button></div>`;
   return null;
 }
 
@@ -3866,7 +4109,7 @@ function accountStart() { if (Account.user()) syncAccount(); }
 
 /* Forge des Héros — page Compte et réglages : thème, langue, support, version */
 
-const APP_VERSION = "1.7.1";
+const APP_VERSION = "1.8.0";
 
 /* ---------- Thème ---------- */
 const Theme = {
@@ -4014,6 +4257,549 @@ async function settingsAct(a, d) {
   }
   return false;
 }
+
+/* Forge des Héros — contenu maison partagé par l’aventure.
+   Les entrées sont stockées dans adventures/{code}/homebrew/{id} et visibles par les membres.
+   Chaque personnage garde une copie des entrées qu’il utilise (b.hb) pour rester lisible hors ligne et par le MJ. */
+
+const HBSUB = {};        // sous-classes maison, clé "hb_<id>"
+const HBITEMS = {};      // objets maison
+const HB_RAW = {};       // définitions brutes, clé "hb_<id>"
+const HB_TYPES = [["sub", "Subclass"], ["bg", "Background"], ["feat", "Feat"], ["spell", "Spell"], ["item", "Item"]];
+const HB_TYPE_L = Object.fromEntries(HB_TYPES);
+const HB_RARITY = [K("commun"), K("peu commun"), K("rare"), K("très rare"), K("légendaire"), K("artefact")];
+const HB_RARITY_L = { [K("commun")]: "Common", [K("peu commun")]: "Uncommon", [K("rare")]: "Rare", [K("très rare")]: "Very rare", [K("légendaire")]: "Legendary", [K("artefact")]: "Artifact" };
+
+/* Aptitudes de sous-classe du SRD sans étiquette entre parenthèses (remplacées par une sous-classe maison) */
+const SUB_UNTAGGED = {
+  clerc: ["Disciple of Life", "Preserve Life"],
+  druide: ["Circle Spells", "Land’s Aid"],
+  moine: ["Open Hand Technique"],
+  rodeur: ["Hunter’s Lore", "Hunter’s Prey"],
+  ensorceleur: ["Draconic Resilience", "Draconic Spells"],
+  magicien: ["Evocation Savant", "Potent Cantrip"],
+};
+function isSubFeat(cls, n) {
+  const m = String(n).match(/\(([^)]*)\)$/);
+  if (m && !/\d/.test(m[1])) return true;
+  return (SUB_UNTAGGED[cls] || []).includes(n);
+}
+
+const hbKey = (d) => "hb_" + d.id;
+const clampLv = (v, lo, hi) => Math.max(lo, Math.min(hi, parseInt(v, 10) || lo));
+function parseGear(txt) {
+  return String(txt || "").split(/[,\n;]+/).map((x) => x.trim()).filter(Boolean).slice(0, 30).map((x) => {
+    const m = x.match(/^(\d+)\s*[x×]?\s+(.+)$/i) || x.match(/^(.+?)\s*[x×]\s*(\d+)$/i);
+    if (!m) return [x, 1];
+    return /^\d+$/.test(m[1]) ? [m[2], +m[1]] : [m[1], +m[2]];
+  });
+}
+
+/* Transforme une entrée brute en objet compatible avec les données du SRD */
+function hbShape(d) {
+  const base = { n: d.n || "Unnamed", hb: true, hbId: d.id, adv: d.adv || null };
+  switch (d.type) {
+    case "sub": return { ...base, cls: d.cls, d: d.d || "", feats: (d.feats || []).filter((f) => f && f.n).map((f) => ({ l: clampLv(f.l, 3, 20), n: f.n, d: f.d || "" })), spells: d.spells || {} };
+    case "bg": return { ...base, ab: (d.ab || []).slice(0, 3), skills: (d.skills || []).slice(0, 2), tool: d.tool || "—", feat: d.feat || "vigilant", featList: d.feat === "initie" ? d.featList || "clr" : undefined, desc: d.d || "", gear: parseGear(d.gear), gold: Math.max(0, parseInt(d.gold, 10) || 0) };
+    case "feat": return { ...base, d: d.d || "", cat: d.cat === "general" ? "general" : "origine", ab: d.ab || [], pre: d.pre || "" };
+    case "spell": {
+      const o = { ...base, l: clampLv(d.l, 0, 9), e: SC[d.e] ? d.e : "evo", t: d.t || "Action", p: d.p || "—", c: d.c || "V, S", du: d.du || "Instantaneous", co: !!d.co, ri: !!d.ri, cl: (d.cl || []).filter((k) => CLASSES[k]), d: d.d || "" };
+      if (d.dmg) { o.dmg = d.dmg; o.ty = DMG[d.ty] ? d.ty : "force"; }
+      if (d.heal) o.heal = d.heal;
+      if (d.atk === "cac" || d.atk === "dist") o.atk = d.atk;
+      else if (ABIL[d.atk]) o.sv = d.atk;
+      if (d.up) o.up = d.up;
+      return o;
+    }
+    case "item": return { ...base, d: d.d || "", rarity: d.rarity || K("peu commun"), attune: !!d.attune, kind: d.kind || "" };
+  }
+  return null;
+}
+
+/* Enregistre une entrée dans les tables de l’app. force = remplace une version plus ancienne */
+function hbRegister(d, force) {
+  if (!d || !d.id || !d.type) return;
+  const k = hbKey(d);
+  if (HB_RAW[k] && !force) return;
+  const shaped = hbShape(d);
+  if (!shaped) return;
+  HB_RAW[k] = d;
+  const tgt = { sub: HBSUB, bg: BACKGROUNDS, feat: FEATS, spell: SPELLS, item: HBITEMS }[d.type];
+  if (tgt) tgt[k] = shaped;
+}
+function hbUnregister(k) {
+  delete HB_RAW[k];
+  [HBSUB, BACKGROUNDS, FEATS, SPELLS, HBITEMS].forEach((t) => { if (t[k] && t[k].hb) delete t[k]; });
+}
+
+/* Entrées utilisées par un personnage, copiées dans b.hb */
+function hbUsed(b) {
+  const ids = new Set();
+  const add = (k) => { if (typeof k === "string" && k.startsWith("hb_")) ids.add(k); };
+  add(b.bg); add(b.humanFeat); add(b.subHb);
+  if (b.bg && BACKGROUNDS[b.bg]) add(BACKGROUNDS[b.bg].feat);
+  Object.values(b.opts.asis || {}).forEach((a) => a && add(a.feat));
+  [...(b.cant || []), ...(b.prep || []), ...(b.opts.lore2 || []), ...Object.values(b.opts.arcanum || {})].forEach(add);
+  Object.values(b.magic || {}).forEach((m) => { (m.cant || []).forEach(add); add(m.spell); });
+  const hs = b.subHb && HBSUB[b.subHb];
+  if (hs) Object.values(hs.spells || {}).flat().forEach(add);
+  return ids;
+}
+function hbEmbed(b) {
+  if (!b || !b.opts) return;
+  const out = {};
+  hbUsed(b).forEach((k) => { const d = HB_RAW[k] || (b.hb && b.hb[k]); if (d) out[k] = d; });
+  if (Object.keys(out).length) b.hb = out; else delete b.hb;
+}
+
+/* Cache local : { code: { name, defs: [...] } } */
+const HB = {
+  cache: {},
+  boot() {
+    try { this.cache = JSON.parse(localStorage.getItem("forge-hb") || "{}") || {}; } catch (e) { this.cache = {}; }
+    Object.values(this.cache).forEach((a) => (a.defs || []).forEach((d) => hbRegister(d, true)));
+  },
+  persist() { try { localStorage.setItem("forge-hb", JSON.stringify(this.cache)); } catch (e) { } },
+  set(code, defs, name) {
+    const prev = this.cache[code];
+    (prev ? prev.defs || [] : []).forEach((d) => { if (!defs.some((x) => x.id === d.id)) hbUnregister(hbKey(d)); });
+    this.cache[code] = { name: name || (prev && prev.name) || code, defs };
+    defs.forEach((d) => hbRegister(d, true));
+    this.persist();
+  },
+  codes() {
+    const s = new Set();
+    if (typeof GmList !== "undefined") GmList.get().forEach((x) => s.add(x.code));
+    S.chars.forEach((c) => c.adv && s.add(c.adv));
+    return [...s];
+  },
+  advName(code) {
+    const g = typeof GmList !== "undefined" && GmList.get().find((x) => x.code === code);
+    if (g) return g.name;
+    const ch = S.chars.find((c) => c.adv === code && c.advName);
+    return ch ? ch.advName : (this.cache[code] && this.cache[code].name) || code;
+  },
+  defs(code) { return (this.cache[code] && this.cache[code].defs) || []; },
+  async refresh() {
+    if (typeof FB === "undefined" || !FB.ok) return;
+    await Promise.all(this.codes().map(async (code) => {
+      try { const q = await FB.adv(code).collection("homebrew").get(); this.set(code, q.docs.map((d) => d.data()), this.advName(code)); } catch (e) { }
+    }));
+  },
+};
+
+const hbTag = (o) => (o && o.hb ? `<span class="hb-tag" title="Homebrew content">Homebrew</span>` : "");
+function hbCanEdit(d, code) {
+  if (typeof FB === "undefined" || !FB.ok) return false;
+  if (d.by === FB.uid) return true;
+  return !!(Live.code === code && Live.doc && Live.doc.gm === FB.uid);
+}
+
+/* ---------- Écran « Contenu maison » ---------- */
+function hbMeta(d) {
+  const o = hbShape(d);
+  if (!o) return "";
+  switch (d.type) {
+    case "sub": return (CLASSES[o.cls] ? CLASSES[o.cls].n : "") + " · " + o.feats.length + " aptitude" + (o.feats.length > 1 ? "s" : "");
+    case "bg": return o.ab.map((a) => ABIL[a].s).join(", ") + " · " + o.skills.map((k) => SKILLS[k] ? SKILLS[k].n : k).join(", ") + (FEATS[o.feat] ? " · " + FEATS[o.feat].n : "");
+    case "feat": return o.cat === "general" ? "General feat (level 4 and up)" : "Origin feat";
+    case "spell": return (o.l ? "Level " + o.l : "Cantrip") + " · " + SC[o.e] + (o.cl.length ? " · " + o.cl.map((k) => CLASSES[k].n).join(", ") : "");
+    case "item": return (o.kind ? o.kind + " · " : "") + (HB_RARITY_L[o.rarity] || o.rarity) + (o.attune ? " · attunement" : "");
+  }
+  return "";
+}
+
+function viewHB() {
+  const code = S.hbCode;
+  if (typeof FB === "undefined" || !FB.ok) return `<header class="topbar"><button class="icon-btn" data-a="hbBack" aria-label="Back">${ICON.back}</button><div class="tb-title"><strong>Homebrew content</strong></div></header><main class="sheet"><p class="mute">Homebrew content needs a connection to the adventure.</p></main>`;
+  Live.watch(code);
+  if (S.hbf) return viewHBForm();
+  const defs = HB.defs(code).slice().sort((a, b) => (a.type === b.type ? (a.n || "").localeCompare(b.n || "", "fr") : HB_TYPES.findIndex((t) => t[0] === a.type) - HB_TYPES.findIndex((t) => t[0] === b.type)));
+  const f = S.hbFilter || "all";
+  const shown = defs.filter((d) => f === "all" || d.type === f);
+  const counts = {}; defs.forEach((d) => (counts[d.type] = (counts[d.type] || 0) + 1));
+  return `<header class="topbar">
+    <button class="icon-btn" data-a="hbBack" aria-label="Back">${ICON.back}</button>
+    <div class="tb-title"><strong>Homebrew content</strong><span class="eyebrow">${esc(HB.advName(code))} · ${esc(code)}</span></div>
+    <button class="btn small primary" data-a="hbNew">${ICON.plus}<span class="hide-s">Add</span></button>
+  </header>
+  <main class="sheet hb-page">
+    <section class="panel hb-intro"><p>Add subclasses, backgrounds, feats, spells and items from your books or your own creations. They appear in the character builder and on the sheets of every member of this adventure.</p>
+      <p class="mute small">Only people with the adventure code can see this content. Anyone can add entries; only their author and the GM can edit them.</p></section>
+    <div class="chips hb-filter">${chip("All (" + defs.length + ")", f === "all", "hbFilter", 'data-v="all"')}${HB_TYPES.map(([k, n]) => chip(n + (counts[k] ? " (" + counts[k] + ")" : ""), f === k, "hbFilter", `data-v="${k}"`)).join("")}</div>
+    ${shown.length ? `<div class="hb-list">${shown.map((d) => `<article class="hb-card">
+      <div class="hb-top"><span class="hb-type">${HB_TYPE_L[d.type] || ""}</span><b>${esc(d.n)}</b></div>
+      <span class="mute small">${esc(hbMeta(d))}</span>
+      ${d.d ? `<p class="hb-desc">${esc(d.d.length > 220 ? d.d.slice(0, 220) + "…" : d.d)}</p>` : ""}
+      <div class="hb-foot"><span class="mute small">${d.byName ? "By " + esc(d.byName) : ""}</span>${hbCanEdit(d, code) ? `<span class="row-btns"><button class="btn small ghost" data-a="hbEdit" data-id="${esc(d.id)}">Edit</button><button class="btn small ghost danger" data-a="hbDelAsk" data-id="${esc(d.id)}">Delete</button></span>` : ""}</div>
+    </article>`).join("")}</div>` : `<section class="panel empty-state"><h3 class="ph">${defs.length ? "Nothing in this category" : "No homebrew content"}</h3><p>Tap <b>Add</b> to create your first entry.</p></section>`}
+  </main>`;
+}
+
+function hbBlank(type) {
+  return { type, n: "", d: "", cls: S.hbCls || "barbare", feats: [{ l: 3, n: "", d: "" }], spellsTxt: "", ab: [], skills: [], tool: "", feat: "vigilant", featList: "clr", gear: "", gold: 15, cat: "origine", pre: "", fab: [], l: 1, e: "evo", t: "Action", p: "60 feet", c: "V, S", du: "Instantaneous", co: false, ri: false, cl: [], dmg: "", ty: "feu", heal: "", atk: "", up: "", rarity: K("peu commun"), attune: false, kind: "" };
+}
+function hbFormFrom(d) {
+  const f = { ...hbBlank(d.type), ...clone(d) };
+  if (d.type === "feat") f.fab = d.ab || [];
+  if (d.type === "sub" && (!f.feats || !f.feats.length)) f.feats = [{ l: 3, n: "", d: "" }];
+  return f;
+}
+
+function hbInput(k, label, ph, opts = {}) {
+  const v = S.hbf[k];
+  return `<label class="field ${opts.big ? "big" : ""}"><span>${label}</span>${opts.area ? `<textarea data-hbf="${k}" rows="${opts.rows || 4}" placeholder="${ph}">${esc(v)}</textarea>` : `<input data-hbf="${k}" value="${esc(v)}" placeholder="${ph}" ${opts.num ? 'type="number" inputmode="numeric"' : ""} autocomplete="off">`}</label>`;
+}
+
+function viewHBForm() {
+  const f = S.hbf;
+  const t = f.type;
+  const multi = (key, opts, max, label) => `<div class="field"><span>${label}${max ? ` — ${f[key].length}/${max}` : ""}</span><div class="chips">${opts.map(([k, n]) => chip(n, f[key].includes(k), "hbToggle", `data-k="${key}" data-v="${k}" data-max="${max || ""}"`, !f[key].includes(k) && max && f[key].length >= max ? 'aria-disabled="true"' : "")).join("")}</div></div>`;
+  const one = (key, opts, label) => `<div class="field"><span>${label}</span><div class="chips">${opts.map(([k, n]) => chip(n, String(f[key]) === String(k), "hbSet", `data-k="${key}" data-v="${k}"`)).join("")}</div></div>`;
+  let body = "";
+  if (t === "sub") {
+    body = `${one("cls", Object.entries(CLASSES).map(([k, c]) => [k, c.n]), "Class")}
+      <p class="mute small">The SRD subclass features (${esc(CLASSES[f.cls].sub.n)}) will be replaced by these. The class's base features remain.</p>
+      <div class="field"><span>Features</span></div>
+      ${f.feats.map((x, i) => `<div class="hb-feat"><div class="hb-feat-top"><label class="field lv"><span>Level</span><input data-hbf="feats.${i}.l" type="number" inputmode="numeric" min="3" max="20" value="${esc(x.l)}"></label><label class="field"><span>Name</span><input data-hbf="feats.${i}.n" value="${esc(x.n)}" placeholder="E.g. Thundering Strike" autocomplete="off"></label><button class="icon-btn" data-a="hbFeatDel" data-i="${i}" aria-label="Remove the feature">${ICON.close}</button></div>
+        <label class="field"><span>Effect</span><textarea data-hbf="feats.${i}.d" rows="3" placeholder="What the feature does">${esc(x.d)}</textarea></label></div>`).join("")}
+      <button class="btn small ghost" data-a="hbFeatAdd">${ICON.plus} Add a feature</button>
+      ${hbInput("spellsTxt", "Always-prepared spells (optional)", "One line per level, for example: 3: Bless, Cure Wounds", { area: true, rows: 4 })}
+      ${f.spellsTxt ? `<p class="mute small">${hbSpellPreview(f.spellsTxt)}</p>` : ""}`;
+  } else if (t === "bg") {
+    const origin = Object.entries(FEATS).filter(([, x]) => x.cat !== "general");
+    body = `${multi("ab", ABK.map((k) => [k, ABIL[k].n]), 3, "Three abilities")}
+      ${multi("skills", SKK.map((k) => [k, SKILLS[k].n]), 2, "Two skills")}
+      ${one("feat", origin.map(([k, x]) => [k, x.n]), "Origin feat")}
+      ${f.feat === "initie" ? one("featList", Object.entries(MI_NAME), "Feat spell list") : ""}
+      ${hbInput("tool", "Tool proficiency", "E.g. Carpenter's Tools")}
+      ${hbInput("gear", "Equipment", "Separate with commas: Carpenter's Tools, Traveler's Clothes, 2 Torches", { area: true, rows: 3 })}
+      ${hbInput("gold", "Gold pieces", "15", { num: true })}`;
+  } else if (t === "feat") {
+    body = `${one("cat", [["origine", "Origin feat"], ["general", "General feat (level 4+)"]], "Category")}
+      <p class="mute small">${f.cat === "general" ? "Offered instead of an Ability Score Improvement, from level 4." : "Offered to homebrew backgrounds and the human origin feat."}</p>
+      ${hbInput("pre", "Prerequisite (optional)", "E.g. Strength 13 or higher")}
+      ${multi("fab", ABK.map((k) => [k, ABIL[k].n]), 0, "+1 to one ability chosen from (optional)")}`;
+  } else if (t === "spell") {
+    body = `${one("l", Array.from({ length: 10 }, (_, i) => [i, i ? String(i) : "Cantrip"]), "Level")}
+      ${one("e", Object.entries(SC), "School")}
+      ${multi("cl", Object.entries(CLASSES).filter(([, c]) => c.caster).map(([k, c]) => [k, c.n]), 0, "Classes with access")}
+      <div class="two-col">${hbInput("t", "Casting time", "Action")}${hbInput("p", "Range", "60 feet")}</div>
+      <div class="two-col">${hbInput("c", "Components", "V, S, M")}${hbInput("du", "Duration", "Instantaneous")}</div>
+      <div class="chips">${chip("Concentration", f.co, "hbFlag", 'data-k="co"')}${chip("Ritual", f.ri, "hbFlag", 'data-k="ri"')}</div>
+      ${one("atk", [["", "No roll"], ["cac", "Melee attack"], ["dist", "Ranged attack"], ...ABK.map((k) => [k, "Save: " + ABIL[k].n])], "Roll")}
+      <div class="two-col">${hbInput("dmg", "Damage (optional)", "E.g. 3d6")}${hbInput("heal", "Healing (optional)", "E.g. 2d8")}</div>
+      ${f.dmg ? `<label class="field"><span>Damage type</span><select data-hbf="ty">${Object.entries(DMG).map(([k, n]) => `<option value="${k}" ${f.ty === k ? "selected" : ""}>${n}</option>`).join("")}</select></label>` : ""}
+      ${hbInput("up", "At higher levels (optional)", "E.g. +1d6 per level")}`;
+  } else if (t === "item") {
+    body = `${hbInput("kind", "Category", "E.g. Ring, Weapon (longsword), Wondrous item")}
+      ${one("rarity", HB_RARITY.map((r) => [r, HB_RARITY_L[r]]), "Rarity")}
+      <div class="chips">${chip("Requires attunement", f.attune, "hbFlag", 'data-k="attune"')}</div>`;
+  }
+  return `<header class="topbar">
+    <button class="icon-btn" data-a="hbCancel" aria-label="Back">${ICON.back}</button>
+    <div class="tb-title"><strong>${f.id ? "Edit" : "New content"}</strong><span class="eyebrow">${esc(HB.advName(S.hbCode))}</span></div>
+  </header>
+  <main class="sheet hb-page"><section class="panel hb-form">
+    ${f.id ? `<p class="lbl">${HB_TYPE_L[t]}</p>` : `<div class="field"><span>Type</span><div class="chips">${HB_TYPES.map(([k, n]) => chip(n, t === k, "hbType", `data-v="${k}"`)).join("")}</div></div>`}
+    ${hbInput("n", "Name", t === "sub" ? "E.g. Path of the Zealot" : t === "bg" ? "E.g. Artisan" : t === "feat" ? "E.g. Tough" : t === "spell" ? "E.g. Thunder Blade" : "E.g. Ring of Protection", { big: true })}
+    ${hbInput("d", "Description", t === "sub" ? "Subclass overview" : t === "item" ? "What the item does" : t === "spell" ? "What the spell does" : "Description", { area: true, rows: t === "sub" || t === "bg" ? 3 : 6 })}
+    ${body}
+    ${f.err ? `<p class="bad">${esc(f.err)}</p>` : ""}
+    <div class="row-btns"><button class="btn primary" data-a="hbSave">${f.id ? "Save" : "Add to the adventure"}</button><button class="btn ghost" data-a="hbCancel">Cancel</button></div>
+  </section></main>`;
+}
+
+/* « 3 : Bénédiction, Soins » → { 3: ["benediction", "soins"] } */
+const normName = (s) => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[’']/g, "'").replace(/\s+/g, " ").trim();
+function hbParseSpells(txt) {
+  const out = {}, unknown = [];
+  const byName = {};
+  Object.entries(SPELLS).forEach(([id, s]) => (byName[normName(s.n)] = id));
+  String(txt || "").split("\n").forEach((line) => {
+    const m = line.match(/^\s*(\d+)\s*[:\-–]\s*(.+)$/);
+    if (!m) { if (line.trim()) unknown.push(line.trim()); return; }
+    const lv = clampLv(m[1], 1, 20);
+    m[2].split(/[,;]/).map((x) => x.trim()).filter(Boolean).forEach((n) => {
+      const id = byName[normName(n)];
+      if (id) (out[lv] = out[lv] || []).push(id); else unknown.push(n);
+    });
+  });
+  return { spells: out, unknown };
+}
+function hbSpellPreview(txt) {
+  const r = hbParseSpells(txt);
+  const ok = Object.values(r.spells).flat().length;
+  return `${ok} sort${ok > 1 ? "s" : ""} reconnu${ok > 1 ? "s" : ""}${r.unknown.length ? ` · introuvables : ${r.unknown.map(esc).join(", ")} (create them as homebrew spells first, or check the spelling)` : ""}`;
+}
+
+function hbAuthorName() {
+  const u = typeof Account !== "undefined" && Account.user ? Account.user() : null;
+  if (u && u.displayName) return u.displayName;
+  if (Live.doc && Live.doc.gm === FB.uid) return "GM";
+  const ch = S.chars.find((c) => c.adv === S.hbCode);
+  return ch ? ch.b.name : "Player";
+}
+
+function hbValidate(f) {
+  if (!f.n.trim()) return "Enter a name.";
+  if (f.type === "sub" && !f.feats.some((x) => x.n.trim())) return "Add at least one feature.";
+  if (f.type === "bg" && f.ab.length !== 3) return "Choose three abilities.";
+  if (f.type === "bg" && f.skills.length !== 2) return "Choose two skills.";
+  if (f.type === "spell" && !f.cl.length) return "Choose at least one class.";
+  if (f.type === "spell" && f.dmg && !/^\d*d\d+([+-]\d+)?$/i.test(f.dmg.replace(/\s/g, ""))) return "Damage: use a formula like 3d6 or 2d8+2.";
+  if (f.type === "spell" && f.heal && !/^\d*d\d+([+-]\d+)?$/i.test(f.heal.replace(/\s/g, ""))) return "Healing: use a formula like 2d8.";
+  return null;
+}
+function hbToDoc(f) {
+  const d = { id: f.id || uid(), type: f.type, n: f.n.trim().slice(0, 120), d: (f.d || "").slice(0, 6000), adv: S.hbCode, updated: Date.now() };
+  if (f.type === "sub") { d.cls = f.cls; d.feats = f.feats.filter((x) => x.n.trim()).slice(0, 30).map((x) => ({ l: clampLv(x.l, 3, 20), n: x.n.trim().slice(0, 120), d: (x.d || "").slice(0, 3000) })); d.spellsTxt = (f.spellsTxt || "").slice(0, 2000); d.spells = hbParseSpells(f.spellsTxt).spells; }
+  if (f.type === "bg") Object.assign(d, { ab: f.ab, skills: f.skills, tool: f.tool.slice(0, 120), feat: f.feat, featList: f.featList, gear: f.gear.slice(0, 1000), gold: Math.max(0, parseInt(f.gold, 10) || 0) });
+  if (f.type === "feat") Object.assign(d, { cat: f.cat, pre: f.pre.slice(0, 200), ab: f.fab });
+  if (f.type === "spell") Object.assign(d, { l: +f.l, e: f.e, cl: f.cl, t: f.t.slice(0, 80), p: f.p.slice(0, 80), c: f.c.slice(0, 200), du: f.du.slice(0, 80), co: !!f.co, ri: !!f.ri, atk: f.atk, dmg: f.dmg.replace(/\s/g, ""), ty: f.ty, heal: f.heal.replace(/\s/g, ""), up: f.up.slice(0, 200) });
+  if (f.type === "item") Object.assign(d, { kind: f.kind.slice(0, 120), rarity: f.rarity, attune: !!f.attune });
+  return d;
+}
+
+async function hbAct(a, d, el) {
+  switch (a) {
+    case "hbOpen": S.hbCode = d.code; S.hbBack = { view: S.view, tab: S.tab, gmTab: S.gmTab }; S.hbf = null; S.hbFilter = "all"; S.view = "hb"; window.scrollTo(0, 0); return true;
+    case "hbBack": { const bk = S.hbBack || { view: "home" }; S.view = bk.view; if (bk.tab) S.tab = bk.tab; if (bk.gmTab) S.gmTab = bk.gmTab; S.hbf = null; window.scrollTo(0, 0); return true; }
+    case "hbFilter": S.hbFilter = d.v; return true;
+    case "hbNew": S.hbf = hbBlank(S.hbFilter && S.hbFilter !== "all" ? S.hbFilter : "sub"); window.scrollTo(0, 0); return true;
+    case "hbType": { const keep = { n: S.hbf.n, d: S.hbf.d }; S.hbf = { ...hbBlank(d.v), ...keep }; return true; }
+    case "hbEdit": { const def = HB.defs(S.hbCode).find((x) => x.id === d.id); if (def) { S.hbf = hbFormFrom(def); window.scrollTo(0, 0); } return true; }
+    case "hbCancel": S.hbf = null; return true;
+    case "hbSet": { const f = S.hbf; f[d.k] = d.k === "l" ? +d.v : d.v; if (d.k === "cls") S.hbCls = d.v; return true; }
+    case "hbFlag": S.hbf[d.k] = !S.hbf[d.k]; return true;
+    case "hbToggle": { if (el && el.getAttribute("aria-disabled") === "true") return true; toggleIn(S.hbf[d.k], d.v, d.max ? +d.max : null); return true; }
+    case "hbFeatAdd": { const last = S.hbf.feats[S.hbf.feats.length - 1]; S.hbf.feats.push({ l: last ? last.l : 3, n: "", d: "" }); return true; }
+    case "hbFeatDel": S.hbf.feats.splice(+d.i, 1); if (!S.hbf.feats.length) S.hbf.feats.push({ l: 3, n: "", d: "" }); return true;
+    case "hbSave": {
+      const f = S.hbf, err = hbValidate(f);
+      if (err) { f.err = err; return true; }
+      const doc = hbToDoc(f);
+      const prev = HB.defs(S.hbCode).find((x) => x.id === doc.id);
+      doc.by = prev ? prev.by : FB.uid;
+      doc.byName = prev ? prev.byName : hbAuthorName();
+      try {
+        await FB.adv(S.hbCode).collection("homebrew").doc(doc.id).set(doc);
+        HB.set(S.hbCode, [...HB.defs(S.hbCode).filter((x) => x.id !== doc.id), doc]);
+        S.hbf = null; S.hbFilter = doc.type;
+        toast(prev ? "Changes saved" : "« " + doc.n + " » added to the adventure");
+      } catch (e) { f.err = e && e.code === "permission-denied" ? "Save refused: publish the new Firestore rules (see FIREBASE.md)." : "Couldn’t save. Check your connection."; }
+      return true;
+    }
+    case "hbDelAsk": S.modal = { k: "hbDel", id: d.id }; return true;
+    case "hbDel": {
+      try {
+        await FB.adv(S.hbCode).collection("homebrew").doc(d.id).delete();
+        HB.set(S.hbCode, HB.defs(S.hbCode).filter((x) => x.id !== d.id));
+        toast("Entry deleted");
+      } catch (e) { toast("Couldn’t delete."); }
+      S.modal = null; return true;
+    }
+    case "setSub": { const b = S.draft; b.subHb = d.v || null; cleanBuild(b); return true; }
+  }
+  return false;
+}
+
+function hbModal(m) {
+  if (m.k === "hbDel") {
+    const def = HB.defs(S.hbCode).find((x) => x.id === m.id);
+    return `<h3>Delete « ${esc(def ? def.n : "")} » ?</h3><p>The entry is removed from the adventure. Characters already using it keep a copy.</p><div class="row-btns"><button class="btn dmgb" data-a="hbDel" data-id="${esc(m.id)}">Delete</button><button class="btn ghost" data-a="closeModal">Cancel</button></div>`;
+  }
+  return null;
+}
+
+document.addEventListener("input", (e) => {
+  const t = e.target;
+  if (!t.dataset || !t.dataset.hbf || !S.hbf) return;
+  const path = t.dataset.hbf.split(".");
+  let o = S.hbf;
+  for (let i = 0; i < path.length - 1; i++) o = o[path[i]];
+  o[path[path.length - 1]] = t.value;
+});
+document.addEventListener("change", (e) => {
+  const t = e.target;
+  if (t.dataset && t.dataset.hbf === "ty" && S.hbf) S.hbf.ty = t.value;
+  if (t.dataset && (t.dataset.hbf === "dmg" || t.dataset.hbf === "spellsTxt") && S.hbf) render();
+});
+
+/* Forge des Héros — bestiaire et objets magiques du SRD 5.2.
+   Les données (MONSTERS, MAGIC_ITEMS) sont dans srd.js, chargé à la demande pour garder l’app légère. */
+
+const SRD = { st: "", p: null };
+const srdOk = () => typeof MONSTERS !== "undefined";
+function srdLoad() {
+  if (srdOk()) return Promise.resolve();
+  if (SRD.p) return SRD.p;
+  SRD.st = "loading";
+  SRD.p = new Promise((res) => {
+    const s = document.createElement("script");
+    s.src = "srd.js";
+    s.onload = () => { SRD.st = "ok"; res(); liveRender(); };
+    s.onerror = () => { SRD.st = "err"; SRD.p = null; s.remove(); res(); liveRender(); };
+    document.head.appendChild(s);
+  });
+  return SRD.p;
+}
+function srdWait(what) {
+  srdLoad();
+  return SRD.st === "err"
+    ? `<p class="mute">Couldn't load ${what}. Check your connection. <button class="btn small ghost" data-a="srdRetry">Retry</button></p>`
+    : `<p class="mute">Loading ${what}…</p>`;
+}
+
+const crNum = (c) => (c === "1/8" ? 0.125 : c === "1/4" ? 0.25 : c === "1/2" ? 0.5 : +c);
+const normQ = (s) => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[’']/g, "'");
+
+/* ---------- Bestiaire (écran du MJ) ---------- */
+function monMatches() {
+  const q = normQ(S.monQ), ty = S.monTy || "";
+  return Object.entries(MONSTERS)
+    .filter(([, m]) => (!ty || m.ty === ty) && (!q || normQ(m.n).includes(q) || (m.en && normQ(m.en).includes(q))))
+    .sort((a, b) => (S.monSort === "cr" ? crNum(a[1].cr) - crNum(b[1].cr) : 0) || a[1].n.localeCompare(b[1].n, "fr"));
+}
+function monRows() {
+  const list = monMatches();
+  if (!list.length) return `<p class="mute">No creature matches.</p>`;
+  return list.slice(0, 120).map(([k, m]) => `<button class="mon-row" data-a="monView" data-k="${k}"><b>${esc(m.n)}</b><span class="mute small">${esc(m.ty)} · ${esc(m.sz)}</span><span class="mon-cr">CR ${esc(m.cr)}</span><span class="mon-vit">AC ${m.ac} · HP ${m.hp}</span></button>`).join("") + (list.length > 120 ? `<p class="mute small">${list.length - 120} more results: refine your search.</p>` : "");
+}
+function gmBestiary() {
+  if (!srdOk()) return `<section class="panel">${srdWait("the bestiary")}</section>`;
+  const types = [...new Set(Object.values(MONSTERS).map((m) => m.ty))].sort((a, b) => a.localeCompare(b, "fr"));
+  return `<section class="panel"><div class="adv-head"><h3 class="ph">Bestiary</h3><span class="mute small">${Object.keys(MONSTERS).length} SRD 5.2 creatures</span></div>
+    <div class="mon-filters">
+      <label class="field"><span>Search</span><input id="monQ" value="${esc(S.monQ || "")}" placeholder="E.g. goblin, dragon, wolf…" autocomplete="off"></label>
+      <label class="field"><span>Type</span><select id="monTy"><option value="">All</option>${types.map((t) => `<option ${S.monTy === t ? "selected" : ""}>${esc(t)}</option>`).join("")}</select></label>
+    </div>
+    <div class="chips">${chip("By name", S.monSort !== "cr", "monSort", 'data-v="name"')}${chip("By challenge rating", S.monSort === "cr", "monSort", 'data-v="cr"')}</div>
+    <div class="mon-list" id="monList">${monRows()}</div>
+  </section>`;
+}
+
+/* Texte d’un bloc : dés et bonus d’attaque deviennent des boutons de jet */
+function sbText(t, label) {
+  return esc(t)
+    .replace(/((?:Jet d’attaque[^:<]*?|Attack Roll) ?: )([+−-]\d+)/g, (_, a, b) => `${a}<button class="sb-roll" data-a="r20" data-l="${esc(label)} — attaque" data-m="${b.replace("−", "-")}">${b}</button>`)
+    .replace(/(\d+) \((\d+d\d+(?: [+−-] \d+)?)\)/g, (_, n, d) => `<button class="sb-roll dmg" data-a="rDmg" data-l="${esc(label)}" data-e="${d.replace(/\s/g, "").replace("−", "-")}">${n} (${d})</button>`)
+    .replace(/\n/g, "<br>");
+}
+function statBlock(k, inGM) {
+  const m = MONSTERS[k];
+  if (!m) return "<p>Creature not found.</p>";
+  const mods = m.ab.map((v) => mod(v));
+  const sv = Object.fromEntries((m.sv || []).map(([a, v]) => [a, v]));
+  const sec = (title, arr) => (arr && arr.length ? `<h4 class="sb-h">${title}</h4>${arr.map(([n, d]) => `<p class="sb-p"><b>${esc(n)}.</b> ${sbText(d, m.n + " — " + n.replace(/ \(.*$/, ""))}</p>`).join("")}` : "");
+  const imm = [m.imm, m.ci].filter(Boolean).join(" ; ");
+  return `<div class="statblock">
+    <h3>${esc(m.n)}</h3><p class="mute sb-sub">${esc(m.sz)} · ${esc(m.ty)} · ${esc(m.al)}</p>
+    <div class="sb-vit"><div><span class="lbl">AC</span><b>${m.ac}</b>${m.acn ? `<small>${esc(m.acn)}</small>` : ""}</div>
+      <div><span class="lbl">HP</span><b>${m.hp}</b><button class="sb-roll" data-a="rDmg" data-l="${esc(m.n)} — PV" data-e="${esc(m.hd.replace("−", "-"))}">${esc(m.hd)}</button></div>
+      <div><span class="lbl">Initiative</span><button class="sb-roll big" data-a="r20" data-l="${esc(m.n)} — initiative" data-m="${mods[1]}">${sg(mods[1])}</button></div>
+      <div><span class="lbl">CR</span><b>${esc(m.cr)}</b><small>${m.xp.toLocaleString(LANG === "en" ? "en" : "fr")} XP</small></div></div>
+    <p class="sb-speed"><span class="lbl">Speed</span> ${esc(m.sp)}</p>
+    <div class="ro-abil">${ABK.map((a, i) => `<div><span class="lbl">${ABIL[a].s}</span><button class="sb-roll" data-a="r20" data-l="${esc(m.n)} — ${ABIL[a].n}" data-m="${mods[i]}">${sg(mods[i])}</button><small>${m.ab[i]} · Save <button class="sb-roll" data-a="r20" data-l="${esc(m.n)} — sauvegarde de ${ABIL[a].n}" data-m="${sv[a] != null ? sv[a] : mods[i]}">${sg(sv[a] != null ? sv[a] : mods[i])}</button></small></div>`).join("")}</div>
+    <dl class="facts sb-facts">
+      ${m.sk ? `<div><dt>Skills</dt><dd>${m.sk.map(([s, v]) => `${SKILLS[s].n} <button class="sb-roll" data-a="r20" data-l="${esc(m.n)} — ${SKILLS[s].n}" data-m="${v}">${sg(v)}</button>`).join(", ")}</dd></div>` : ""}
+      ${m.vul ? `<div><dt>Vulnerabilities</dt><dd>${esc(m.vul)}</dd></div>` : ""}
+      ${m.res ? `<div><dt>Resistances</dt><dd>${esc(m.res)}</dd></div>` : ""}
+      ${imm ? `<div><dt>Immunities</dt><dd>${esc(imm)}</dd></div>` : ""}
+      <div><dt>Senses</dt><dd>${m.sen ? esc(m.sen) + " ; " : ""}Passive Perception ${m.pp}</dd></div>
+      <div><dt>Languages</dt><dd>${esc(m.lang || "—")}</dd></div>
+      <div><dt>Proficiency</dt><dd>${sg(m.pb)}</dd></div>
+      ${m.gear ? `<div><dt>Equipment</dt><dd>${esc(m.gear)}</dd></div>` : ""}
+    </dl>
+    ${sec("Traits", m.tr)}${sec("Actions", m.act)}${sec("Bonus Actions", m.ba)}${sec("Reactions", m.re)}${sec("Legendary Actions", m.la)}
+    ${inGM ? `<div class="mon-add"><label class="field"><span>Number</span><input id="monAddN" type="number" inputmode="numeric" value="${esc(S.monAddN || 1)}" min="1" max="20"></label>
+      <div class="field"><span>Hit Points</span><div class="chips">${chip("Medium (" + m.hp + ")", !S.monHpRoll, "monHpMode", 'data-v="avg"')}${chip("Thrown " + esc(m.hd), !!S.monHpRoll, "monHpMode", 'data-v="roll"')}</div></div>
+      <button class="btn primary" data-a="monAddSrd" data-k="${k}">${ICON.plus} Add to combat</button></div>` : ""}
+    <p class="legal">SRD 5.2 · Wizards of the Coast LLC · CC-BY-4.0${LANG === "fr" ? " · unofficial translation" : ""}</p>
+  </div>`;
+}
+
+/* ---------- Objets magiques (inventaire) ---------- */
+const RAR_L = { [K("commun")]: "common", [K("peu commun")]: "uncommon", [K("rare")]: "rare", [K("très rare")]: "very rare", [K("légendaire")]: "legendary", [K("artefact")]: "artifact" };
+function miAll() {
+  const out = [];
+  if (srdOk()) Object.entries(MAGIC_ITEMS).forEach(([k, x]) => { if (!x.vg) out.push({ ref: "mi:" + k, n: x.n, en: x.en, r: x.r, at: x.at, h: x.h }); });
+  Object.entries(HBITEMS).forEach(([k, x]) => out.push({ ref: "hb:" + k, n: x.n, r: x.rarity, at: x.attune, h: x.kind, hb: true }));
+  return out;
+}
+function miRows() {
+  const q = normQ(S.miQ);
+  if (!q) return `<p class="mute small">Type a few letters: potion, ring, sword…</p>`;
+  const list = miAll().filter((x) => normQ(x.n).includes(q) || (x.en && normQ(x.en).includes(q))).sort((a, b) => a.n.localeCompare(b.n, "fr"));
+  if (!list.length) return `<p class="mute small">No item matches.</p>`;
+  return list.slice(0, 40).map((x) => `<button class="mi-row" data-a="miAdd" data-ref="${esc(x.ref)}"><b>${esc(x.n)}${x.hb ? hbTag({ hb: 1 }) : ""}</b><span class="mute small">${esc(x.h || "")}${x.r ? " · " + esc(RAR_L[x.r] || x.r) : ""}${x.at ? " · attunement" : ""}</span><span class="mi-plus">${ICON.plus}</span></button>`).join("");
+}
+function miInfo(i) {
+  if (i.ref && i.ref.startsWith("mi:")) { const x = srdOk() && MAGIC_ITEMS[i.ref.slice(3)]; return x ? { h: x.h, r: x.r, at: x.at, d: x.d } : { h: "", r: i.r, at: i.at, d: null }; }
+  if (i.ref && i.ref.startsWith("hb:")) { const x = HBITEMS[i.ref.slice(3)]; return { h: x ? x.kind : i.h, r: x ? x.rarity : i.r, at: x ? x.attune : i.at, d: x ? x.d : i.d, hb: true }; }
+  return null;
+}
+function invMagicPanel(ch) {
+  const att = ch.p.inv.filter((i) => i.att).length;
+  return `<section class="panel"><h3 class="ph">Magic items</h3>
+    ${att ? `<p class="mute small">Attunement: <b class="${att > 3 ? "bad" : ""}">${att}/3</b></p>` : ""}
+    <label class="field"><span>Add a magic item</span><input id="miQ" value="${esc(S.miQ || "")}" placeholder="Search the SRD${typeof HB !== "undefined" ? " and homebrew content" : ""}" autocomplete="off"></label>
+    <div class="mi-list" id="miList">${srdOk() ? miRows() : srdWait("magic items")}</div>
+  </section>`;
+}
+
+async function srdAct(a, d, el) {
+  switch (a) {
+    case "srdRetry": SRD.st = ""; srdLoad(); return true;
+    case "monSort": S.monSort = d.v; return true;
+    case "monView": S.modal = { k: "mon", key: d.k }; return true;
+    case "monHpMode": S.monHpRoll = d.v === "roll"; return true;
+    case "monAddSrd": {
+      const m = MONSTERS[d.k];
+      const n = Math.max(1, Math.min(20, parseInt(($("#monAddN") || {}).value, 10) || 1));
+      const bonus = mod(m.ab[1]);
+      await saveInit((it) => {
+        for (let i = 0; i < n; i++) {
+          const hp = S.monHpRoll ? Math.max(1, rollExpr(m.hd).total) : m.hp;
+          const r = rollD20(bonus, "normal");
+          it.list.push({ id: "m_" + uid(), kind: "monstre", mk: d.k, name: n > 1 ? `${m.n} ${i + 1}` : m.n, v: r.total, dex: bonus, hp, max: hp, ac: m.ac });
+        }
+      });
+      S.modal = null; S.gmTab = "init"; S.monAddN = 1;
+      toast(n > 1 ? n + " × " + m.n + " added to combat" : m.n + " added to combat");
+      return true;
+    }
+    case "miAdd": {
+      const ch = curChar(); if (!ch) return true;
+      let it = null;
+      if (d.ref.startsWith("mi:")) { const x = MAGIC_ITEMS[d.ref.slice(3)]; if (x) it = { uid: uid(), ref: d.ref, n: x.n, q: 1, eq: false, r: x.r, at: x.at ? 1 : 0 }; }
+      if (d.ref.startsWith("hb:")) { const x = HBITEMS[d.ref.slice(3)]; if (x) it = { uid: uid(), ref: d.ref, n: x.n, q: 1, eq: false, r: x.rarity, at: x.attune ? 1 : 0, h: x.kind, d: x.d }; }
+      if (!it) return true;
+      const same = ch.p.inv.find((i) => i.ref === it.ref);
+      if (same) same.q += 1; else ch.p.inv.push(it);
+      S.miQ = ""; saveSoon(ch); toast(it.n + " added");
+      return true;
+    }
+    case "itemOpen": S.openItem = S.openItem === d.u ? null : d.u; return true;
+    case "attune": { const ch = curChar(), it = ch && ch.p.inv.find((i) => i.uid === d.u); if (it) { it.att = it.att ? 0 : 1; saveSoon(ch); } return true; }
+  }
+  return false;
+}
+function srdModal(m) {
+  if (m.k === "mon") return srdOk() ? statBlock(m.key, S.view === "gm") : srdWait("the bestiary");
+  return null;
+}
+
+/* Recherche en direct sans tout redessiner */
+document.addEventListener("input", (e) => {
+  const t = e.target;
+  if (t.id === "monQ") { S.monQ = t.value; const l = $("#monList"); if (l && srdOk()) l.innerHTML = monRows(); }
+  if (t.id === "monAddN") S.monAddN = t.value;
+  if (t.id === "miQ") { S.miQ = t.value; const l = $("#miList"); if (l && srdOk()) l.innerHTML = miRows(); }
+});
+document.addEventListener("change", (e) => {
+  if (e.target.id === "monTy") { S.monTy = e.target.value; const l = $("#monList"); if (l && srdOk()) l.innerHTML = monRows(); }
+});
 
 boot();
 if ("serviceWorker" in navigator) {

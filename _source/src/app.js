@@ -48,6 +48,7 @@ const Store = {
   },
   async put(ch) {
     ch.updated = Date.now();
+    if (typeof hbEmbed === "function") hbEmbed(ch.b);
     if (typeof cloudPut === "function") cloudPut(ch);
     if (typeof pushMember === "function") pushMember(ch);
     if (this.mode === "cloud") {
@@ -93,6 +94,7 @@ function render() {
   else if (S.view === "sheet") app.innerHTML = viewSheet();
   else if (S.view === "gm") app.innerHTML = viewGM();
   else if (S.view === "account") app.innerHTML = viewSettings();
+  else if (S.view === "hb") app.innerHTML = viewHB();
   $("#overlay").innerHTML = (S.modal ? viewModal() : "") + (S.tray ? viewTray() : "");
   $("#rollbar").innerHTML = viewRollbar();
   document.body.classList.toggle("noscroll", !!S.modal || S.tray);
@@ -174,7 +176,7 @@ function viewSummary(b) {
   return `<div class="sum-card">
     <div class="sum-top"><span class="sigil big">${c ? classSigil(b.cls) : "?"}</span>
       <div><div class="sum-name">${esc(b.name || "Héros sans nom")}</div>
-      <div class="mute small">${sp ? sp.n : "Espèce ?"} · ${c ? c.n : "Classe ?"} ${b.level}${bg ? " · " + bg.n : ""}</div></div></div>
+      <div class="mute small">${sp ? sp.n : "Espèce ?"} · ${c ? c.n : "Classe ?"} ${b.level}${bg ? " · " + esc(bg.n) : ""}</div></div></div>
     <div class="sum-abil">${ABK.map((k) => `<div><span class="lbl">${ABIL[k].s}</span><b>${sg(mod(ab[k]))}</b><span class="mute small">${ab[k]}</span></div>`).join("")}</div>
     ${s ? `<div class="sum-vitals"><div><span class="lbl">PV</span><b>${s.hpMax}</b></div><div><span class="lbl">CA</span><b>${s.ac}</b></div><div><span class="lbl">Vitesse</span><b>${fmtM(s.speed)}</b></div><div><span class="lbl">Maîtrise</span><b>${sg(s.pb)}</b></div></div>` : ""}
     ${s && s.casting ? `<div class="sum-cast"><span>DD des sorts <b>${s.casting.dc}</b></span><span>Attaque <b>${sg(s.casting.atk)}</b></span></div>` : ""}
@@ -196,8 +198,17 @@ function stepClass(b) {
   const c = CLASSES[b.cls];
   let detail = "";
   if (c) {
-    const feats = [];
-    for (let l = 1; l <= MAXLV; l++) (c.feats[l] || []).forEach(([n, d]) => feats.push(`<details class="feat ${l > b.level ? "locked" : ""}" ${l <= b.level && l === 1 ? "open" : ""}><summary><span class="lv">Niv. ${l}</span>${n}</summary><p>${d}</p></details>`));
+    const feats = [], hs = hbSub(b);
+    for (let l = 1; l <= MAXLV; l++) {
+      (c.feats[l] || []).forEach(([n, d]) => { if (b.subHb && isSubFeat(b.cls, n)) return; feats.push(`<details class="feat ${l > b.level ? "locked" : ""}" ${l <= b.level && l === 1 ? "open" : ""}><summary><span class="lv">Niv. ${l}</span>${n}</summary><p>${d}</p></details>`); });
+      if (hs) hs.feats.filter((f) => f.l === l).forEach((f) => feats.push(`<details class="feat ${l > b.level ? "locked" : ""}"><summary><span class="lv">Niv. ${l}</span>${esc(f.n)}${hbTag(hs)}</summary><p>${esc(f.d)}</p></details>`));
+    }
+    const subs = Object.entries(HBSUB).filter(([, x]) => x.cls === b.cls);
+    const subPick = `<section class="panel"><h4>Sous-classe (niveau 3)</h4><div class="opt-grid">
+      <button class="opt ${!b.subHb ? "on" : ""}" data-a="setSub" data-v=""><b>${c.sub.n}</b><span>${c.sub.d}</span></button>
+      ${subs.map(([k, x]) => `<button class="opt ${b.subHb === k ? "on" : ""}" data-a="setSub" data-v="${k}"><b>${esc(x.n)}${hbTag(x)}</b><span>${esc(x.d || x.feats.map((f) => f.n).join(", "))}</span></button>`).join("")}
+      ${b.subHb && !hs ? `<button class="opt on" data-a="setSub" data-v=""><b>Sous-classe maison introuvable</b><span>Elle a été supprimée de l’aventure. Touchez pour revenir à ${c.sub.n}.</span></button>` : ""}
+    </div>${!subs.length && typeof FB !== "undefined" && FB.ok ? `<p class="mute small">Vous avez d’autres sous-classes dans vos livres ? Ajoutez-les dans <b>Contenu maison</b>, depuis l’onglet Aventure d’une fiche ou l’écran du MJ.</p>` : ""}</section>`;
     detail = `<section class="panel detail">
       <h3>${c.n}</h3>
       <dl class="facts">
@@ -207,8 +218,8 @@ function stepClass(b) {
         <div><dt>Armures</dt><dd>${compute(b, { inv: [] }).profs.armor}</dd></div>
         <div><dt>Armes</dt><dd>${compute(b, { inv: [] }).profs.weapons}</dd></div>
         <div><dt>Compétences</dt><dd>${c.skills.n} au choix ${c.skills.from === "all" ? "parmi toutes" : "parmi " + c.skills.from.map((k) => SKILLS[k].n).join(", ")}</dd></div>
-        <div><dt>Sous-classe (niv. 3)</dt><dd>${c.sub.n} — ${c.sub.d}</dd></div>
       </dl>
+      ${subPick}
       <h4>Aptitudes</h4><div class="feats">${feats.join("")}</div>
       <p class="mute small">Les aptitudes grisées arrivent à un niveau supérieur à celui choisi.</p>
     </section>`;
@@ -220,9 +231,9 @@ function stepClass(b) {
 function stepOrigin(b) {
   const bgs = Object.entries(BACKGROUNDS).map(([k, g]) => `
     <button class="pick-card ${b.bg === k ? "on" : ""}" data-a="setBg" data-v="${k}">
-      <span class="pc-head"><span class="pc-name">${g.n}</span></span>
-      <span class="pc-tag">${g.desc}</span>
-      <span class="pc-list"><span><b>Caractéristiques</b> ${g.ab.map((a) => ABIL[a].s).join(", ")}</span><span><b>Don</b> ${FEATS[g.feat].n}${g.featList ? " (" + MI_NAME[g.featList] + ")" : ""}</span><span><b>Compétences</b> ${g.skills.map((s) => SKILLS[s].n).join(", ")}</span><span><b>Outils</b> ${g.tool}</span></span>
+      <span class="pc-head"><span class="pc-name">${g.hb ? esc(g.n) : g.n}</span>${hbTag(g)}</span>
+      <span class="pc-tag">${g.hb ? esc(g.desc) : g.desc}</span>
+      <span class="pc-list"><span><b>Caractéristiques</b> ${g.ab.map((a) => ABIL[a].s).join(", ")}</span><span><b>Don</b> ${FEATS[g.feat] ? esc(FEATS[g.feat].n) : "—"}${g.featList ? " (" + MI_NAME[g.featList] + ")" : ""}</span><span><b>Compétences</b> ${g.skills.map((s) => SKILLS[s].n).join(", ")}</span><span><b>Outils</b> ${g.hb ? esc(g.tool) : g.tool}</span></span>
     </button>`).join("");
   const sps = Object.entries(SPECIES).map(([k, s]) => `
     <button class="pick-card ${b.species === k ? "on" : ""}" data-a="setSpecies" data-v="${k}">
@@ -262,7 +273,7 @@ function stepAbilities(b) {
     const pri = CLASSES[b.cls] && CLASSES[b.cls].prim.includes(k);
     return `<div class="ab-row ${pri ? "pri" : ""}"><span class="ab-name">${ABIL[k].n}${pri ? '<span class="tagp">principale</span>' : ""}</span>${ctrl}<span class="ab-bonus">${bonus ? "+" + bonus : "·"}</span>${b.level >= 4 ? `<span class="ab-bonus">${asi > 0 ? "+" + asi : "·"}</span>` : ""}<span class="ab-total">${ab[k]}</span><span class="ab-mod">${sg(mod(ab[k]))}</span></div>`;
   }).join("");
-  const bonusUi = bg ? `<section class="panel"><h4>Bonus d’historique (${bg.n})</h4>
+  const bonusUi = bg ? `<section class="panel"><h4>Bonus d’historique (${esc(bg.n)})</h4>
     <div class="chips">${chip("+2 et +1", b.bonus.mode === "21", "setBonusMode", 'data-v="21"')}${chip("+1 à trois", b.bonus.mode === "111", "setBonusMode", 'data-v="111"')}</div>
     ${b.bonus.mode === "21" ? `<div class="bonus-pick"><span>+2</span><div class="chips">${bg.ab.map((a) => chip(ABIL[a].n, b.bonus.p2 === a, "setP2", `data-v="${a}"`)).join("")}</div></div>
     <div class="bonus-pick"><span>+1</span><div class="chips">${bg.ab.filter((a) => a !== b.bonus.p2).map((a) => chip(ABIL[a].n, b.bonus.p1 === a, "setP1", `data-v="${a}"`)).join("")}</div></div>` : `<p class="mute small">+1 en ${bg.ab.map((a) => ABIL[a].n).join(", ")}.</p>`}
@@ -270,9 +281,9 @@ function stepAbilities(b) {
   const asiUi = activeAsiLevels(b).map((lv) => {
     const a = asiAt(b, lv), dl = `data-lv="${lv}"`;
     return `<section class="panel"><h4>Amélioration de caractéristique (niveau ${lv})</h4>
-    <div class="chips">${chip("+2 à une", a.mode === "2", "setAsiMode", 'data-v="2" ' + dl)}${chip("+1 à deux", a.mode === "11", "setAsiMode", 'data-v="11" ' + dl)}</div>
-    <div class="bonus-pick"><span>${a.mode === "2" ? "+2" : "+1"}</span><div class="chips">${ABK.map((x) => chip(ABIL[x].s, a.a === x, "setAsiA", `data-v="${x}" ${dl}`)).join("")}</div></div>
-    ${a.mode === "11" ? `<div class="bonus-pick"><span>+1</span><div class="chips">${ABK.filter((x) => x !== a.a).map((x) => chip(ABIL[x].s, a.b === x, "setAsiB", `data-v="${x}" ${dl}`)).join("")}</div></div>` : ""}
+    <div class="chips">${chip("+2 à une", a.mode === "2", "setAsiMode", 'data-v="2" ' + dl)}${chip("+1 à deux", a.mode === "11", "setAsiMode", 'data-v="11" ' + dl)}${chip("Un don", a.mode === "feat", "setAsiMode", 'data-v="feat" ' + dl)}</div>
+    ${a.mode === "feat" ? asiFeatUi(b, a, lv) : `<div class="bonus-pick"><span>${a.mode === "2" ? "+2" : "+1"}</span><div class="chips">${ABK.map((x) => chip(ABIL[x].s, a.a === x, "setAsiA", `data-v="${x}" ${dl}`)).join("")}</div></div>
+    ${a.mode === "11" ? `<div class="bonus-pick"><span>+1</span><div class="chips">${ABK.filter((x) => x !== a.a).map((x) => chip(ABIL[x].s, a.b === x, "setAsiB", `data-v="${x}" ${dl}`)).join("")}</div></div>` : ""}`}
   </section>`;
   }).join("") + (b.level >= 19 ? `<section class="panel"><h4>Faveur épique (niveau 19)</h4><p class="mute small">Un don épique et +1 à une caractéristique, jusqu’à 30.</p>
     <div class="opt-grid">${Object.entries(EPIC_BOONS).map(([k, x]) => `<button class="opt ${b.opts.boon.id === k ? "on" : ""}" data-a="boon" data-v="${k}"><b>${x.n}</b><span>${x.d}</span></button>`).join("")}</div>
@@ -283,6 +294,15 @@ function stepAbilities(b) {
   </section>
   <section class="panel abil-table"><div class="ab-row head"><span>Caractéristique</span><span>Base</span><span>Hist.</span>${b.level >= 4 ? "<span>Niveaux</span>" : ""}<span>Total</span><span>Mod.</span></div>${rows}</section>
   ${bonusUi}${asiUi}`;
+}
+
+function asiFeatUi(b, a, lv) {
+  const taken = new Set(featsOf(b).filter((f) => f.src !== "asi" + lv).map((f) => f.id));
+  const list = Object.entries(FEATS).filter(([k, f]) => f.cat === "general" && !taken.has(k));
+  const f = FEATS[a.feat], dl = `data-lv="${lv}"`;
+  return `<p class="mute small">Un don général à la place de l’amélioration.${typeof FB !== "undefined" && FB.ok ? " Ajoutez les dons de vos livres dans le contenu maison d’une aventure." : ""}</p>
+    <div class="opt-grid">${list.map(([k, x]) => `<button class="opt ${a.feat === k ? "on" : ""}" data-a="setAsiFeat" data-v="${k}" ${dl}><b>${esc(x.n)}${hbTag(x)}</b><span>${x.pre ? "<i>Prérequis : " + esc(x.pre) + "</i> · " : ""}${esc(x.d)}</span></button>`).join("")}</div>
+    ${f && (f.ab || []).length ? `<div class="bonus-pick"><span>+1</span><div class="chips">${f.ab.map((x) => chip(ABIL[x].s, a.a === x, "setAsiA", `data-v="${x}" ${dl}`)).join("")}</div></div>` : ""}`;
 }
 
 function skillChips(b, pool, selected, max, act, lockSet) {
@@ -302,9 +322,9 @@ function magicPicker(b, src) {
     ${src === "human" ? `<div class="chips">${Object.entries(MI_NAME).map(([k, n]) => chip("Liste " + n, m.list === k, "miList", `data-src="${src}" data-v="${k}"`)).join("")}</div>` : `<p class="mute small">Liste de sorts : ${MI_NAME[m.list]}</p>`}
     <div class="bonus-pick"><span>Carac.</span><div class="chips">${["int", "sag", "cha"].map((a) => chip(ABIL[a].n, m.ab === a, "miAb", `data-src="${src}" data-v="${a}"`)).join("")}</div></div>
     <p class="lbl">Deux tours de magie (${m.cant.length}/2)</p>
-    <div class="chips">${cants.map((id) => chip(SPELLS[id].n, m.cant.includes(id), "miCant", `data-src="${src}" data-v="${id}"`, !m.cant.includes(id) && m.cant.length >= 2 ? 'aria-disabled="true"' : "")).join("")}</div>
+    <div class="chips">${cants.map((id) => chip(esc(SPELLS[id].n), m.cant.includes(id), "miCant", `data-src="${src}" data-v="${id}"`, !m.cant.includes(id) && m.cant.length >= 2 ? 'aria-disabled="true"' : "")).join("")}</div>
     <p class="lbl">Un sort de niveau 1</p>
-    <div class="chips">${l1.map((id) => chip(SPELLS[id].n, m.spell === id, "miSpell", `data-src="${src}" data-v="${id}"`)).join("")}</div></div>`;
+    <div class="chips">${l1.map((id) => chip(esc(SPELLS[id].n), m.spell === id, "miSpell", `data-src="${src}" data-v="${id}"`)).join("")}</div></div>`;
 }
 
 function stepOptions(b) {
@@ -317,12 +337,13 @@ function stepOptions(b) {
     ${bg ? `<p class="mute small">Déjà acquises par l’historique : ${bg.skills.map((k) => SKILLS[k].n).join(", ")}.</p>` : ""}
     ${skillChips(b, classSkillPool(b), b.skillsClass, c.skills.n, "skClass", fromOthers(b.skillsClass))}</section>`);
   if (sp && sp.skillPick) out.push(`<section class="panel"><h4>Compétence d’espèce (${sp.n})</h4>${skillChips(b, sp.skillPick.from === "all" ? SKK : sp.skillPick.from, b.skillsSpecies, sp.skillPick.n, "skSpecies", fromOthers(b.skillsSpecies))}</section>`);
-  if (sp && sp.bonusFeat) out.push(`<section class="panel"><h4>Don d’origine (humain)</h4><div class="opt-grid">${Object.entries(FEATS).map(([k, f]) => `<button class="opt ${b.humanFeat === k ? "on" : ""}" data-a="humanFeat" data-v="${k}"><b>${f.n}</b><span>${f.d}</span></button>`).join("")}</div></section>`);
+  if (sp && sp.bonusFeat) out.push(`<section class="panel"><h4>Don d’origine (humain)</h4><div class="opt-grid">${Object.entries(FEATS).filter(([, f]) => f.cat !== "general").map(([k, f]) => `<button class="opt ${b.humanFeat === k ? "on" : ""}" data-a="humanFeat" data-v="${k}"><b>${esc(f.n)}${hbTag(f)}</b><span>${esc(f.d)}</span></button>`).join("")}</div></section>`);
   featsOf(b).forEach((f) => {
     if (f.id === "doue") out.push(`<section class="panel"><h4>Don Doué — ${b.skilled.length}/3</h4>${skillChips(b, SKK, b.skilled, 3, "skSkilled", fromOthers(b.skilled))}</section>`);
     if (f.id === "initie") out.push(`<section class="panel">${magicPicker(b, f.src)}</section>`);
   });
-  if (b.cls === "barde" && b.level >= 3) out.push(`<section class="panel"><h4>Collège du Savoir : trois compétences — ${b.skillsLore.length}/3</h4>${skillChips(b, SKK, b.skillsLore, 3, "skLore", fromOthers(b.skillsLore))}</section>`);
+  const std = srdSub(b);
+  if (b.cls === "barde" && b.level >= 3 && std) out.push(`<section class="panel"><h4>Collège du Savoir : trois compétences — ${b.skillsLore.length}/3</h4>${skillChips(b, SKK, b.skillsLore, 3, "skLore", fromOthers(b.skillsLore))}</section>`);
   if (b.cls === "barbare" && b.level >= 3) out.push(`<section class="panel"><h4>Savoir primitif : une compétence de barbare</h4>${skillChips(b, c.skills.from, b.skillPrimal ? [b.skillPrimal] : [], 1, "skPrimal", fromOthers(b.skillPrimal ? [b.skillPrimal] : []))}</section>`);
   const ex = expertiseCount(b);
   if (ex) out.push(`<section class="panel"><h4>Expertise — ${b.expertise.length}/${ex}</h4><p class="mute small">Bonus de maîtrise doublé.</p><div class="chips">${expertisePool(b).map((k) => chip(SKILLS[k].n, b.expertise.includes(k), "expertise", `data-v="${k}"`, !b.expertise.includes(k) && b.expertise.length >= ex ? 'aria-disabled="true"' : "")).join("")}</div></section>`);
@@ -345,13 +366,13 @@ function stepOptions(b) {
     out.push(`<section class="panel"><h4>Manifestations occultes — ${b.opts.inv.length}/${n}</h4><div class="opt-grid">${Object.entries(INVOCATIONS).filter(([, v]) => v.lv <= b.level).map(([k, v]) => `<button class="opt ${b.opts.inv.includes(k) ? "on" : ""}" data-a="inv" data-v="${k}" ${!b.opts.inv.includes(k) && b.opts.inv.length >= n ? 'aria-disabled="true"' : ""}><b>${v.n}</b><span>${v.d}</span></button>`).join("")}</div></section>`);
   }
   if (b.cls === "ensorceleur" && b.level >= 2) { const mc = metaCount(b); out.push(`<section class="panel"><h4>Métamagie — ${b.opts.meta.length}/${mc}</h4><div class="opt-grid">${Object.entries(METAMAGIC).map(([k, v]) => `<button class="opt ${b.opts.meta.includes(k) ? "on" : ""}" data-a="meta" data-v="${k}" ${!b.opts.meta.includes(k) && b.opts.meta.length >= mc ? 'aria-disabled="true"' : ""}><b>${v.n}</b><span>${v.d}</span></button>`).join("")}</div></section>`); }
-  if (b.cls === "ensorceleur" && b.level >= 6) out.push(`<section class="panel"><h4>Affinité élémentaire : type de dégâts</h4><p class="mute small">Celui de votre ascendance draconique.</p><div class="chips">${[K("acide"), K("froid"), K("feu"), K("foudre"), K("poison")].map((t) => chip(DMG[t][0].toUpperCase() + DMG[t].slice(1), b.opts.dragon === t, "dragon", `data-v="${t}"`)).join("")}</div></section>`);
-  if (b.cls === "guerrier" && b.level >= 7) out.push(`<section class="panel"><h4>Second style de combat (Champion)</h4><div class="opt-grid">${Object.entries(FIGHTING_STYLES).filter(([k]) => k !== b.opts.style).map(([k, f]) => `<button class="opt ${b.opts.style2 === k ? "on" : ""}" data-a="style2" data-v="${k}"><b>${f.n}</b><span>${f.d}</span></button>`).join("")}</div></section>`);
+  if (b.cls === "ensorceleur" && b.level >= 6 && std) out.push(`<section class="panel"><h4>Affinité élémentaire : type de dégâts</h4><p class="mute small">Celui de votre ascendance draconique.</p><div class="chips">${[K("acide"), K("froid"), K("feu"), K("foudre"), K("poison")].map((t) => chip(DMG[t][0].toUpperCase() + DMG[t].slice(1), b.opts.dragon === t, "dragon", `data-v="${t}"`)).join("")}</div></section>`);
+  if (b.cls === "guerrier" && b.level >= 7 && std) out.push(`<section class="panel"><h4>Second style de combat (Champion)</h4><div class="opt-grid">${Object.entries(FIGHTING_STYLES).filter(([k]) => k !== b.opts.style).map(([k, f]) => `<button class="opt ${b.opts.style2 === k ? "on" : ""}" data-a="style2" data-v="${k}"><b>${f.n}</b><span>${f.d}</span></button>`).join("")}</div></section>`);
   if (STRIKE_OPTS[b.cls] && b.level >= STRIKE_OPTS[b.cls].lvl) { const so = STRIKE_OPTS[b.cls]; out.push(`<section class="panel"><h4>${so.label} (niveau ${so.lvl})</h4><div class="opt-grid">${Object.entries(so.opts).map(([k, o]) => `<button class="opt ${b.opts.strike === k ? "on" : ""}" data-a="strike" data-v="${k}"><b>${o.n}</b><span>${o.d}</span></button>`).join("")}</div></section>`); }
-  if (b.cls === "rodeur" && b.level >= 3) out.push(`<section class="panel"><h4>Proie du chasseur</h4><div class="opt-grid">
+  if (b.cls === "rodeur" && b.level >= 3 && std) out.push(`<section class="panel"><h4>Proie du chasseur</h4><div class="opt-grid">
     <button class="opt ${b.opts.prey === "colosse" ? "on" : ""}" data-a="prey" data-v="colosse"><b>Tueur de colosses</b><span>Une fois par tour, +1d8 dégâts contre une cible blessée.</span></button>
     <button class="opt ${b.opts.prey === "horde" ? "on" : ""}" data-a="prey" data-v="horde"><b>Briseur de hordes</b><span>Une attaque de plus contre une autre créature proche de la cible.</span></button></div></section>`);
-  if (b.cls === "druide" && b.level >= 3) out.push(`<section class="panel"><h4>Cercle de la Terre : votre terre</h4><div class="opt-grid">${Object.entries(LAND_SPELLS).map(([k, l]) => `<button class="opt ${b.opts.land === k ? "on" : ""}" data-a="land" data-v="${k}"><b>${l.n}</b><span>${Object.values(l.s).flat().map((id) => SPELLS[id].n).join(", ")}</span></button>`).join("")}</div></section>`);
+  if (b.cls === "druide" && b.level >= 3 && std) out.push(`<section class="panel"><h4>Cercle de la Terre : votre terre</h4><div class="opt-grid">${Object.entries(LAND_SPELLS).map(([k, l]) => `<button class="opt ${b.opts.land === k ? "on" : ""}" data-a="land" data-v="${k}"><b>${l.n}</b><span>${Object.values(l.s).flat().map((id) => SPELLS[id].n).join(", ")}</span></button>`).join("")}</div></section>`);
   out.push(`<section class="panel"><h4>Langues — ${b.langs.length}/2</h4><p class="mute small">Vous parlez le commun et deux autres langues.</p><div class="chips">${LANGS.map((l) => chip(LANG_L[l], b.langs.includes(l), "lang", `data-v="${esc(l)}"`, !b.langs.includes(l) && b.langs.length >= 2 ? 'aria-disabled="true"' : "")).join("")}</div></section>`);
   return out.join("");
 }
@@ -362,7 +383,7 @@ function spellRow(id, on, act, disabled, locked, src) {
   return `<div class="spell-row ${on ? "on" : ""} ${locked ? "lock" : ""}">
     <button class="sr-main" data-a="${locked ? "toggleSpell" : act}" data-v="${id}" ${disabled && !on && !locked ? 'aria-disabled="true"' : ""} aria-pressed="${on}">
       <span class="sr-check">${on || locked ? ICON.check : ""}</span>
-      <span class="sr-name">${s.n}${s.co ? '<i class="tagc" title="Concentration">C</i>' : ""}${s.ri ? '<i class="tagc" title="Rituel">R</i>' : ""}</span>
+      <span class="sr-name">${esc(s.n)}${s.co ? '<i class="tagc" title="Concentration">C</i>' : ""}${s.ri ? '<i class="tagc" title="Rituel">R</i>' : ""}${hbTag(s)}</span>
       <span class="sr-meta">${src ? esc(src) : SC[s.e]}</span>
     </button>
     <button class="sr-info" data-a="toggleSpell" data-v="${id}" aria-label="Détails" aria-expanded="${open}">${open ? "−" : "i"}</button>
@@ -370,7 +391,8 @@ function spellRow(id, on, act, disabled, locked, src) {
   </div>`;
 }
 function spellDetail(s) {
-  return `<dl class="spell-facts"><div><dt>Incantation</dt><dd>${s.t}</dd></div><div><dt>Portée</dt><dd>${s.p}</dd></div><div><dt>Composantes</dt><dd>${s.c}</dd></div><div><dt>Durée</dt><dd>${s.co ? "Concentration, " : ""}${s.du}</dd></div></dl><p>${s.d}</p>${s.up ? `<p class="mute small">Niveau supérieur : ${s.up}</p>` : ""}`;
+  const e = s.hb ? esc : (x) => x;
+  return `<dl class="spell-facts"><div><dt>Incantation</dt><dd>${e(s.t)}</dd></div><div><dt>Portée</dt><dd>${e(s.p)}</dd></div><div><dt>Composantes</dt><dd>${e(s.c)}</dd></div><div><dt>Durée</dt><dd>${s.co ? "Concentration, " : ""}${e(s.du)}</dd></div></dl><p>${e(s.d)}</p>${s.up ? `<p class="mute small">Niveau supérieur : ${e(s.up)}</p>` : ""}`;
 }
 
 function stepSpells(b) {
@@ -385,7 +407,7 @@ function stepSpells(b) {
   const lvTabs = ["all", ...Array.from({ length: max }, (_, i) => i + 1)].map((l) => chip(l === "all" ? "Tous" : "Niveau " + l, S.spellLvl == l, "spellLvl", `data-v="${l}"`)).join("");
   const pool = [];
   for (let l = 1; l <= max; l++) if (S.spellLvl === "all" || S.spellLvl == l) pool.push(`<p class="lvl-sep">Niveau ${l}</p>` + classSpellPool(b, l).filter((id) => !gIds.has(id)).map((id) => spellRow(id, b.prep.includes(id), "pickPrep", b.prep.length >= np)).join(""));
-  if (b.cls === "barde" && b.level >= 6) {
+  if (b.cls === "barde" && b.level >= 6 && srdSub(b)) {
     const lp = []; for (let l = 0; l <= max; l++) lp.push(...Object.keys(SPELLS).filter((id) => SPELLS[id].l === l && !SPELLS[id].cl.includes("barde") && SPELLS[id].cl.some((x) => ["clerc", "druide", "magicien"].includes(x)) && !gIds.has(id) || b.opts.lore2.includes(id) && SPELLS[id].l === l));
     const uniq = [...new Set(lp)].sort((x, y) => SPELLS[x].l - SPELLS[y].l || SPELLS[x].n.localeCompare(SPELLS[y].n, "fr"));
     html += `<section class="panel"><h4>Découvertes magiques — ${b.opts.lore2.length}/2</h4><p class="mute small">Deux sorts de clerc, druide ou magicien, toujours préparés.</p>${uniq.map((id) => spellRow(id, b.opts.lore2.includes(id), "lore2", b.opts.lore2.length >= 2, false, SPELLS[id].l ? "niv. " + SPELLS[id].l : "tour")).join("")}</section>`;
@@ -400,7 +422,7 @@ function stepSpells(b) {
 
 function gearList(list) {
   return `<ul class="gear">${list.map(([ref, q]) => {
-    const n = ref.startsWith("w:") ? WEAPONS[ref.slice(2)].n : ref.startsWith("a:") ? ARMORS[ref.slice(2)].n : GEAR[ref];
+    const n = ref.startsWith("w:") ? WEAPONS[ref.slice(2)].n : ref.startsWith("a:") ? ARMORS[ref.slice(2)].n : GEAR[ref] || esc(ref);
     return `<li>${q && q > 1 ? `<b>${q}×</b> ` : ""}${n}</li>`;
   }).join("")}</ul>`;
 }
@@ -412,7 +434,7 @@ function stepEquip(b) {
   clsOpts.push([c.gearB ? "C" : "B", "Or uniquement", `<p class="gold big">${c.goldB} po</p><p class="mute small">Achetez votre équipement vous-même.</p>`]);
   const st = startingInventory(b);
   return `<section class="block"><h3 class="bh">${c.n}</h3><div class="opt-grid">${clsOpts.map(([k, n, h]) => `<button class="opt tall ${b.gear.cls === k ? "on" : ""}" data-a="gearCls" data-v="${k}"><b>${n}</b>${h}</button>`).join("")}</div></section>
-  <section class="block"><h3 class="bh">${bg.n}</h3><div class="opt-grid">
+  <section class="block"><h3 class="bh">${esc(bg.n)}</h3><div class="opt-grid">
     <button class="opt tall ${b.gear.bg === "A" ? "on" : ""}" data-a="gearBg" data-v="A"><b>Équipement d’historique</b>${gearList(bg.gear)}<p class="gold">+ ${bg.gold} po</p></button>
     <button class="opt tall ${b.gear.bg === "B" ? "on" : ""}" data-a="gearBg" data-v="B"><b>Or uniquement</b><p class="gold big">50 po</p></button></div></section>
   <section class="panel"><h4>Votre sac au départ</h4><p class="mute small">${st.inv.length} objets · ${st.gold} po. Les armes et la meilleure armure maîtrisée sont équipées automatiquement.</p></section>`;
@@ -509,7 +531,7 @@ function tabActions(ch, s) {
   const cantHtml = cantrips.map((x) => {
     const dice = x.dmg ? scaleCantrip(x, b.level) : null;
     return `<div class="atk spell">
-      <div class="atk-name"><b>${x.n}</b><span class="mute small">${x.p} · tour de magie</span></div>
+      <div class="atk-name"><b>${esc(x.n)}</b><span class="mute small">${esc(x.p)} · tour de magie</span></div>
       ${x.atk ? `<button class="rb hit" data-a="r20" data-l="${esc(x.n)} — attaque" data-m="${x.atk}">${sg(x.atk)}</button>` : `<span class="rb dc">DD ${x.dc}<small>${ABIL[x.sv].s}</small></span>`}
       ${dice ? `<button class="rb dmg" data-a="rDmg" data-l="${esc(x.n)} — ${DMG[x.ty]}" data-e="${dice}${x.dmgBonus ? (x.dmgBonus > 0 ? "+" : "") + x.dmgBonus : ""}">${dice}${x.dmgBonus ? sg(x.dmgBonus) : ""}<small>${x.beams ? beams(b.level) + " rayon" + (beams(b.level) > 1 ? "s" : "") : DMG[x.ty]}</small></button>` : ""}
     </div>`;
@@ -523,13 +545,13 @@ function tabActions(ch, s) {
   if (b.cls === "druide" && b.level >= 7 && b.opts.strike === "primale") extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Frappe primale" data-e="${b.level >= 15 ? "2d8" : "1d8"}">Frappe primale ${b.level >= 15 ? "2d8" : "1d8"}</button>`);
   if (b.cls === "paladin" && b.level >= 11) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Frappes radieuses" data-e="1d8">Frappes radieuses +1d8</button>`);
   if (b.cls === "barbare" && b.level >= 9) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Frappe brutale" data-e="${b.level >= 17 ? "2d10" : "1d10"}">Frappe brutale ${b.level >= 17 ? "2d10" : "1d10"}</button>`);
-  if (b.cls === "moine" && b.level >= 6) extras.push(`<button class="rb heal wide" data-a="rHeal" data-l="Plénitude du corps" data-e="${s.maDie}+${s.m.sag}">Plénitude du corps ${s.maDie}${sg(s.m.sag)}</button>`);
+  if (b.cls === "moine" && b.level >= 6 && srdSub(b)) extras.push(`<button class="rb heal wide" data-a="rHeal" data-l="Plénitude du corps" data-e="${s.maDie}+${s.m.sag}">Plénitude du corps ${s.maDie}${sg(s.m.sag)}</button>`);
   if (b.cls === "rodeur" && b.level >= 10) extras.push(`<button class="rb heal wide" data-a="rHeal" data-l="Infatigable (PV temporaires)" data-e="1d8+${s.m.sag}">Infatigable 1d8${sg(s.m.sag)}</button>`);
   if (b.cls === "clerc" && b.level >= 2) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Étincelle divine" data-e="1d8+${s.m.sag}">Étincelle divine 1d8${sg(s.m.sag)}</button>`);
   if (b.species === "drakeide") extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Souffle (JS Dex DD ${8 + s.m.con + s.pb})" data-e="${b.level >= 5 ? "2d10" : "1d10"}">Souffle ${b.level >= 5 ? "2d10" : "1d10"} · DD ${8 + s.m.con + s.pb}</button>`);
   if (b.cls === "rodeur" || s.spells.some((x) => x.id === "marquechasseur")) { const hm = b.cls === "rodeur" && b.level >= 20 ? "1d10" : "1d6"; extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Marque du chasseur" data-e="${hm}">Marque du chasseur +${hm}</button>`); }
-  if (b.cls === "rodeur" && b.opts.prey === "colosse" && b.level >= 3) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Tueur de colosses" data-e="1d8">Tueur de colosses +1d8</button>`);
-  if (b.cls === "barbare" && b.level >= 3) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Frénésie" data-e="${s.rageDmg}d6">Frénésie ${s.rageDmg}d6</button>`);
+  if (b.cls === "rodeur" && srdSub(b) && b.opts.prey === "colosse" && b.level >= 3) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Tueur de colosses" data-e="1d8">Tueur de colosses +1d8</button>`);
+  if (b.cls === "barbare" && b.level >= 3 && srdSub(b)) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Frénésie" data-e="${s.rageDmg}d6">Frénésie ${s.rageDmg}d6</button>`);
   return `<div class="cols">
     <section class="panel"><h3 class="ph">Attaques</h3><p class="mute small">Attaques par action : ${s.apa}${s.crit < 20 ? " · critique sur " + s.crit + "-20" : ""}${b.cls === "moine" ? " · arts martiaux " + s.maDie.slice(1) : ""}</p>
       ${atk}${cantHtml}${extras.length ? `<div class="extras">${extras.join("")}</div>` : ""}</section>
@@ -579,7 +601,7 @@ function tabSpells(ch, s) {
     const heal = x.heal ? x.heal + (x.id === "simulacredevie" ? "" : (x.mod >= 0 ? "+" : "") + x.mod) : null;
     return `<div class="spell-row sheet-spell ${p.conc === x.id ? "conc" : ""}">
       <button class="sr-main" data-a="toggleSpell" data-v="${x.id}" aria-expanded="${open}">
-        <span class="sr-name">${x.n}${x.co ? '<i class="tagc" title="Concentration">C</i>' : ""}${x.ri ? '<i class="tagc" title="Rituel">R</i>' : ""}</span>
+        <span class="sr-name">${esc(x.n)}${x.co ? '<i class="tagc" title="Concentration">C</i>' : ""}${x.ri ? '<i class="tagc" title="Rituel">R</i>' : ""}</span>
         <span class="sr-meta">${x.t} · ${x.p}${x.always ? " · " + esc(x.src) : ""}</span>
       </button>
       <div class="sr-acts">
@@ -594,21 +616,25 @@ function tabSpells(ch, s) {
   }).join("")).join("");
   return `<section class="panel">
     ${cast ? `<div class="cast-head"><div><span class="lbl">Caractéristique</span><b>${ABIL[cast.ab].n}</b></div><div><span class="lbl">DD des sorts</span><b>${cast.dc}</b></div><div><span class="lbl">Attaque de sort</span><b>${sg(cast.atk)}</b></div></div><div class="slots">${slots}</div>` : ""}
-    ${p.conc ? `<div class="conc-bar">Concentration : <b>${SPELLS[p.conc].n}</b><button class="btn small ghost" data-a="endConc">Terminer</button></div>` : ""}
+    ${p.conc ? `<div class="conc-bar">Concentration : <b>${SPELLS[p.conc] ? esc(SPELLS[p.conc].n) : ""}</b><button class="btn small ghost" data-a="endConc">Terminer</button></div>` : ""}
     ${groups}
   </section>`;
 }
 
 function tabInventory(ch) {
   const p = ch.p;
+  if (typeof srdLoad === "function" && p.inv.some((i) => i.ref && i.ref.startsWith("mi:"))) srdLoad();
   const rows = p.inv.map((i) => {
     const w = i.ref && i.ref.startsWith("w:") && WEAPONS[i.ref.slice(2)];
     const a = i.ref && i.ref.startsWith("a:") && ARMORS[i.ref.slice(2)];
-    const sub = w ? `${w.d} ${DMG[w.t]}${w.p.length ? " · " + w.p.map((x) => WPROP[x]).join(", ") : ""}` : a ? (a.t === "bouclier" ? "+2 CA" : `CA ${a.ac}${a.dex === 99 ? " + Dex" : a.dex ? " + Dex (max 2)" : ""}`) : "";
-    return `<div class="item">
-      ${w || a ? `<button class="eq ${i.eq ? "on" : ""}" data-a="equip" data-u="${i.uid}" aria-pressed="${i.eq}" title="${i.eq ? "Équipé" : "Équiper"}">${i.eq ? ICON.check : ""}</button>` : '<span class="eq none"></span>'}
-      <div class="it-name"><b>${esc(itemName(i))}</b>${sub ? `<span class="mute small">${sub}</span>` : ""}</div>
+    const mi = typeof miInfo === "function" ? miInfo(i) : null;
+    const sub = w ? `${w.d} ${DMG[w.t]}${w.p.length ? " · " + w.p.map((x) => WPROP[x]).join(", ") : ""}` : a ? (a.t === "bouclier" ? "+2 CA" : `CA ${a.ac}${a.dex === 99 ? " + Dex" : a.dex ? " + Dex (max 2)" : ""}`) : mi ? esc([mi.h, mi.r ? RAR_L[mi.r] || mi.r : "", mi.at ? "harmonisation" : ""].filter(Boolean).join(" · ")) : "";
+    const open = mi && S.openItem === i.uid;
+    return `<div class="item ${mi ? "magic" : ""}">
+      ${w || a ? `<button class="eq ${i.eq ? "on" : ""}" data-a="equip" data-u="${i.uid}" aria-pressed="${i.eq}" title="${i.eq ? "Équipé" : "Équiper"}">${i.eq ? ICON.check : ""}</button>` : mi && mi.at ? `<button class="eq att ${i.att ? "on" : ""}" data-a="attune" data-u="${i.uid}" aria-pressed="${!!i.att}" title="${i.att ? "Harmonisé" : "Se lier à l’objet"}">${i.att ? "✦" : ""}</button>` : '<span class="eq none"></span>'}
+      ${mi ? `<button class="it-name it-open" data-a="itemOpen" data-u="${i.uid}" aria-expanded="${open}"><b>${esc(itemName(i))}${mi.hb ? hbTag({ hb: 1 }) : ""}</b><span class="mute small">${sub}</span></button>` : `<div class="it-name"><b>${esc(itemName(i))}</b>${sub ? `<span class="mute small">${sub}</span>` : ""}</div>`}
       <div class="qty"><button class="mini" data-a="qty" data-u="${i.uid}" data-d="-1" aria-label="Moins">−</button><b>${i.q}</b><button class="mini" data-a="qty" data-u="${i.uid}" data-d="1" aria-label="Plus">+</button></div>
+      ${open ? `<div class="it-desc">${mi.d == null ? (typeof srdWait === "function" ? srdWait("de la description") : "") : mi.d ? sbText(mi.d, itemName(i)) : '<span class="mute">Pas de description.</span>'}</div>` : ""}
     </div>`;
   }).join("");
   const addables = [...Object.entries(WEAPONS).map(([k, w]) => ["w:" + k, w.n + " (arme)"]), ...Object.entries(ARMORS).map(([k, a]) => ["a:" + k, a.n + " (armure)"])].sort((x, y) => x[1].localeCompare(y[1], "fr"));
@@ -617,6 +643,7 @@ function tabInventory(ch) {
     <div class="add-item"><label class="field"><span>Ajouter un objet</span><input id="newItem" placeholder="Ex. Corde de chanvre (15 m)"></label><button class="btn small" data-a="addItem">Ajouter</button></div>
     <div class="add-item"><label class="field"><span>Ajouter une arme ou armure</span><select id="newRef">${addables.map(([k, n]) => `<option value="${k}">${n}</option>`).join("")}</select></label><button class="btn small" data-a="addRef">Ajouter</button></div>
   </section>
+  ${typeof invMagicPanel === "function" ? invMagicPanel(ch) : ""}
   <section class="panel"><h3 class="ph">Bourse</h3>
     <div class="gold-row"><b class="gold big">${p.gold} po</b></div>
     <div class="add-item"><label class="field"><span>Montant (po)</span><input id="goldAmt" type="number" inputmode="numeric" placeholder="10"></label><button class="btn small" data-a="gold" data-d="1">Gagner</button><button class="btn small ghost" data-a="gold" data-d="-1">Dépenser</button></div>
@@ -663,7 +690,7 @@ function viewModal() {
     if (cast && cast.slots.type === "pact" && cast.slots.lvl >= sp.l) { const left = cast.slots.n - (ch.p.pact || 0); opts.push(`<button class="btn" data-a="castDo" data-v="${m.v}" data-lv="pact" ${left > 0 ? "" : "disabled"}>Emplacement de pacte niv. ${cast.slots.lvl} <small>(${left}/${cast.slots.n})</small></button>`); }
     if (entry && entry.free) { const r = s.resources.find((x) => x.k === entry.free); if (r) { const left = r.max - (ch.p.res[r.k] || 0); opts.push(`<button class="btn ghost" data-a="castDo" data-v="${m.v}" data-lv="free" data-k="${r.k}" ${left > 0 ? "" : "disabled"}>Gratuit <small>(${left}/${r.max} par repos)</small></button>`); } }
     if (sp.ri) opts.push(`<button class="btn ghost" data-a="castDo" data-v="${m.v}" data-lv="ritual">En rituel (+10 minutes, sans emplacement)</button>`);
-    inner = `<h3>Lancer ${sp.n}</h3>${spellDetail(sp)}<div class="cast-opts">${opts.join("") || '<p class="mute">Aucun emplacement disponible pour ce sort.</p>'}</div>`;
+    inner = `<h3>Lancer ${esc(sp.n)}</h3>${spellDetail(sp)}<div class="cast-opts">${opts.join("") || '<p class="mute">Aucun emplacement disponible pour ce sort.</p>'}</div>`;
   } else if (m.k === "del") {
     inner = `<h3>Supprimer ${esc(ch.b.name)} ?</h3><p>Le personnage sera effacé définitivement. Exportez-le d’abord si vous voulez le garder.</p><div class="row-btns"><button class="btn dmgb" data-a="delDo">Supprimer définitivement</button><button class="btn ghost" data-a="closeModal">Annuler</button></div>`;
   } else if (m.k === "export") {
@@ -747,7 +774,7 @@ function setClass(b, k) {
   b.cls = k;
   b.skillsClass = []; b.expertise = []; b.skillsLore = []; b.skillPrimal = null;
   b.opts = { style: null, style2: null, order: null, strike: null, dragon: null, mastery: [], inv: [], meta: [], prey: null, land: null, lore2: [], arcanum: {}, asis: b.opts.asis || {}, boon: b.opts.boon || { id: null, a: null } };
-  b.cant = []; b.prep = []; b.gear.cls = "A";
+  b.cant = []; b.prep = []; b.gear.cls = "A"; b.subHb = null;
   if (b.method !== "points") assignStandard(b);
 }
 
@@ -799,6 +826,7 @@ async function act(a, d, el) {
     case "setP2": b.bonus.p2 = d.v; if (b.bonus.p1 === d.v) b.bonus.p1 = null; break;
     case "setP1": b.bonus.p1 = d.v; break;
     case "setAsiMode": b.opts.asis[d.lv] = { mode: d.v, a: null, b: null }; break;
+    case "setAsiFeat": { const x = asiAt(b, d.lv); x.feat = d.v; const f = FEATS[d.v]; x.a = f && f.ab && f.ab.length === 1 ? f.ab[0] : f && f.ab && f.ab.includes(x.a) ? x.a : null; x.b = null; break; }
     case "setAsiA": { const x = asiAt(b, d.lv); x.a = d.v; if (x.b === d.v) x.b = null; break; }
     case "setAsiB": asiAt(b, d.lv).b = d.v; break;
     case "boon": b.opts.boon.id = d.v; break;
@@ -915,9 +943,9 @@ async function act(a, d, el) {
     case "endConc": ch.p.conc = null; saveSoon(ch); break;
     case "equip": {
       const it = ch.p.inv.find((i) => i.uid === d.u);
-      if (!it) return;
+      if (!it || !it.ref) return;
       const isBody = it.ref.startsWith("a:") && it.ref !== "a:bouclier";
-      if (!it.eq && isBody) ch.p.inv.forEach((i) => { if (i.ref.startsWith("a:") && i.ref !== "a:bouclier") i.eq = false; });
+      if (!it.eq && isBody) ch.p.inv.forEach((i) => { if (i.ref && i.ref.startsWith("a:") && i.ref !== "a:bouclier") i.eq = false; });
       it.eq = !it.eq; saveSoon(ch); break;
     }
     case "qty": { const it = ch.p.inv.find((i) => i.uid === d.u); it.q += +d.d; if (it.q <= 0) ch.p.inv = ch.p.inv.filter((i) => i.uid !== d.u); saveSoon(ch); break; }
@@ -1034,6 +1062,7 @@ document.addEventListener("keydown", (e) => {
 /* ---------------- Démarrage ---------------- */
 async function boot() {
   render();
+  if (typeof HB !== "undefined") HB.boot();
   await Store.init();
   S.chars = (await Store.all()).map((c) => { migrate(c.b); return c; });
   S.loaded = true;
@@ -1046,7 +1075,7 @@ async function boot() {
     await Store.markSeeded();
   }
   render();
-  if (typeof FB !== "undefined") FB.init().then(() => { if (FB.ok) { S.chars.filter((c) => c.adv).forEach((c) => pushMember(c)); render(); if (typeof accountStart === "function") accountStart(); } else if (FB.err) render(); });
+  if (typeof FB !== "undefined") FB.init().then(() => { if (FB.ok) { S.chars.filter((c) => c.adv).forEach((c) => pushMember(c)); render(); if (typeof HB !== "undefined") HB.refresh().then(() => liveRender()); if (typeof accountStart === "function") accountStart(); } else if (FB.err) render(); });
 }
 function exampleCharacter() {
   const b = newBuild();

@@ -2,7 +2,7 @@
 import json, os, subprocess, sys, glob
 
 SRC = 'src/'
-FILES = ['data.js', 'data2.js', 'rules.js', 'app.js', 'adventure.js', 'account.js', 'settings.js']
+FILES = ['data.js', 'data2.js', 'data3.js', 'rules.js', 'app.js', 'adventure.js', 'account.js', 'settings.js', 'homebrew.js', 'bestiary.js']
 css = open(SRC + 'style.css').read()
 reset = ":root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}\n"
 
@@ -99,6 +99,11 @@ if ("serviceWorker" in navigator) {{
     return html, missing
 
 os.makedirs('pwa/en', exist_ok=True)
+# données SRD (bestiaire, objets magiques), chargées à la demande
+import shutil
+subprocess.run(['node', 'tools/srd/build_srd.js'], check=True)
+shutil.copy('tools/srd/out/srd.fr.js', 'pwa/srd.js')
+shutil.copy('tools/srd/out/srd.en.js', 'pwa/en/srd.js')
 fr, _ = page('fr')
 open('pwa/index.html', 'w').write(fr)
 en, missing = page('en')

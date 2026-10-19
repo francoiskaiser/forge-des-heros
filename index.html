@@ -626,6 +626,77 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
 
 .deity-hint { margin: 0 0 10px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--ember); background: var(--emberbg); color: var(--ink); font-size: .9rem; }
 
+/* Contenu maison */
+.hb-tag { display: inline-block; margin-left: .45em; padding: .05em .5em; border-radius: 999px; font: 700 .64rem/1.5 var(--f-body); letter-spacing: .08em; text-transform: uppercase; color: var(--arc); background: var(--arcbg); vertical-align: middle; }
+.hb-page { max-width: 980px; }
+.hb-intro p { margin: 0 0 .4em; max-width: 70ch; }
+.hb-filter { margin: 14px 0; }
+.hb-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.hb-card { display: grid; gap: 6px; align-content: start; padding: 14px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); min-width: 0; }
+.hb-top { display: flex; align-items: baseline; gap: .6em; flex-wrap: wrap; }
+.hb-top b { font-size: 1.05rem; overflow-wrap: anywhere; }
+.hb-type { font-size: .68rem; text-transform: uppercase; letter-spacing: .1em; color: var(--arc); }
+.hb-desc { margin: 0; font-size: .92rem; color: var(--ink); overflow-wrap: anywhere; white-space: pre-line; }
+.hb-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.hb-foot .row-btns { margin: 0; }
+.hb-form { max-width: 760px; }
+.hb-form .chips { margin-bottom: 4px; }
+.hb-feat { padding: 10px 12px; margin-bottom: 10px; border: 1px dashed var(--line2); border-radius: 12px; }
+.hb-feat-top { display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; gap: 10px; align-items: end; }
+.hb-feat-top .icon-btn { margin-bottom: 12px; }
+.field select { background: var(--bg2); border: 1px solid var(--line2); border-radius: 9px; padding: .6em .75em; width: 100%; color: var(--ink); }
+.feat .hb-tag { margin-left: .6em; }
+
+/* Bestiaire */
+.mon-filters { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 12px; }
+.mon-list { display: grid; gap: 6px; margin-top: 10px; }
+.mon-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "n cr" "t v"; gap: 2px 12px; text-align: left; padding: 10px 12px; border-radius: 10px; background: var(--bg2); border: 1px solid var(--line); }
+.mon-row:hover { border-color: var(--ember); }
+.mon-row b { grid-area: n; overflow-wrap: anywhere; }
+.mon-row > .mute { grid-area: t; }
+.mon-cr { grid-area: cr; font-weight: 700; color: var(--ember2); white-space: nowrap; }
+.mon-vit { grid-area: v; font-size: .85rem; color: var(--mute); white-space: nowrap; }
+.modal:has(.statblock) { width: min(680px, calc(100vw - 24px)); }
+.statblock h3 { margin-bottom: 0; }
+.sb-sub { margin: 0 0 12px; font-style: italic; }
+.sb-vit { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 10px; }
+.sb-vit > div { display: grid; justify-items: center; gap: 2px; padding: 8px 4px; border-radius: 10px; background: var(--bg2); border: 1px solid var(--line); text-align: center; }
+.sb-vit b { font-size: 1.35rem; line-height: 1.1; }
+.sb-vit small { font-size: .74rem; color: var(--mute); overflow-wrap: anywhere; }
+.sb-speed { margin: 0 0 10px; }
+.sb-speed .lbl { margin-right: .5em; }
+.sb-roll { display: inline; padding: 0 .3em; border-radius: 6px; font: inherit; font-weight: 700; color: var(--ember2); background: var(--emberbg); border: 0; cursor: pointer; }
+.sb-roll:hover { background: var(--ember); color: var(--onember); }
+.sb-roll.dmg { color: var(--dmgink); background: var(--bloodbg); }
+.sb-roll.dmg:hover { background: var(--blood); color: var(--onember); }
+.sb-roll.big { font-size: 1.35rem; line-height: 1.1; }
+.sb-h { margin: 16px 0 6px; padding-bottom: 4px; border-bottom: 1px solid var(--ember); color: var(--ember2); font-family: var(--f-display); font-weight: 400; font-size: 1.15rem; }
+.sb-p { margin: 0 0 8px; line-height: 1.55; }
+.sb-facts > div { grid-template-columns: 130px 1fr; }
+.mon-add { display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; gap: 12px; align-items: end; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line2); }
+.mon-add .field { margin: 0; }
+.linkish { display: inline; padding: 0; border: 0; background: none; color: var(--ember2); text-decoration: underline; text-underline-offset: 2px; font: inherit; cursor: pointer; }
+
+/* Objets magiques */
+.mi-list { display: grid; gap: 6px; }
+.mi-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; text-align: left; padding: 9px 12px; border-radius: 10px; background: var(--bg2); border: 1px solid var(--line); }
+.mi-row:hover { border-color: var(--arc); }
+.mi-row b { overflow-wrap: anywhere; }
+.mi-row .mute { grid-column: 1; }
+.mi-plus { grid-row: 1 / span 2; grid-column: 2; align-self: center; color: var(--arc); }
+.mi-plus svg { width: 18px; height: 18px; }
+.item.magic .it-name b { color: var(--arc); }
+.it-open { text-align: left; background: none; border: 0; padding: 0; cursor: pointer; }
+.it-desc { grid-column: 1 / -1; padding: 10px 12px; border-radius: 10px; background: var(--bg2); font-size: .92rem; line-height: 1.55; }
+.eq.att { color: var(--arc); font-size: .95rem; }
+.eq.att.on { background: var(--arcbg); border-color: var(--arc); }
+@media (max-width: 560px) {
+  .mon-filters { grid-template-columns: minmax(0, 1fr); }
+  .sb-vit { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sb-facts > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .mon-add { grid-template-columns: minmax(0, 1fr); }
+}
+
 </style>
 </head>
 <body>
@@ -872,6 +943,8 @@ const FEATS = {
   initie: { n: "Initié à la magie", d: "Vous apprenez deux tours de magie et un sort de niveau 1 d’une liste (clerc, druide ou magicien). Vous pouvez lancer ce sort une fois par repos long sans emplacement, ou avec vos emplacements.", magic: true },
   sauvage: { n: "Attaquant sauvage", d: "Une fois par tour, quand vous touchez avec une arme, vous pouvez relancer ses dés de dégâts et garder le résultat de votre choix." },
   doue: { n: "Doué", d: "Vous gagnez la maîtrise de trois compétences de votre choix.", skills: 3 },
+  // Don général (niveau 4 et plus, à la place d’une amélioration de caractéristique)
+  lutteur: { n: "Lutteur", cat: "general", ab: ["for", "dex"], d: "+1 en Force ou en Dextérité (max 20). Quand vous touchez avec une frappe à mains nues lors de l’action d’Attaque, vous pouvez infliger les dégâts et agripper (une fois par tour). Avantage aux attaques contre une créature que vous agrippez, et la déplacer ne vous coûte pas de mouvement supplémentaire si elle est de votre taille ou plus petite." },
 };
 
 /* ---------- Historiques ---------- */
@@ -1361,7 +1434,7 @@ const EPIC_BOONS = {
   voyage: { n: "Faveur du voyage dimensionnel", d: "Après une action d’Attaque ou de Magie, vous pouvez vous téléporter jusqu’à 9 m dans un espace que vous voyez." },
   destin: { n: "Faveur du destin", d: "Quand une créature à 18 m fait un test d20, vous pouvez lancer 2d4 et l’ajouter ou le soustraire. Récupérée à l’initiative ou au repos court." },
   offensive: { n: "Faveur de l’offensive irrésistible", d: "Vos dégâts contondants, perforants et tranchants ignorent la résistance. Sur un 20 naturel, dégâts supplémentaires égaux à la caractéristique augmentée." },
-  rappel: { n: "Faveur du rappel de sort", d: "Une fois par repos long, vous lancez un sort de niveau 1 à 4 préparé sans dépenser d’emplacement." },
+  rappel: { n: "Faveur du rappel de sort", d: "Quand vous lancez un sort avec un emplacement de niveau 1 à 4, lancez 1d4 : si le résultat est égal au niveau de l’emplacement, celui-ci n’est pas dépensé." },
   vision: { n: "Faveur de vision véritable", d: "Vous gagnez la vision véritable sur 18 m." },
 };
 
@@ -1712,6 +1785,119 @@ Object.assign(SPELLS, {
   guerisongroupe: { n: "Guérison de groupe", l: 9, e: "abj", t: A, p: "18 m", c: "V, S", du: "Instantanée", cl: [CL], heal: "700", d: "Vous répartissez jusqu’à 700 PV entre des créatures que vous voyez, qui sont aussi guéries de plusieurs maux." },
 });
 
+/* Forge des Héros — sorts du SRD 5.2 (Wizards of the Coast LLC, CC-BY-4.0), résumés non officiels. Fichier généré par tools/spells3.js. */
+Object.assign(SPELLS, {
+  elementalisme: {"n":"Élémentalisme","l":0,"e":"tra","t":"1 action","p":"9 m","c":"V, S","du":"Instantanée","cl":["druide","ensorceleur","magicien"],"d":"Petits effets élémentaires dans un cube de 1,50 m : brise qui ferme une porte, voile de poussière ou mot tracé dans le sable, braises et fumée colorée qui allument une bougie, bruine, ou petite sculpture de terre ou de glace."},
+  decharge_sorciere: {"n":"Décharge ensorcelée","l":0,"e":"evo","t":"1 action","p":"36 m","c":"V, S","du":"Instantanée","cl":["ensorceleur"],"atk":"dist","dmg":"1d8","ty":"force","sc":1,"d":"Attaque de sort à distance : 1d8 dégâts d’acide, de froid, de feu, de foudre, de poison, psychiques ou de tonnerre (au choix). Sur un 8, relancez un d8 et ajoutez-le (au maximum votre modificateur d’incantation)."},
+  feu_follet_stellaire: {"n":"Étincelle stellaire","l":0,"e":"evo","t":"1 action","p":"18 m","c":"V, S","du":"Instantanée","cl":["barde","druide"],"atk":"dist","dmg":"1d8","ty":"radiant","sc":1,"d":"Attaque de sort à distance : 1d8 dégâts radiants. Jusqu’à la fin de votre prochain tour, la cible diffuse une lumière faible sur 3 m et ne peut pas profiter de l’état Invisible."},
+  orbe_chromatique: {"n":"Orbe chromatique","l":1,"e":"evo","t":"1 action","p":"27 m","c":"V, S, M","du":"Instantanée","cl":["ensorceleur","magicien"],"atk":"dist","dmg":"3d8","ty":"feu","up":"+1d8 et un rebond de plus par niveau","d":"Attaque de sort à distance : 3d8 dégâts d’acide, de froid, de feu, de foudre, de poison ou de tonnerre (au choix). Si deux d8 donnent le même résultat, l’orbe rebondit sur une autre cible à 9 m ou moins. Diamant de 50 po."},
+  couleurs_dansantes: {"n":"Couleurs dansantes","l":1,"e":"ill","t":"1 action","p":"Cône de 4,50 m","c":"V, S, M","du":"Instantanée","cl":["barde","ensorceleur","magicien"],"sv":"con","d":"Une gerbe de lumières éblouissantes : chaque créature du cône réussit un JS de Constitution ou subit l’état Aveuglé jusqu’à la fin de votre prochain tour."},
+  creation_destruction_eau: {"n":"Création ou destruction d’eau","l":1,"e":"tra","t":"1 action","p":"9 m","c":"V, S, M","du":"Instantanée","cl":["clerc","druide"],"up":"+40 litres ou cube +1,50 m par niveau","d":"Crée jusqu’à 40 litres d’eau potable (ou une pluie dans un cube de 9 m qui éteint les flammes), ou détruit autant d’eau ou le brouillard d’un cube de 9 m."},
+  detection_mal_bien: {"n":"Détection du mal et du bien","l":1,"e":"div","t":"1 action","p":"Personnelle","c":"V, S","du":"10 minutes","co":true,"cl":["clerc","paladin"],"d":"Vous percevez l’emplacement des aberrations, célestes, élémentaires, fées, fiélons et morts-vivants à 9 m ou moins, ainsi que les lieux sanctifiés. Bloqué par 30 cm de pierre ou une feuille de plomb."},
+  detection_poison: {"n":"Détection du poison et des maladies","l":1,"e":"div","t":"1 action","p":"Personnelle","c":"V, S, M","du":"10 minutes","co":true,"ri":true,"cl":["clerc","druide","paladin","rodeur"],"d":"Vous percevez l’emplacement et la nature des poisons, des créatures venimeuses et des maladies magiques à 9 m ou moins."},
+  murmures_dissonants: {"n":"Murmures dissonants","l":1,"e":"enc","t":"1 action","p":"18 m","c":"V","du":"Instantanée","cl":["barde"],"sv":"sag","dmg":"3d6","ty":"psy","up":"+1d6 par niveau","d":"JS de Sagesse : 3d6 dégâts psychiques et la cible doit utiliser sa réaction pour s’éloigner de vous au maximum (moitié des dégâts seulement si réussite)."},
+  frappe_pieges: {"n":"Frappe piégeuse","l":1,"e":"inv","t":"Action bonus après avoir touché","p":"Personnelle","c":"V","du":"1 minute","co":true,"cl":["rodeur"],"sv":"for","dmg":"1d6","ty":"perforant","up":"+1d6 par niveau","d":"Après avoir touché, des lianes saisissent la cible : JS de Force (avantage si Grande ou plus) ou elle est entravée et subit 1d6 dégâts perforants au début de chacun de ses tours. Un test de Force (Athlétisme) contre votre DD la libère."},
+  appel_familier: {"n":"Appel de familier","l":1,"e":"inv","t":"1 heure","p":"3 m","c":"V, S, M","du":"Instantanée","ri":true,"cl":["magicien"],"d":"Vous obtenez un familier (chat, chouette, corbeau, rat, araignée… toute bête de FP 0), de type céleste, fée ou fiélon. Télépathie à 30 m, et vous pouvez voir et entendre par ses sens. Il peut transmettre vos sorts de contact. Encens de 10 po."},
+  disque_flottant: {"n":"Disque flottant","l":1,"e":"inv","t":"1 action","p":"9 m","c":"V, S, M","du":"1 heure","ri":true,"cl":["magicien"],"d":"Un disque de force de 90 cm flotte à 90 cm du sol et porte jusqu’à 250 kg. Il vous suit en restant à 6 m ou moins de vous."},
+  malefice: {"n":"Maléfice","l":1,"e":"enc","t":"1 action bonus","p":"27 m","c":"V, S, M","du":"1 heure","co":true,"cl":["occultiste"],"dmg":"1d6","ty":"necro","d":"Vous maudissez une créature : +1d6 dégâts nécrotiques quand vous la touchez avec une attaque, et désavantage aux tests d’une caractéristique de votre choix. Si elle tombe à 0 PV, vous pouvez transférer la malédiction par une action bonus. Plus longue aux niveaux supérieurs."},
+  fou_rire: {"n":"Fou rire","l":1,"e":"enc","t":"1 action","p":"9 m","c":"V, S, M","du":"1 minute","co":true,"cl":["barde","occultiste","magicien"],"sv":"sag","up":"+1 cible par niveau","d":"JS de Sagesse ou la cible est à terre et neutralisée, secouée de rire. Elle refait le JS à la fin de chacun de ses tours et quand elle subit des dégâts (avec avantage)."},
+  couteau_glace: {"n":"Couteau de glace","l":1,"e":"inv","t":"1 action","p":"18 m","c":"S, M","du":"Instantanée","cl":["druide","ensorceleur","magicien"],"atk":"dist","dmg":"1d10","ty":"perforant","up":"+1d6 froid par niveau","d":"Attaque de sort à distance : 1d10 dégâts perforants. Touché ou non, l’éclat explose : la cible et chaque créature à 1,50 m réussissent un JS de Dextérité ou subissent 2d6 dégâts de froid."},
+  ecriture_illusoire: {"n":"Écriture illusoire","l":1,"e":"ill","t":"1 minute","p":"Contact","c":"S, M","du":"10 jours","ri":true,"cl":["barde","occultiste","magicien"],"d":"Un texte que seuls vous et les créatures désignées pouvez lire ; pour les autres il paraît indéchiffrable ou dit autre chose. Encre de 10 po."},
+  purification_nourriture: {"n":"Purification de nourriture et d’eau","l":1,"e":"tra","t":"1 action","p":"3 m","c":"V, S","du":"Instantanée","ri":true,"cl":["clerc","druide","paladin"],"d":"Élimine le poison et la pourriture de la nourriture et des boissons non magiques dans une sphère de 1,50 m de rayon."},
+  chatiment_ardent: {"n":"Châtiment ardent","l":1,"e":"evo","t":"Action bonus après avoir touché","p":"Personnelle","c":"V","du":"1 minute","cl":["paladin"],"dmg":"1d6","ty":"feu","up":"+1d6 par niveau","d":"Après avoir touché au corps à corps : +1d6 dégâts de feu. Au début de chacun de ses tours, la cible subit 1d6 dégâts de feu puis fait un JS de Constitution ; une réussite met fin au sort."},
+  fleche_acide: {"n":"Flèche acide","l":2,"e":"evo","t":"1 action","p":"27 m","c":"V, S, M","du":"Instantanée","cl":["magicien"],"atk":"dist","dmg":"4d4","ty":"acide","up":"+1d4 (initial et différé) par niveau","d":"Attaque de sort à distance : 4d4 dégâts d’acide, puis 2d4 à la fin de son prochain tour. En cas d’échec, la moitié des dégâts initiaux seulement."},
+  messager_animal: {"n":"Messager animal","l":2,"e":"enc","t":"1 action","p":"9 m","c":"V, S, M","du":"24 heures","ri":true,"cl":["barde","druide","rodeur"],"up":"+48 heures par niveau","d":"Une très petite bête porte un message de 25 mots vers un lieu que vous avez visité et un destinataire que vous décrivez, à environ 40 km par jour (80 km si elle vole)."},
+  verrou_arcanique: {"n":"Verrou arcanique","l":2,"e":"abj","t":"1 action","p":"Contact","c":"V, S, M","du":"Jusqu’à dissipation","cl":["magicien"],"d":"Verrouille magiquement une porte, fenêtre ou coffre. Seuls vous, les créatures désignées ou un mot de passe peuvent l’ouvrir. Poudre d’or de 25 po."},
+  aura_magique_arcaniste: {"n":"Aura magique de l’arcaniste","l":2,"e":"ill","t":"1 action","p":"Contact","c":"V, S, M","du":"24 heures","cl":["magicien"],"d":"Masque : les sorts considèrent la créature comme d’un autre type. Fausse aura : un objet paraît magique, non magique ou d’une autre école aux sorts de détection. Permanent après 30 jours."},
+  flamme_eternelle: {"n":"Flamme éternelle","l":2,"e":"evo","t":"1 action","p":"Contact","c":"V, S, M","du":"Jusqu’à dissipation","cl":["clerc","druide","magicien"],"d":"Une flamme sans chaleur jaillit d’un objet : lumière vive sur 6 m et faible sur 6 m de plus. Elle ne peut pas être étouffée. Poudre de rubis de 50 po."},
+  detection_pensees: {"n":"Détection des pensées","l":2,"e":"div","t":"1 action","p":"Personnelle","c":"V, S, M","du":"1 minute","co":true,"cl":["barde","ensorceleur","magicien"],"sv":"sag","d":"Vous percevez les esprits pensants à 9 m. Par une action Magie, vous lisez les pensées de surface d’une créature ; vous pouvez sonder plus loin (JS de Sagesse)."},
+  souffle_dragon: {"n":"Souffle du dragon","l":2,"e":"tra","t":"1 action bonus","p":"Contact","c":"V, S, M","du":"1 minute","co":true,"cl":["ensorceleur","magicien"],"sv":"dex","dmg":"3d6","ty":"feu","up":"+1d6 par niveau","d":"Une créature consentante peut, par une action Magie, souffler un cône de 4,50 m d’acide, de froid, de feu, de foudre ou de poison : JS de Dextérité, 3d6 dégâts (moitié si réussite)."},
+  agrandir_retrecir: {"n":"Agrandir/Rétrécir","l":2,"e":"tra","t":"1 action","p":"9 m","c":"V, S, M","du":"1 minute","co":true,"cl":["barde","druide","ensorceleur","magicien"],"sv":"con","d":"Agrandir : la cible gagne une catégorie de taille, l’avantage aux tests et JS de Force, et +1d4 aux dégâts de ses armes. Rétrécir : l’inverse (désavantage, −1d4). JS de Constitution si la cible refuse."},
+  discours_captivant: {"n":"Discours captivant","l":2,"e":"enc","t":"1 action","p":"18 m","c":"V, S","du":"1 minute","co":true,"cl":["barde","occultiste"],"sv":"sag","d":"Les créatures choisies font un JS de Sagesse (réussite automatique si vous les combattez) ou subissent −10 aux tests de Sagesse (Perception) et à leur Perception passive."},
+  detection_pieges: {"n":"Détection des pièges","l":2,"e":"div","t":"1 action","p":"36 m","c":"V, S","du":"Instantanée","cl":["clerc","druide","rodeur"],"d":"Vous savez si un piège se trouve dans votre champ de vision à portée, et sa nature générale, mais pas son emplacement exact."},
+  lame_flamme: {"n":"Lame de feu","l":2,"e":"evo","t":"1 action bonus","p":"Personnelle","c":"V, S, M","du":"10 minutes","co":true,"cl":["druide","ensorceleur"],"atk":"cac","dmg":"3d6","ty":"feu","up":"+1d6 par niveau","d":"Une lame enflammée dans votre main libre. Par une action Magie, attaque de sort au corps à corps : 3d6 + votre modificateur d’incantation en dégâts de feu. Lumière vive sur 3 m."},
+  doux_repos: {"n":"Doux repos","l":2,"e":"nec","t":"1 action","p":"Contact","c":"V, S, M","du":"10 jours","ri":true,"cl":["clerc","paladin","magicien"],"d":"Un cadavre est protégé de la décomposition et ne peut pas devenir un mort-vivant. Ces jours ne comptent pas dans le délai des sorts de résurrection."},
+  bourrasque: {"n":"Bourrasque","l":2,"e":"evo","t":"1 action","p":"Ligne de 18 m","c":"V, S, M","du":"1 minute","co":true,"cl":["druide","rodeur","ensorceleur","magicien"],"sv":"for","d":"Une ligne de vent de 18 m sur 3 m : JS de Force ou repoussé de 4,50 m. Se rapprocher de vous coûte le double. Disperse les gaz et éteint les flammes nues."},
+  deverrouillage: {"n":"Déblocage","l":2,"e":"tra","t":"1 action","p":"18 m","c":"V","du":"Instantanée","cl":["barde","ensorceleur","magicien"],"d":"Ouvre une serrure, des menottes ou une porte bloquée (une seule serrure). Suspend un Verrou arcanique pendant 10 minutes. Un grand coup résonne à 90 m."},
+  localisation_animaux: {"n":"Localisation d’animaux ou de plantes","l":2,"e":"div","t":"1 action","p":"Personnelle","c":"V, S, M","du":"Instantanée","ri":true,"cl":["barde","druide","rodeur"],"d":"Vous apprenez la direction et la distance de la bête ou de la plante du type nommé la plus proche, à 7,5 km ou moins."},
+  localisation_objet: {"n":"Localisation d’objet","l":2,"e":"div","t":"1 action","p":"Personnelle","c":"V, S, M","du":"10 minutes","co":true,"cl":["barde","clerc","druide","paladin","rodeur","magicien"],"d":"Vous percevez la direction d’un objet familier, ou de l’objet le plus proche d’un type donné, à 300 m ou moins. Bloqué par le plomb."},
+  bouche_magique: {"n":"Bouche magique","l":2,"e":"ill","t":"1 minute","p":"9 m","c":"V, S, M","du":"Jusqu’à dissipation","ri":true,"cl":["barde","magicien"],"d":"Un objet récite un message de 25 mots quand une condition que vous fixez se produit. Poudre de jade de 10 po."},
+  pointe_mentale: {"n":"Pointe mentale","l":2,"e":"div","t":"1 action","p":"36 m","c":"S","du":"1 heure","co":true,"cl":["ensorceleur","occultiste","magicien"],"sv":"sag","dmg":"3d8","ty":"psy","up":"+1d8 par niveau","d":"JS de Sagesse : 3d8 dégâts psychiques (moitié si réussite). En cas d’échec, vous connaissez sa position tant que dure le sort ; elle ne peut pas se cacher de vous."},
+  force_fantasmagorique: {"n":"Force fantasmagorique","l":2,"e":"ill","t":"1 action","p":"18 m","c":"V, S, M","du":"1 minute","co":true,"cl":["barde","ensorceleur","magicien"],"sv":"int","dmg":"2d8","ty":"psy","d":"JS d’Intelligence ou la cible perçoit une illusion (cube de 3 m) qu’elle croit réelle. Elle peut subir 2d8 dégâts psychiques par tour à cause d’elle. Un test d’Intelligence (Investigation) la dissipe."},
+  protection_poison: {"n":"Protection contre le poison","l":2,"e":"abj","t":"1 action","p":"Contact","c":"V, S","du":"1 heure","cl":["clerc","druide","paladin","rodeur"],"d":"Met fin à l’état Empoisonné. Pendant 1 heure : avantage aux JS contre l’empoisonnement et résistance aux dégâts de poison."},
+  corde_enchantee: {"n":"Corde enchantée","l":2,"e":"tra","t":"1 action","p":"Contact","c":"V, S, M","du":"1 heure","cl":["magicien"],"d":"Une corde se dresse vers un espace extradimensionnel invisible pouvant accueillir huit créatures de taille Moyenne. Rien ne peut y entrer ou en sortir, sauf par la corde."},
+  voir_invisible: {"n":"Voir l’invisible","l":2,"e":"div","t":"1 action","p":"Personnelle","c":"V, S, M","du":"1 heure","cl":["barde","ensorceleur","magicien"],"d":"Vous voyez les créatures et objets invisibles, et vous voyez dans le plan Éthéré."},
+  chatiment_lumineux: {"n":"Châtiment lumineux","l":2,"e":"tra","t":"Action bonus après avoir touché","p":"Personnelle","c":"V","du":"1 minute","co":true,"cl":["paladin"],"dmg":"2d6","ty":"radiant","up":"+1d6 par niveau","d":"Après avoir touché au corps à corps : +2d6 dégâts radiants. La cible diffuse une lumière vive sur 1,50 m, les attaques contre elle ont l’avantage et elle ne peut pas profiter de l’état Invisible."},
+  croissance_epines: {"n":"Croissance d’épines","l":2,"e":"tra","t":"1 action","p":"45 m","c":"V, S, M","du":"10 minutes","co":true,"cl":["druide","rodeur"],"dmg":"2d4","ty":"perforant","d":"Le sol d’une sphère de 6 m de rayon se couvre d’épines camouflées : terrain difficile, et 2d4 dégâts perforants par tranche de 1,50 m parcourue."},
+  lien_protecteur: {"n":"Lien protecteur","l":2,"e":"abj","t":"1 action","p":"Contact","c":"V, S, M","du":"1 heure","cl":["clerc","paladin"],"d":"La cible gagne +1 à la CA et aux JS et la résistance à tous les dégâts tant qu’elle est à 18 m ou moins de vous ; vous subissez autant de dégâts qu’elle. Deux anneaux de platine de 50 po."},
+  animation_morts: {"n":"Animation des morts","l":3,"e":"nec","t":"1 minute","p":"3 m","c":"V, S, M","du":"Instantanée","cl":["clerc","magicien"],"up":"+2 morts-vivants par niveau","d":"Des ossements ou un cadavre deviennent un squelette ou un zombi sous vos ordres (action bonus, 18 m). Le contrôle dure 24 heures ; relancez le sort pour le maintenir."},
+  clignotement: {"n":"Clignotement","l":3,"e":"tra","t":"1 action","p":"Personnelle","c":"V, S","du":"1 minute","cl":["ensorceleur","magicien"],"d":"À la fin de chacun de vos tours, lancez 1d6 : sur 4 à 6, vous passez dans le plan Éthéré jusqu’au début de votre prochain tour."},
+  clairvoyance: {"n":"Clairvoyance","l":3,"e":"div","t":"10 minutes","p":"1,5 km","c":"V, S, M","du":"10 minutes","co":true,"cl":["barde","clerc","ensorceleur","magicien"],"d":"Un capteur invisible dans un lieu connu ou évident : vous voyez ou entendez à travers lui. Focaliseur de 100 po."},
+  creation_nourriture: {"n":"Création de nourriture et d’eau","l":3,"e":"inv","t":"1 action","p":"9 m","c":"V, S","du":"Instantanée","cl":["clerc","paladin"],"d":"Crée 20 kg de nourriture fade mais nourrissante et 120 litres d’eau potable, de quoi nourrir quinze personnes pendant 24 heures."},
+  forme_gazeuse: {"n":"Forme gazeuse","l":3,"e":"tra","t":"1 action","p":"Contact","c":"V, S, M","du":"1 heure","co":true,"cl":["ensorceleur","occultiste","magicien"],"up":"+1 cible par niveau","d":"La cible devient une brume : vol 3 m (surplace), résistance aux dégâts contondants, perforants et tranchants, avantage aux JS de For, Dex et Con, passe par les interstices. Elle ne peut ni attaquer ni lancer de sorts."},
+  glyphe_garde: {"n":"Glyphe de garde","l":3,"e":"abj","t":"1 heure","p":"Contact","c":"V, S, M","du":"Jusqu’à déclenchement","cl":["barde","clerc","magicien"],"sv":"dex","dmg":"5d8","ty":"feu","up":"+1d8 par niveau","d":"Un glyphe presque invisible se déclenche selon une condition : rune explosive (JS de Dextérité, 5d8 dégâts d’acide, de froid, de feu, de foudre ou de tonnerre sur 6 m) ou sort stocké. Diamant de 200 po."},
+  cercle_magique: {"n":"Cercle magique","l":3,"e":"abj","t":"1 minute","p":"3 m","c":"V, S, M","du":"1 heure","cl":["clerc","paladin","occultiste","magicien"],"up":"+1 heure par niveau","d":"Un cylindre de 3 m de rayon que les célestes, élémentaires, fées, fiélons ou morts-vivants choisis ne peuvent franchir ; ils ont le désavantage contre les créatures à l’intérieur. Peut être inversé pour les y piéger."},
+  image_majeure: {"n":"Image majeure","l":3,"e":"ill","t":"1 action","p":"36 m","c":"V, S, M","du":"10 minutes","co":true,"cl":["barde","ensorceleur","occultiste","magicien"],"d":"Une illusion réaliste (cube de 6 m) avec sons, odeurs et température. Vous la déplacez par une action Magie. Permanente si lancée au niveau 4 ou plus."},
+  fusion_pierre: {"n":"Fusion dans la pierre","l":3,"e":"tra","t":"1 action","p":"Contact","c":"V, S","du":"8 heures","ri":true,"cl":["clerc","druide","rodeur"],"d":"Vous fusionnez avec la pierre, indétectable. Vous pouvez lancer des sorts sur vous-même. Si la pierre est détruite, vous êtes expulsé et subissez 6d6 dégâts de force."},
+  antidetection: {"n":"Antidétection","l":3,"e":"abj","t":"1 action","p":"Contact","c":"V, S, M","du":"8 heures","cl":["barde","rodeur","magicien"],"d":"Une créature, un objet ou un lieu ne peut pas être ciblé par les sorts de divination ni perçu par les capteurs magiques. Poudre de diamant de 25 po."},
+  monture_fantome: {"n":"Monture fantôme","l":3,"e":"ill","t":"1 minute","p":"9 m","c":"V, S","du":"1 heure","ri":true,"cl":["magicien"],"d":"Un cheval quasi réel avec sa selle apparaît : vitesse 30 m, il parcourt 20 km par heure. Il disparaît s’il subit des dégâts."},
+  protection_energie: {"n":"Protection contre l’énergie","l":3,"e":"abj","t":"1 action","p":"Contact","c":"V, S","du":"1 heure","co":true,"cl":["clerc","druide","rodeur","ensorceleur","magicien"],"d":"Une créature consentante obtient la résistance à l’acide, au froid, au feu, à la foudre ou au tonnerre (au choix)."},
+  delivrance_maledictions: {"n":"Délivrance des malédictions","l":3,"e":"abj","t":"1 action","p":"Contact","c":"V, S","du":"Instantanée","cl":["clerc","paladin","occultiste","magicien"],"d":"Met fin à toutes les malédictions d’une créature ou d’un objet. Un objet maudit le reste, mais l’harmonisation est rompue et il peut être retiré."},
+  communication_distance: {"n":"Communication à distance","l":3,"e":"div","t":"1 action","p":"Illimitée","c":"V, S, M","du":"Instantanée","cl":["barde","clerc","magicien"],"d":"Vous envoyez un message de 25 mots à une créature connue, à n’importe quelle distance ; elle peut répondre aussitôt. 5 % d’échec vers un autre plan."},
+  communication_plantes: {"n":"Communication avec les plantes","l":3,"e":"tra","t":"1 action","p":"Personnelle","c":"V, S","du":"10 minutes","cl":["barde","druide","rodeur"],"d":"Les plantes dans une émanation de 9 m vous parlent de ce qu’elles ont perçu depuis un jour, obéissent à des ordres simples, et vous pouvez créer ou supprimer un terrain difficile végétal."},
+  petite_hutte: {"n":"Petite hutte","l":3,"e":"evo","t":"1 minute","p":"Personnelle","c":"V, S, M","du":"8 heures","ri":true,"cl":["barde","magicien"],"d":"Un dôme de 3 m vous abrite, confortable et sec. Seules les créatures présentes au lancement le traversent ; les sorts de niveau 3 ou moins ne passent pas."},
+  caresse_vampirique: {"n":"Caresse vampirique","l":3,"e":"nec","t":"1 action","p":"Personnelle","c":"V, S","du":"1 minute","co":true,"cl":["ensorceleur","occultiste","magicien"],"atk":"cac","dmg":"3d6","ty":"necro","up":"+1d6 par niveau","d":"Attaque de sort au corps à corps : 3d6 dégâts nécrotiques et vous récupérez la moitié en PV. Vous pouvez recommencer à chaque tour par une action Magie."},
+  respiration_aquatique: {"n":"Respiration aquatique","l":3,"e":"tra","t":"1 action","p":"9 m","c":"V, S, M","du":"24 heures","ri":true,"cl":["druide","rodeur","ensorceleur","magicien"],"d":"Jusqu’à dix créatures consentantes peuvent respirer sous l’eau."},
+  marche_onde: {"n":"Marche sur l’onde","l":3,"e":"tra","t":"1 action","p":"9 m","c":"V, S, M","du":"1 heure","ri":true,"cl":["clerc","druide","rodeur","ensorceleur"],"d":"Jusqu’à dix créatures marchent sur l’eau, la boue, la neige, les sables mouvants ou la lave comme sur un sol ferme."},
+  mur_vent: {"n":"Mur de vent","l":3,"e":"evo","t":"1 action","p":"36 m","c":"V, S, M","du":"1 minute","co":true,"cl":["druide","rodeur"],"sv":"for","dmg":"4d8","ty":"contondant","d":"Un mur de vent de 15 m de long : JS de Force, 4d8 dégâts contondants (moitié si réussite). Il bloque les gaz, les petites créatures volantes et les projectiles ordinaires."},
+  charme_monstre: {"n":"Charme-monstre","l":4,"e":"enc","t":"1 action","p":"9 m","c":"V, S","du":"1 heure","cl":["barde","druide","ensorceleur","occultiste","magicien"],"sv":"sag","up":"+1 cible par niveau","d":"JS de Sagesse (avantage si vous la combattez) ou la créature est charmée et amicale jusqu’à ce que vous ou vos alliés la blessiez."},
+  contrainte: {"n":"Contrainte","l":4,"e":"enc","t":"1 action","p":"9 m","c":"V, S","du":"1 minute","co":true,"cl":["barde"],"sv":"sag","d":"JS de Sagesse ou les cibles sont charmées : par une action bonus, vous désignez une direction et elles doivent s’y déplacer à leur tour."},
+  invocation_elementaires_mineurs: {"n":"Invocation d’élémentaires mineurs","l":4,"e":"inv","t":"1 action","p":"Personnelle","c":"V, S","du":"10 minutes","co":true,"cl":["druide","magicien"],"dmg":"2d8","ty":"feu","up":"+1d8 par niveau","d":"Des esprits élémentaires tourbillonnent dans une émanation de 4,50 m : vos attaques infligent +2d8 dégâts d’acide, de froid, de feu ou de foudre aux créatures dans la zone, qui est un terrain difficile pour vos ennemis."},
+  invocation_etres_sylvestres: {"n":"Invocation d’êtres sylvestres","l":4,"e":"inv","t":"1 action","p":"Personnelle","c":"V, S","du":"10 minutes","co":true,"cl":["druide","rodeur"],"sv":"sag","dmg":"5d8","ty":"force","up":"+1d8 par niveau","d":"Des esprits de la nature vous entourent (émanation de 3 m) : une créature qui y entre ou y finit son tour fait un JS de Sagesse, 5d8 dégâts de force (moitié si réussite). Désengagement par une action bonus."},
+  domination_bete: {"n":"Domination de bête","l":4,"e":"enc","t":"1 action","p":"18 m","c":"V, S","du":"1 minute","co":true,"cl":["druide","rodeur","ensorceleur"],"sv":"sag","d":"JS de Sagesse ou la bête est charmée et vous obéit par télépathie. Elle refait le JS quand elle subit des dégâts. Dure plus longtemps aux niveaux supérieurs."},
+  fabrication: {"n":"Fabrication","l":4,"e":"tra","t":"10 minutes","p":"36 m","c":"V, S","du":"Instantanée","cl":["magicien"],"d":"Transforme des matières premières en objet fini (pont, corde, vêtements) jusqu’à la taille Grande, ou Moyenne pour le métal et la pierre."},
+  chien_fidele: {"n":"Chien de garde","l":4,"e":"inv","t":"1 action","p":"9 m","c":"V, S, M","du":"8 heures","cl":["magicien"],"sv":"dex","dmg":"4d8","ty":"force","d":"Un chien fantôme invisible aboie si un intrus approche à 9 m sans le mot de passe. Au début de vos tours, il mord un ennemi à 1,50 m : JS de Dextérité ou 4d8 dégâts de force."},
+  insecte_geant: {"n":"Insecte géant","l":4,"e":"inv","t":"1 action","p":"18 m","c":"V, S","du":"10 minutes","co":true,"cl":["druide"],"d":"Vous invoquez un mille-pattes, une araignée ou une guêpe géante (bloc de statistiques Insecte géant : CA 11 + niveau, 30 PV + 10 par niveau au-delà de 4). Il agit juste après vous."},
+  terrain_hallucinatoire: {"n":"Terrain hallucinatoire","l":4,"e":"ill","t":"10 minutes","p":"90 m","c":"V, S, M","du":"24 heures","cl":["barde","druide","occultiste","magicien"],"d":"Un terrain naturel (cube de 45 m) ressemble à un autre : un champ devient marais, un précipice une pente douce. Le toucher n’est pas modifié."},
+  sanctuaire_prive: {"n":"Sanctuaire privé","l":4,"e":"abj","t":"10 minutes","p":"36 m","c":"V, S, M","du":"24 heures","cl":["magicien"],"up":"+30 m de côté par niveau","d":"Une zone (cube de 1,50 m à 30 m) protégée au choix contre le son, la vue, la divination et la téléportation."},
+  coffre_secret: {"n":"Coffre secret","l":4,"e":"inv","t":"1 action","p":"Contact","c":"V, S, M","du":"Jusqu’à dissipation","cl":["magicien"],"d":"Vous cachez un coffre et son contenu dans le plan Éthéré et le rappelez par une action Magie grâce à sa réplique miniature. Coffre de 5 000 po."},
+  sphere_vitriolique: {"n":"Sphère vitriolique","l":4,"e":"evo","t":"1 action","p":"45 m","c":"V, S, M","du":"Instantanée","cl":["ensorceleur","magicien"],"sv":"dex","dmg":"10d4","ty":"acide","up":"+2d4 par niveau","d":"Une boule d’acide explose (sphère de 6 m) : JS de Dextérité, 10d4 dégâts d’acide puis 5d4 à la fin de son prochain tour (moitié des dégâts initiaux seulement si réussite)."},
+  bouclier_antivie: {"n":"Bouclier antivie","l":5,"e":"abj","t":"1 action","p":"Personnelle","c":"V, S","du":"1 heure","co":true,"cl":["druide"],"d":"Une barrière de 3 m autour de vous empêche les créatures autres que les morts-vivants et créatures artificielles de passer ou de vous atteindre au corps à corps."},
+  contact_autre_plan: {"n":"Contact avec un autre plan","l":5,"e":"div","t":"1 minute","p":"Personnelle","c":"V","du":"1 minute","ri":true,"cl":["occultiste","magicien"],"dmg":"6d6","ty":"psy","d":"JS d’Intelligence DD 15 : en cas de réussite, posez cinq questions à une entité d’un autre plan (réponses en un mot). En cas d’échec, 6d6 dégâts psychiques et neutralisé jusqu’à un repos long."},
+  contagion: {"n":"Contagion","l":5,"e":"nec","t":"1 action","p":"Contact","c":"V, S","du":"7 jours","cl":["clerc","druide"],"sv":"con","dmg":"11d8","ty":"necro","d":"JS de Constitution ou 11d8 dégâts nécrotiques et empoisonné, avec désavantage aux JS d’une caractéristique choisie. Trois échecs : l’effet dure 7 jours."},
+  creation: {"n":"Création","l":5,"e":"ill","t":"1 minute","p":"9 m","c":"V, S, M","du":"Spéciale","cl":["ensorceleur","magicien"],"up":"Cube +1,50 m par niveau","d":"Vous créez un objet non vivant (cube de 1,50 m) en matière d’ombre ; sa durée dépend du matériau (12 heures pour la pierre, 1 minute pour l’or)."},
+  sanctification: {"n":"Sanctification","l":5,"e":"abj","t":"24 heures","p":"Contact","c":"V, S, M","du":"Jusqu’à dissipation","cl":["clerc"],"d":"Une zone de 18 m de rayon interdite aux créatures de types choisis, avec un effet au choix (courage, lumière, ténèbres, silence, langues, résistance ou vulnérabilité à un type de dégâts…). Encens de 1 000 po."},
+  double_illusoire: {"n":"Double illusoire","l":5,"e":"ill","t":"1 action","p":"Personnelle","c":"S","du":"1 heure","co":true,"cl":["barde","occultiste","magicien"],"d":"Vous devenez invisible et un double illusoire apparaît. Vous le déplacez et le faites parler, et percevez par ses sens. L’invisibilité cesse si vous attaquez ou lancez un sort."},
+  lien_planaire: {"n":"Lien planaire","l":5,"e":"abj","t":"1 heure","p":"18 m","c":"V, S, M","du":"24 heures","cl":["barde","clerc","druide","occultiste","magicien"],"sv":"cha","d":"JS de Charisme ou un céleste, élémentaire, fée ou fiélon est lié à votre service et suit vos ordres. Durée plus longue aux niveaux supérieurs. Joyau de 1 000 po."},
+  reincarnation: {"n":"Réincarnation","l":5,"e":"nec","t":"1 heure","p":"Contact","c":"V, S, M","du":"Instantanée","cl":["druide"],"d":"Une créature humanoïde morte depuis 10 jours au plus revient dans un nouveau corps d’une espèce tirée au hasard (1d10). Huiles de 1 000 po."},
+  invocation_dragon: {"n":"Invocation de dragon","l":5,"e":"inv","t":"1 action","p":"18 m","c":"V, S, M","du":"1 heure","co":true,"cl":["magicien"],"d":"Un esprit draconique (CA 14 + niveau, 50 PV + 10 par niveau au-delà de 5, vol 18 m) combat pour vous, avec morsures et souffle. Il agit juste après vous."},
+  lien_telepathique: {"n":"Lien télépathique","l":5,"e":"div","t":"1 action","p":"9 m","c":"V, S, M","du":"1 heure","ri":true,"cl":["barde","magicien"],"d":"Jusqu’à huit créatures consentantes communiquent par télépathie, à n’importe quelle distance sur le même plan."},
+  invocation_fee: {"n":"Invocation de fée","l":6,"e":"inv","t":"1 action","p":"18 m","c":"V, S","du":"10 minutes","co":true,"cl":["druide"],"atk":"cac","dmg":"3d12","ty":"psy","up":"+1d12 par niveau","d":"Un esprit féerique apparaît et attaque (attaque de sort au corps à corps) : 3d12 + votre modificateur d’incantation en dégâts psychiques, et la cible est effrayée. Vous le téléportez de 9 m par une action bonus pour attaquer de nouveau."},
+  contingence: {"n":"Contingence","l":6,"e":"abj","t":"10 minutes","p":"Personnelle","c":"V, S, M","du":"10 jours","cl":["magicien"],"d":"Vous associez un sort de niveau 5 ou moins qui peut vous cibler à une condition de déclenchement ; il prend effet dès qu’elle se produit. Statuette de 1 500 po."},
+  interdiction: {"n":"Interdiction","l":6,"e":"abj","t":"10 minutes","p":"Contact","c":"V, S, M","du":"1 jour","ri":true,"cl":["clerc"],"dmg":"5d10","ty":"radiant","d":"Une vaste zone est protégée contre la téléportation et le voyage planaire. Les créatures de types choisis qui y entrent ou y commencent leur tour subissent 5d10 dégâts radiants ou nécrotiques. Rubis de 1 000 po."},
+  sphere_glaciale: {"n":"Sphère glaciale","l":6,"e":"evo","t":"1 action","p":"90 m","c":"V, S, M","du":"Instantanée","cl":["ensorceleur","magicien"],"sv":"con","dmg":"10d6","ty":"froid","up":"+1d6 par niveau","d":"Un globe glacé explose (sphère de 18 m) : JS de Constitution, 10d6 dégâts de froid (moitié si réussite). Gèle une étendue d’eau. Vous pouvez le garder en main pour le lancer plus tard."},
+  garde_et_protection: {"n":"Garde et protection","l":6,"e":"abj","t":"1 heure","p":"Contact","c":"V, S, M","du":"24 heures","cl":["barde","magicien"],"d":"Protège un bâtiment : couloirs embrumés, portes verrouillées et masquées, escaliers couverts de toiles, et un effet au choix. Baguette d’argent de 10 po."},
+  convocation_instantanee: {"n":"Convocation instantanée","l":6,"e":"inv","t":"1 minute","p":"Contact","c":"V, S, M","du":"Jusqu’à dissipation","ri":true,"cl":["magicien"],"d":"Vous marquez un objet de 5 kg au plus ; en brisant le saphir, il apparaît dans votre main, où qu’il soit. Saphir de 1 000 po."},
+  possession: {"n":"Possession","l":6,"e":"nec","t":"1 minute","p":"Personnelle","c":"V, S, M","du":"Jusqu’à dissipation","cl":["magicien"],"sv":"cha","d":"Votre âme passe dans un réceptacle, d’où elle peut tenter de posséder un humanoïde à 30 m (JS de Charisme). Réceptacle de 500 po."},
+  glissement_terrain: {"n":"Glissement de terrain","l":6,"e":"tra","t":"1 action","p":"36 m","c":"V, S, M","du":"2 heures","co":true,"cl":["druide","ensorceleur","magicien"],"d":"Vous remodelez la terre, le sable ou l’argile d’une zone de 12 m de côté : élever, creuser, former un mur ou un pilier. Chaque changement prend 10 minutes."},
+  allie_planaire: {"n":"Allié planaire","l":6,"e":"inv","t":"10 minutes","p":"18 m","c":"V, S","du":"Instantanée","cl":["clerc"],"d":"Une entité que vous connaissez vous envoie un céleste, un élémentaire ou un fiélon ; il accomplit un service contre un paiement à négocier."},
+  illusion_programmee: {"n":"Illusion programmée","l":6,"e":"ill","t":"1 action","p":"36 m","c":"V, S, M","du":"Jusqu’à dissipation","cl":["barde","magicien"],"d":"Une illusion (cube de 9 m) de 5 minutes au plus se déclenche selon une condition, puis se réactive après 10 minutes. Poudre de jade de 25 po."},
+  voyage_plantes: {"n":"Voyage par les plantes","l":6,"e":"inv","t":"1 action","p":"3 m","c":"V, S","du":"1 minute","cl":["druide"],"d":"Une grande plante devient un passage vers une autre plante déjà vue, à n’importe quelle distance sur le même plan."},
+  mur_epines: {"n":"Mur d’épines","l":6,"e":"inv","t":"1 action","p":"36 m","c":"V, S, M","du":"10 minutes","co":true,"cl":["druide"],"sv":"dex","dmg":"7d8","ty":"perforant","up":"+1d8 par niveau","d":"Un mur de ronces épineuses (18 m de long ou cercle de 6 m) : JS de Dextérité, 7d8 dégâts perforants (moitié si réussite). Le traverser coûte 4 fois plus de mouvement et inflige 7d8 tranchants."},
+  marche_vent: {"n":"Marche sur le vent","l":6,"e":"tra","t":"1 minute","p":"9 m","c":"V, S, M","du":"8 heures","cl":["druide"],"d":"Vous et dix créatures prenez une forme de nuage : vol 90 m, résistance aux dégâts physiques. Reprendre forme normale demande 1 minute."},
+  invocation_celeste: {"n":"Invocation de céleste","l":7,"e":"inv","t":"1 action","p":"27 m","c":"V, S","du":"10 minutes","co":true,"cl":["clerc"],"sv":"dex","dmg":"6d12","ty":"radiant","heal":"4d12","up":"+1d12 par niveau","d":"Un pilier de lumière (cylindre de 3 m de rayon) : chaque créature y récupère 4d12 + votre modificateur d’incantation en PV, ou fait un JS de Dextérité contre 6d12 dégâts radiants. Vous le déplacez de 9 m à votre tour."},
+  manoir_magnifique: {"n":"Manoir somptueux","l":7,"e":"inv","t":"1 minute","p":"90 m","c":"V, S, M","du":"24 heures","cl":["barde","magicien"],"d":"Une porte mène à une demeure extradimensionnelle meublée, avec un festin pour cent personnes et des serviteurs invisibles. Porte miniature de 15 po."},
+  mirage_arcanique: {"n":"Mirage arcanique","l":7,"e":"ill","t":"10 minutes","p":"Vue","c":"V, S","du":"10 jours","cl":["barde","druide","magicien"],"d":"Un terrain de 1,5 km de côté ressemble à un autre, jusqu’au toucher : il peut créer ou supprimer un terrain difficile et ajouter de fausses structures."},
+  sequestre: {"n":"Séquestre","l":7,"e":"tra","t":"1 action","p":"Contact","c":"V, S, M","du":"Jusqu’à dissipation","cl":["magicien"],"d":"Une créature ou un objet devient invisible et indétectable par la divination ; une créature est plongée dans un sommeil sans âge jusqu’à une condition choisie. Poudre de gemme de 5 000 po."},
+  simulacre: {"n":"Simulacre","l":7,"e":"ill","t":"12 heures","p":"Contact","c":"V, S, M","du":"Jusqu’à dissipation","cl":["magicien"],"d":"Vous créez un double de neige d’une bête ou d’un humanoïde : mêmes statistiques avec la moitié des PV, il vous obéit. Poudre de rubis de 1 500 po."},
+  antipathie_sympathie: {"n":"Antipathie/Sympathie","l":8,"e":"enc","t":"1 heure","p":"18 m","c":"V, S, M","du":"10 jours","cl":["barde","druide","magicien"],"sv":"sag","d":"Un objet ou une créature repousse (effrayé) ou attire (charmé) un type de créature choisi qui arrive à 36 m (JS de Sagesse)."},
+  embrouillamini: {"n":"Esprit brisé","l":8,"e":"enc","t":"1 action","p":"45 m","c":"V, S, M","du":"Instantanée","cl":["barde","druide","occultiste","magicien"],"sv":"int","dmg":"10d12","ty":"psy","d":"JS d’Intelligence ou 10d12 dégâts psychiques, et la cible ne peut plus lancer de sorts ni effectuer l’action Magie (nouveau JS tous les 30 jours). Moitié des dégâts seulement si réussite."},
+  clone: {"n":"Clone","l":8,"e":"nec","t":"1 heure","p":"Contact","c":"V, S, M","du":"Instantanée","cl":["magicien"],"d":"Un double inerte de la créature grandit en 120 jours ; si elle meurt, son âme y passe. Diamant de 1 000 po et réceptacle de 2 000 po."},
+  eloquence: {"n":"Éloquence","l":8,"e":"enc","t":"1 action","p":"Personnelle","c":"V","du":"1 heure","cl":["barde","occultiste"],"d":"Vous pouvez remplacer le résultat de vos tests de Charisme par 15, et la magie qui détecte le mensonge vous dit sincère."},
+  tsunami: {"n":"Tsunami","l":8,"e":"inv","t":"1 minute","p":"1,5 km","c":"V, S","du":"6 rounds","co":true,"cl":["druide"],"sv":"for","dmg":"6d10","ty":"contondant","d":"Un mur d’eau de 90 m : JS de Force, 6d10 dégâts contondants (moitié si réussite). Il avance de 15 m par tour et frappe de nouveau (5d10)."},
+  ennemi_subconscient: {"n":"Ennemi subconscient","l":9,"e":"ill","t":"1 action","p":"36 m","c":"V, S","du":"1 minute","co":true,"cl":["occultiste","magicien"],"sv":"sag","dmg":"10d10","ty":"psy","d":"Les créatures choisies dans une sphère de 9 m font un JS de Sagesse : 10d10 dégâts psychiques et effrayées (moitié si réussite). À chaque tour, nouvel échec : 5d10 dégâts."},
+});
+
 /* Forge des Héros — moteur de règles (fonctions pures) */
 
 const mod = (s) => Math.floor((s - 10) / 2);
@@ -1739,7 +1925,7 @@ function newBuild() {
     skillsClass: [], skillsSpecies: [], skilled: [], skillsLore: [], skillPrimal: null, expertise: [],
     humanFeat: null, magic: { bg: { list: "clr", cant: [], spell: null, ab: "sag" }, human: { list: "clr", cant: [], spell: null, ab: "sag" } },
     opts: { style: null, style2: null, order: null, strike: null, dragon: null, mastery: [], inv: [], meta: [], prey: null, land: null, lore2: [], arcanum: {}, asis: {}, boon: { id: null, a: null } },
-    cant: [], prep: [], gear: { cls: "A", bg: "A" }, langs: [], align: "Neutre",
+    cant: [], prep: [], gear: { cls: "A", bg: "A" }, langs: [], align: "Neutre", subHb: null,
     details: { age: "", taille: "", divinite: "", apparence: "", personnalite: "", ideaux: "", liens: "", defauts: "", histoire: "" },
     created: Date.now(),
   };
@@ -1756,12 +1942,17 @@ const MI_NAME = { clr: "Clerc", drd: "Druide", mag: "Magicien" };
 
 function featsOf(b) {
   const out = [];
-  if (b.bg) out.push({ id: BACKGROUNDS[b.bg].feat, src: "bg" });
+  if (b.bg && BACKGROUNDS[b.bg]) out.push({ id: BACKGROUNDS[b.bg].feat, src: "bg" });
   if (b.species === "humain" && b.humanFeat) out.push({ id: b.humanFeat, src: "human" });
-  return out;
+  activeAsiLevels(b).forEach((lv) => { const a = b.opts.asis[lv]; if (a && a.mode === "feat" && a.feat) out.push({ id: a.feat, src: "asi" + lv }); });
+  return out.filter((f) => FEATS[f.id]);
 }
 
 function subActive(b) { return b.level >= 3; }
+/* Sous-classe : celle du SRD, ou une sous-classe maison (b.subHb) */
+function hbSub(b) { const h = b.subHb && typeof HBSUB !== "undefined" && HBSUB[b.subHb]; return h && h.cls === b.cls ? h : null; }
+function srdSub(b) { return !b.subHb; }
+function subName(b) { const c = CLASSES[b.cls]; if (!c) return null; const h = hbSub(b); return h ? h.n : srdSub(b) ? c.sub.n : null; }
 
 function migrate(b) {
   const o = b.opts;
@@ -1772,6 +1963,8 @@ function migrate(b) {
   if (!o.arcanum) o.arcanum = {};
   ["style2", "strike", "dragon"].forEach((k) => { if (!(k in o)) o[k] = null; });
   if (b.details && !("divinite" in b.details)) b.details.divinite = "";
+  if (!("subHb" in b)) b.subHb = null;
+  if (b.hb && typeof hbRegister === "function") Object.values(b.hb).forEach((d) => hbRegister(d, false));
   return b;
 }
 function asiAt(b, lv) { if (!b.opts.asis[lv]) b.opts.asis[lv] = { mode: "2", a: null, b: null }; return b.opts.asis[lv]; }
@@ -1803,6 +1996,7 @@ function abilities(b) {
     if (!a) return;
     if (a.mode === "2" && a.a) out[a.a] = Math.min(20, out[a.a] + 2);
     if (a.mode === "11") { if (a.a) out[a.a] = Math.min(20, out[a.a] + 1); if (a.b && a.b !== a.a) out[a.b] = Math.min(20, out[a.b] + 1); }
+    if (a.mode === "feat" && a.feat && FEATS[a.feat] && a.a && (FEATS[a.feat].ab || []).includes(a.a)) out[a.a] = Math.min(20, out[a.a] + 1);
   });
   if (b.level >= 19 && b.opts.boon.a) out[b.opts.boon.a] = Math.min(30, out[b.opts.boon.a] + 1);
   if (b.level >= 20 && b.cls === "barbare") ["for", "con"].forEach((k) => (out[k] = Math.max(out[k], Math.min(25, out[k] + 4))));
@@ -1818,11 +2012,11 @@ function classSkillPool(b) {
 
 function profSkills(b) {
   const s = new Set();
-  if (b.bg) BACKGROUNDS[b.bg].skills.forEach((k) => s.add(k));
+  if (b.bg && BACKGROUNDS[b.bg]) BACKGROUNDS[b.bg].skills.forEach((k) => s.add(k));
   b.skillsClass.forEach((k) => s.add(k));
   b.skillsSpecies.forEach((k) => s.add(k));
   featsOf(b).forEach((f) => { if (f.id === "doue") b.skilled.forEach((k) => s.add(k)); });
-  if (b.cls === "barde" && b.level >= 3) b.skillsLore.forEach((k) => s.add(k));
+  if (b.cls === "barde" && b.level >= 3 && srdSub(b)) b.skillsLore.forEach((k) => s.add(k));
   if (b.cls === "barbare" && b.level >= 3 && b.skillPrimal) s.add(b.skillPrimal);
   return s;
 }
@@ -1892,8 +2086,9 @@ function grantedSpells(b) {
   if (c) {
     if (c.always) Object.entries(c.always).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: "Classe", ab: c.sab, always: true, free: b.cls === "paladin" ? "smite" : b.cls === "rodeur" ? "ennemi" : null })); });
     if (b.cls === "druide") out.push({ id: "comanimaux", src: "Druidique", ab: c.sab, always: true });
-    if (subActive(b) && c.sub.spells) Object.entries(c.sub.spells).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: c.sub.n, ab: c.sab, always: true })); });
-    if (b.cls === "druide" && subActive(b) && b.opts.land) Object.entries(LAND_SPELLS[b.opts.land].s).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: "Cercle de la Terre", ab: c.sab, always: true })); });
+    const hs = hbSub(b), subSpells = hs ? hs.spells : srdSub(b) ? c.sub.spells : null;
+    if (subActive(b) && subSpells) Object.entries(subSpells).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: subName(b), ab: c.sab || "sag", always: true })); });
+    if (b.cls === "druide" && subActive(b) && srdSub(b) && b.opts.land) Object.entries(LAND_SPELLS[b.opts.land].s).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: "Cercle de la Terre", ab: c.sab, always: true })); });
   }
   if (sp) {
     const opt = sp.choice && b.sChoice && sp.choice.opts[b.sChoice];
@@ -1902,7 +2097,7 @@ function grantedSpells(b) {
     });
     if (sp.extraSpells) sp.extraSpells.forEach((id) => out.push({ id, src: sp.n, ab: b.sSpellAb, always: true }));
   }
-  if (b.cls === "barde" && b.level >= 6) b.opts.lore2.forEach((id) => out.push({ id, src: "Découvertes magiques", ab: "cha", always: true }));
+  if (b.cls === "barde" && b.level >= 6 && srdSub(b)) b.opts.lore2.forEach((id) => out.push({ id, src: "Découvertes magiques", ab: "cha", always: true }));
   if (b.cls === "occultiste") Object.entries(b.opts.arcanum).forEach(([lv, id]) => { if (id && b.level >= ARCANUM_LV[lv]) out.push({ id, src: "Arcanum mystique", ab: "cha", always: true, free: "arc_" + lv }); });
   featsOf(b).forEach((f) => {
     if (f.id !== "initie") return;
@@ -1931,25 +2126,25 @@ function hpMax(b, ab) {
   let hp = Math.max(1, c.hd + cm);
   for (let l = 2; l <= b.level; l++) hp += Math.max(1, c.hd / 2 + 1 + cm);
   hp += speciesHPBonus(b);
-  if (b.cls === "ensorceleur" && b.level >= 3) hp += b.level;
+  if (b.cls === "ensorceleur" && b.level >= 3 && srdSub(b)) hp += b.level;
   return hp;
 }
 
 function resources(b, ab) {
-  const L = b.level, pb = pbOf(L), r = [];
+  const L = b.level, pb = pbOf(L), r = [], std = srdSub(b);
   const add = (k, n, max, reset, note) => max > 0 && r.push({ k, n, max, reset, note });
   switch (b.cls) {
-    case "barbare": add("rage", "Rage", L >= 17 ? 6 : L >= 12 ? 5 : L >= 6 ? 4 : L >= 3 ? 3 : 2, "short1", "+" + rageDmg(L) + " dégâts"); if (L >= 11) add("relent", "Rage implacable (DD 10, +5 par usage)", 1, "short"); if (L >= 14) add("intim", "Présence intimidante", 1, "long"); if (L >= 15) add("persist", "Rage persistante", 1, "long"); break;
+    case "barbare": add("rage", "Rage", L >= 17 ? 6 : L >= 12 ? 5 : L >= 6 ? 4 : L >= 3 ? 3 : 2, "short1", "+" + rageDmg(L) + " dégâts"); if (L >= 11) add("relent", "Rage implacable (DD 10, +5 par usage)", 1, "short"); if (L >= 14 && std) add("intim", "Présence intimidante", 1, "long"); if (L >= 15) add("persist", "Rage persistante", 1, "long"); break;
     case "barde": add("insp", "Inspiration bardique", Math.max(1, mod(ab.cha)), L >= 5 ? "short" : "long", bardDie(L)); break;
     case "clerc": if (L >= 2) add("cd", "Conduit divin", L >= 18 ? 4 : L >= 6 ? 3 : 2, "short1"); if (L >= 10) add("interv", "Intervention divine", 1, "long"); break;
-    case "druide": if (L >= 2) add("ws", "Forme sauvage", L >= 17 ? 4 : L >= 6 ? 3 : 2, "short1"); if (L >= 6 && b.opts.land) add("natrec", "Récupération naturelle", 1, "long"); break;
+    case "druide": if (L >= 2) add("ws", "Forme sauvage", L >= 17 ? 4 : L >= 6 ? 3 : 2, "short1"); if (L >= 6 && std && b.opts.land) add("natrec", "Récupération naturelle", 1, "long"); break;
     case "guerrier": add("sw", "Second souffle", L >= 10 ? 4 : L >= 4 ? 3 : 2, "short1", "1d10+" + L); if (L >= 2) add("surge", "Fougue", L >= 17 ? 2 : 1, "short"); if (L >= 9) add("indom", "Inflexible", L >= 17 ? 3 : L >= 13 ? 2 : 1, "long", "+" + L); break;
-    case "moine": if (L >= 2) add("focus", "Points de focalisation", L, "short"); if (L >= 2) add("meta", "Métabolisme extraordinaire", 1, "long"); if (L >= 6) add("whole", "Plénitude du corps", Math.max(1, mod(ab.sag)), "long"); break;
-    case "paladin": add("loh", "Imposition des mains (PV)", 5 * L, "long", "réserve"); if (L >= 2) add("smite", "Châtiment gratuit", 1, "long"); if (L >= 3) add("cd", "Conduit divin", L >= 11 ? 3 : 2, "short1"); if (L >= 5) add("steed", "Destrier gratuit", 1, "long"); if (L >= 20) add("nimbe", "Nimbe sacré", 1, "long"); break;
+    case "moine": if (L >= 2) add("focus", "Points de focalisation", L, "short"); if (L >= 2) add("meta", "Métabolisme extraordinaire", 1, "long"); if (L >= 6 && std) add("whole", "Plénitude du corps", Math.max(1, mod(ab.sag)), "long"); break;
+    case "paladin": add("loh", "Imposition des mains (PV)", 5 * L, "long", "réserve"); if (L >= 2) add("smite", "Châtiment gratuit", 1, "long"); if (L >= 3) add("cd", "Conduit divin", L >= 11 ? 3 : 2, "short1"); if (L >= 5) add("steed", "Destrier gratuit", 1, "long"); if (L >= 20 && std) add("nimbe", "Nimbe sacré", 1, "long"); break;
     case "rodeur": add("ennemi", "Marque du chasseur gratuite", L >= 17 ? 6 : L >= 13 ? 5 : L >= 9 ? 4 : L >= 5 ? 3 : 2, "long", L >= 20 ? "d10" : "d6"); if (L >= 10) add("tireless", "Infatigable", Math.max(1, mod(ab.sag)), "long"); if (L >= 14) add("veil", "Voile de la nature", Math.max(1, mod(ab.sag)), "long"); break;
     case "roublard": if (L >= 20) add("luck", "Coup de chance", 1, "short"); break;
-    case "ensorceleur": add("innate", "Sorcellerie innée", 2, "long"); if (L >= 2) add("sp", "Points de sorcellerie", L, "long"); if (L >= 5) add("sorcrest", "Restauration ensorcelante", 1, "long"); if (L >= 14) add("wings", "Ailes de dragon", 1, "long"); break;
-    case "occultiste": if (L >= 2) add("cunning", "Astuce magique", 1, "long"); if (L >= 6) add("darkluck", "Chance du ténébreux", Math.max(1, mod(ab.cha)), "long", "1d10"); if (L >= 9) add("patron", "Contacter le protecteur", 1, "long"); if (L >= 14) add("hurl", "Jeter en enfer", 1, "long", "8d10"); break;
+    case "ensorceleur": add("innate", "Sorcellerie innée", 2, "long"); if (L >= 2) add("sp", "Points de sorcellerie", L, "long"); if (L >= 5) add("sorcrest", "Restauration ensorcelante", 1, "long"); if (L >= 14 && std) add("wings", "Ailes de dragon", 1, "long"); break;
+    case "occultiste": if (L >= 2) add("cunning", "Astuce magique", 1, "long"); if (L >= 6 && std) add("darkluck", "Chance du ténébreux", Math.max(1, mod(ab.cha)), "long", "1d10"); if (L >= 9) add("patron", "Contacter le protecteur", 1, "long"); if (L >= 14 && std) add("hurl", "Jeter en enfer", 1, "long", "8d10"); break;
     case "magicien": add("arcrec", "Restauration arcanique", 1, "long"); break;
   }
   switch (b.species) {
@@ -1963,8 +2158,7 @@ function resources(b, ab) {
   featsOf(b).forEach((f) => { if (f.id === "initie" && b.magic[f.src].spell) add("mi_" + f.src, SPELLS[b.magic[f.src].spell].n + " (gratuit)", 1, "long"); });
   if (b.cls === "occultiste") Object.entries(b.opts.arcanum).forEach(([lv, id]) => { if (id && L >= ARCANUM_LV[lv]) add("arc_" + lv, SPELLS[id].n + " (arcanum)", 1, "long"); });
   if (L >= 19 && b.opts.boon.id === "destin") add("boonfate", "Faveur du destin", 1, "short", "2d4");
-  if (L >= 19 && b.opts.boon.id === "rappel") add("boonrecall", "Rappel de sort", 1, "long");
-  if (b.cls === "barde" && L >= 3) r.forEach((x) => { if (x.k === "insp") x.note += " · Mots cinglants"; });
+  if (b.cls === "barde" && L >= 3 && std) r.forEach((x) => { if (x.k === "insp") x.note += " · Mots cinglants"; });
   return r;
 }
 
@@ -1983,16 +2177,20 @@ function features(b) {
     const opt = sp.choice && b.sChoice && sp.choice.opts[b.sChoice];
     if (opt) out.push({ n: sp.choice.label + " : " + opt.n, d: opt.d || ("Dégâts de " + DMG[opt.t] + "."), src: sp.n });
   }
-  if (c) for (let l = 1; l <= b.level; l++) (c.feats[l] || []).forEach(([n, d]) => out.push({ n, d, src: c.n + " " + l, lvl: l }));
-  featsOf(b).forEach((f) => out.push({ n: FEATS[f.id].n, d: FEATS[f.id].d, src: f.src === "bg" ? "Historique" : "Humain" }));
+  const hs = hbSub(b);
+  if (c) for (let l = 1; l <= b.level; l++) {
+    (c.feats[l] || []).forEach(([n, d]) => { if (b.subHb && isSubFeat(b.cls, n)) return; out.push({ n, d, src: c.n + " " + l, lvl: l }); });
+    if (hs && l >= 3) hs.feats.filter((f) => f.l === l).forEach((f) => out.push({ n: f.n + " (" + hs.n + ")", d: f.d, src: c.n + " " + l, lvl: l }));
+  }
+  featsOf(b).forEach((f) => out.push({ n: FEATS[f.id].n, d: FEATS[f.id].d, src: f.src === "bg" ? "Historique" : f.src === "human" ? "Humain" : "Don (niv. " + f.src.slice(3) + ")" }));
   if (b.opts.style && FIGHTING_STYLES[b.opts.style]) out.push({ n: "Style : " + FIGHTING_STYLES[b.opts.style].n, d: FIGHTING_STYLES[b.opts.style].d, src: c.n });
-  if (b.cls === "guerrier" && b.level >= 7 && b.opts.style2 && FIGHTING_STYLES[b.opts.style2]) out.push({ n: "Style : " + FIGHTING_STYLES[b.opts.style2].n, d: FIGHTING_STYLES[b.opts.style2].d, src: "Champion" });
+  if (b.cls === "guerrier" && b.level >= 7 && srdSub(b) && b.opts.style2 && FIGHTING_STYLES[b.opts.style2]) out.push({ n: "Style : " + FIGHTING_STYLES[b.opts.style2].n, d: FIGHTING_STYLES[b.opts.style2].d, src: "Champion" });
   const so = STRIKE_OPTS[b.cls];
   if (so && b.level >= so.lvl && b.opts.strike && so.opts[b.opts.strike]) out.push({ n: so.label + " : " + so.opts[b.opts.strike].n, d: so.opts[b.opts.strike].d, src: c.n });
-  if (b.cls === "ensorceleur" && b.level >= 6 && b.opts.dragon) out.push({ n: "Affinité : " + DMG[b.opts.dragon], d: "Résistance aux dégâts de " + DMG[b.opts.dragon] + " ; + mod. Cha aux dégâts de ce type de vos sorts.", src: "Sorcellerie draconique" });
+  if (b.cls === "ensorceleur" && b.level >= 6 && srdSub(b) && b.opts.dragon) out.push({ n: "Affinité : " + DMG[b.opts.dragon], d: "Résistance aux dégâts de " + DMG[b.opts.dragon] + " ; + mod. Cha aux dégâts de ce type de vos sorts.", src: "Sorcellerie draconique" });
   if (b.level >= 19 && b.opts.boon.id) out.push({ n: EPIC_BOONS[b.opts.boon.id].n, d: EPIC_BOONS[b.opts.boon.id].d, src: "Faveur épique" });
-  if (b.cls === "rodeur" && b.level >= 3 && b.opts.prey) out.push({ n: b.opts.prey === "colosse" ? "Tueur de colosses" : "Briseur de hordes", d: b.opts.prey === "colosse" ? "Une fois par tour, +1d8 dégâts contre une créature qui n’a pas tous ses PV." : "Une fois par tour, attaque supplémentaire contre une autre créature à 1,50 m de la cible initiale.", src: "Chasseur" });
-  if (b.cls === "druide" && b.level >= 3 && b.opts.land) out.push({ n: "Terre : " + LAND_SPELLS[b.opts.land].n, d: "Sorts du cercle toujours préparés.", src: "Cercle de la Terre" });
+  if (b.cls === "rodeur" && b.level >= 3 && srdSub(b) && b.opts.prey) out.push({ n: b.opts.prey === "colosse" ? "Tueur de colosses" : "Briseur de hordes", d: b.opts.prey === "colosse" ? "Une fois par tour, +1d8 dégâts contre une créature qui n’a pas tous ses PV." : "Une fois par tour, attaque supplémentaire contre une autre créature à 1,50 m de la cible initiale.", src: "Chasseur" });
+  if (b.cls === "druide" && b.level >= 3 && srdSub(b) && b.opts.land) out.push({ n: "Terre : " + LAND_SPELLS[b.opts.land].n, d: "Sorts du cercle toujours préparés.", src: "Cercle de la Terre" });
   b.opts.inv.forEach((k) => INVOCATIONS[k] && out.push({ n: INVOCATIONS[k].n, d: INVOCATIONS[k].d, src: "Manifestation" }));
   b.opts.meta.forEach((k) => METAMAGIC[k] && out.push({ n: METAMAGIC[k].n, d: METAMAGIC[k].d, src: "Métamagie" }));
   return out;
@@ -2000,7 +2198,7 @@ function features(b) {
 
 function compute(b, p) {
   const c = CLASSES[b.cls], sp = SPECIES[b.species], bg = BACKGROUNDS[b.bg];
-  const L = b.level, pb = pbOf(L);
+  const L = b.level, pb = pbOf(L), std = srdSub(b);
   const ab = abilities(b), m = {};
   ABK.forEach((k) => (m[k] = mod(ab[k])));
   const feats = featsOf(b).map((f) => f.id);
@@ -2031,12 +2229,12 @@ function compute(b, p) {
   let ac, acNote;
   if (armor) {
     ac = armor.ac + Math.min(m.dex, armor.dex); acNote = armor.n;
-    if ((b.opts.style === "defense" && (b.cls === "guerrier" || b.cls === "paladin" || b.cls === "rodeur")) || (b.cls === "guerrier" && L >= 7 && b.opts.style2 === "defense")) ac += 1;
+    if ((b.opts.style === "defense" && (b.cls === "guerrier" || b.cls === "paladin" || b.cls === "rodeur")) || (b.cls === "guerrier" && L >= 7 && std && b.opts.style2 === "defense")) ac += 1;
   } else {
     const opts = [{ v: 10 + m.dex, n: "Sans armure" }];
     if (b.cls === "barbare") opts.push({ v: 10 + m.dex + m.con, n: "Défense sans armure" });
     if (b.cls === "moine" && !eqShield) opts.push({ v: 10 + m.dex + m.sag, n: "Défense sans armure" });
-    if (b.cls === "ensorceleur" && L >= 3) opts.push({ v: 10 + m.dex + m.cha, n: "Résilience draconique" });
+    if (b.cls === "ensorceleur" && L >= 3 && std) opts.push({ v: 10 + m.dex + m.cha, n: "Résilience draconique" });
     const best = opts.sort((x, y) => y.v - x.v)[0];
     ac = best.v; acNote = best.n;
   }
@@ -2058,8 +2256,8 @@ function compute(b, p) {
   // Attaques
   const attacks = [];
   const maDie = martialDie(L);
-  const archery = b.opts.style === "archerie" || (b.cls === "guerrier" && L >= 7 && b.opts.style2 === "archerie");
-  const crit = b.cls === "guerrier" ? (L >= 15 ? 18 : L >= 3 ? 19 : 20) : 20;
+  const archery = b.opts.style === "archerie" || (b.cls === "guerrier" && L >= 7 && std && b.opts.style2 === "archerie");
+  const crit = b.cls === "guerrier" && std ? (L >= 15 ? 18 : L >= 3 ? 19 : 20) : 20;
   inv.filter((i) => i.eq && i.ref && i.ref.startsWith("w:")).forEach((i) => {
     const w = WEAPONS[i.ref.slice(2)];
     if (!w) return;
@@ -2092,8 +2290,8 @@ function compute(b, p) {
   const dmgBonus = (s) => {
     let v = 0, why = [];
     if (s.l === 0 && potent && s.cl.includes(b.cls)) { v += m.sag; why.push("Incantation puissante"); }
-    if (b.cls === "magicien" && L >= 10 && s.e === "evo" && s.l > 0 && s.cl.includes("magicien")) { v += m.int; why.push("Évocation surpuissante"); }
-    if (b.cls === "ensorceleur" && L >= 6 && b.opts.dragon && s.ty === b.opts.dragon) { v += m.cha; why.push("Affinité élémentaire"); }
+    if (b.cls === "magicien" && L >= 10 && std && s.e === "evo" && s.l > 0 && s.cl.includes("magicien")) { v += m.int; why.push("Évocation surpuissante"); }
+    if (b.cls === "ensorceleur" && L >= 6 && std && b.opts.dragon && s.ty === b.opts.dragon) { v += m.cha; why.push("Affinité élémentaire"); }
     if (b.cls === "occultiste" && s.id === "dechargeocculte" && b.opts.inv.includes("dechiree")) { v += m.cha; why.push("Décharge déchirante"); }
     return { v, why };
   };
@@ -2126,7 +2324,7 @@ function compute(b, p) {
       weapons: c ? c.weapons.map((w) => ({ simple: "Armes simples", guerre: "Armes de guerre", guerreLegere: "Armes de guerre légères", guerreFinesse: "Armes de guerre (finesse ou légères)" })[w]).join(", ") + ((b.cls === "clerc" && b.opts.order === "protecteur") || (b.cls === "druide" && b.opts.order === "gardien") ? ", armes de guerre" : "") : "",
       tools: [c && c.tools !== "—" ? c.tools : null, bg ? bg.tool : null].filter(Boolean).join(", ") || "Aucun",
     },
-    sub: c && L >= 3 ? c.sub.n : null,
+    sub: c && L >= 3 ? subName(b) : null,
   };
 }
 
@@ -2143,6 +2341,7 @@ function itemName(i) {
   if (i.ref && i.ref.startsWith("w:") && WEAPONS[i.ref.slice(2)]) return WEAPONS[i.ref.slice(2)].n;
   if (i.ref && i.ref.startsWith("a:") && ARMORS[i.ref.slice(2)]) return ARMORS[i.ref.slice(2)].n;
   if (i.ref && i.ref.startsWith("g:") && GEAR[i.ref.slice(2)]) return GEAR[i.ref.slice(2)];
+  if (i.ref && i.ref.startsWith("mi:") && typeof MAGIC_ITEMS !== "undefined" && MAGIC_ITEMS[i.ref.slice(3)]) return MAGIC_ITEMS[i.ref.slice(3)].n;
   return i.n;
 }
 function startingInventory(b) {
@@ -2182,11 +2381,16 @@ function issues(b) {
   if (!sp) out.origine.push("Choisissez une espèce");
   if (sp && sp.choice && !b.sChoice) out.origine.push(sp.choice.label);
   if (!bg) out.origine.push("Choisissez un historique");
+  if (c && b.subHb && !hbSub(b)) out.classe.push("Sous-classe maison introuvable");
   if (bg && b.bonus.mode === "21" && (!b.bonus.p2 || !b.bonus.p1 || b.bonus.p1 === b.bonus.p2)) out.carac.push("Répartissez les bonus d’historique");
   if (b.method === "points") { const spent = ABK.reduce((t, k) => t + (PB_COST[b.base[k]] ?? 99), 0); if (spent > 27) out.carac.push("Trop de points dépensés"); }
   if (b.method === "roll" && !b.rolled) out.carac.push("Lancez les dés");
   migrate(b);
-  activeAsiLevels(b).forEach((lv) => { const a = b.opts.asis[lv]; if (!a || !a.a || (a.mode === "11" && (!a.b || a.b === a.a))) out.carac.push("Amélioration (niv. " + lv + ")"); });
+  activeAsiLevels(b).forEach((lv) => {
+    const a = b.opts.asis[lv];
+    if (a && a.mode === "feat") { const f = FEATS[a.feat]; if (!f || ((f.ab || []).length && !a.a)) out.carac.push("Don (niv. " + lv + ")"); return; }
+    if (!a || !a.a || (a.mode === "11" && (!a.b || a.b === a.a))) out.carac.push("Amélioration (niv. " + lv + ")");
+  });
   if (b.level >= 19 && (!b.opts.boon.id || !b.opts.boon.a)) out.carac.push("Faveur épique (niv. 19)");
   if (c) {
     const need = c.skills.n;
@@ -2196,22 +2400,22 @@ function issues(b) {
     if (b.species === "humain" && !b.humanFeat) out.options.push("Don d’origine (humain)");
     featsOf(b).forEach((f) => { if (f.id === "initie") { const mm = b.magic[f.src]; if (mm.cant.length < 2 || !mm.spell) out.options.push("Sorts d’Initié à la magie"); } });
     const ex = expertiseCount(b); if (b.expertise.length < ex) out.options.push(`Expertise (${b.expertise.length}/${ex})`);
-    if (b.cls === "barde" && b.level >= 3 && b.skillsLore.length < 3) out.options.push("Compétences du Collège du Savoir");
+    if (b.cls === "barde" && b.level >= 3 && srdSub(b) && b.skillsLore.length < 3) out.options.push("Compétences du Collège du Savoir");
     if (b.cls === "barbare" && b.level >= 3 && !b.skillPrimal) out.options.push("Savoir primitif");
     if (c.mastery && b.opts.mastery.length < c.mastery) out.options.push(`Maîtrise d’arme (${b.opts.mastery.length}/${c.mastery})`);
     if ((b.cls === "guerrier" || (["paladin", "rodeur"].includes(b.cls) && b.level >= 2)) && !b.opts.style) out.options.push("Style de combat");
     if ((b.cls === "clerc" || b.cls === "druide") && !b.opts.order) out.options.push(b.cls === "clerc" ? "Ordre divin" : "Ordre primitif");
     if (b.cls === "occultiste" && b.opts.inv.length < c.inv[b.level - 1]) out.options.push(`Manifestations (${b.opts.inv.length}/${c.inv[b.level - 1]})`);
     if (b.cls === "ensorceleur" && b.level >= 2 && b.opts.meta.length < metaCount(b)) out.options.push(`Métamagie (${b.opts.meta.length}/${metaCount(b)})`);
-    if (b.cls === "ensorceleur" && b.level >= 6 && !b.opts.dragon) out.options.push("Affinité élémentaire");
-    if (b.cls === "guerrier" && b.level >= 7 && !b.opts.style2) out.options.push("Second style de combat");
+    if (b.cls === "ensorceleur" && b.level >= 6 && srdSub(b) && !b.opts.dragon) out.options.push("Affinité élémentaire");
+    if (b.cls === "guerrier" && b.level >= 7 && srdSub(b) && !b.opts.style2) out.options.push("Second style de combat");
     if (STRIKE_OPTS[b.cls] && b.level >= STRIKE_OPTS[b.cls].lvl && !b.opts.strike) out.options.push(STRIKE_OPTS[b.cls].label);
-    if (b.cls === "rodeur" && b.level >= 3 && !b.opts.prey) out.options.push("Proie du chasseur");
-    if (b.cls === "druide" && b.level >= 3 && !b.opts.land) out.options.push("Type de terre");
+    if (b.cls === "rodeur" && b.level >= 3 && srdSub(b) && !b.opts.prey) out.options.push("Proie du chasseur");
+    if (b.cls === "druide" && b.level >= 3 && srdSub(b) && !b.opts.land) out.options.push("Type de terre");
     if (c.caster) {
       if (b.cant.length < cantripCount(b)) out.sorts.push(`Tours de magie (${b.cant.length}/${cantripCount(b)})`);
       if (b.prep.length < prepCount(b)) out.sorts.push(`Sorts préparés (${b.prep.length}/${prepCount(b)})`);
-      if (b.cls === "barde" && b.level >= 6 && b.opts.lore2.length < 2) out.sorts.push(`Découvertes magiques (${b.opts.lore2.length}/2)`);
+      if (b.cls === "barde" && b.level >= 6 && srdSub(b) && b.opts.lore2.length < 2) out.sorts.push(`Découvertes magiques (${b.opts.lore2.length}/2)`);
       if (b.cls === "occultiste") Object.entries(ARCANUM_LV).forEach(([sl, lv]) => { if (b.level >= lv && !b.opts.arcanum[sl]) out.sorts.push("Arcanum de niveau " + sl); });
     }
   }
@@ -2299,6 +2503,7 @@ const Store = {
   },
   async put(ch) {
     ch.updated = Date.now();
+    if (typeof hbEmbed === "function") hbEmbed(ch.b);
     if (typeof cloudPut === "function") cloudPut(ch);
     if (typeof pushMember === "function") pushMember(ch);
     if (this.mode === "cloud") {
@@ -2344,6 +2549,7 @@ function render() {
   else if (S.view === "sheet") app.innerHTML = viewSheet();
   else if (S.view === "gm") app.innerHTML = viewGM();
   else if (S.view === "account") app.innerHTML = viewSettings();
+  else if (S.view === "hb") app.innerHTML = viewHB();
   $("#overlay").innerHTML = (S.modal ? viewModal() : "") + (S.tray ? viewTray() : "");
   $("#rollbar").innerHTML = viewRollbar();
   document.body.classList.toggle("noscroll", !!S.modal || S.tray);
@@ -2425,7 +2631,7 @@ function viewSummary(b) {
   return `<div class="sum-card">
     <div class="sum-top"><span class="sigil big">${c ? classSigil(b.cls) : "?"}</span>
       <div><div class="sum-name">${esc(b.name || "Héros sans nom")}</div>
-      <div class="mute small">${sp ? sp.n : "Espèce ?"} · ${c ? c.n : "Classe ?"} ${b.level}${bg ? " · " + bg.n : ""}</div></div></div>
+      <div class="mute small">${sp ? sp.n : "Espèce ?"} · ${c ? c.n : "Classe ?"} ${b.level}${bg ? " · " + esc(bg.n) : ""}</div></div></div>
     <div class="sum-abil">${ABK.map((k) => `<div><span class="lbl">${ABIL[k].s}</span><b>${sg(mod(ab[k]))}</b><span class="mute small">${ab[k]}</span></div>`).join("")}</div>
     ${s ? `<div class="sum-vitals"><div><span class="lbl">PV</span><b>${s.hpMax}</b></div><div><span class="lbl">CA</span><b>${s.ac}</b></div><div><span class="lbl">Vitesse</span><b>${fmtM(s.speed)}</b></div><div><span class="lbl">Maîtrise</span><b>${sg(s.pb)}</b></div></div>` : ""}
     ${s && s.casting ? `<div class="sum-cast"><span>DD des sorts <b>${s.casting.dc}</b></span><span>Attaque <b>${sg(s.casting.atk)}</b></span></div>` : ""}
@@ -2447,8 +2653,17 @@ function stepClass(b) {
   const c = CLASSES[b.cls];
   let detail = "";
   if (c) {
-    const feats = [];
-    for (let l = 1; l <= MAXLV; l++) (c.feats[l] || []).forEach(([n, d]) => feats.push(`<details class="feat ${l > b.level ? "locked" : ""}" ${l <= b.level && l === 1 ? "open" : ""}><summary><span class="lv">Niv. ${l}</span>${n}</summary><p>${d}</p></details>`));
+    const feats = [], hs = hbSub(b);
+    for (let l = 1; l <= MAXLV; l++) {
+      (c.feats[l] || []).forEach(([n, d]) => { if (b.subHb && isSubFeat(b.cls, n)) return; feats.push(`<details class="feat ${l > b.level ? "locked" : ""}" ${l <= b.level && l === 1 ? "open" : ""}><summary><span class="lv">Niv. ${l}</span>${n}</summary><p>${d}</p></details>`); });
+      if (hs) hs.feats.filter((f) => f.l === l).forEach((f) => feats.push(`<details class="feat ${l > b.level ? "locked" : ""}"><summary><span class="lv">Niv. ${l}</span>${esc(f.n)}${hbTag(hs)}</summary><p>${esc(f.d)}</p></details>`));
+    }
+    const subs = Object.entries(HBSUB).filter(([, x]) => x.cls === b.cls);
+    const subPick = `<section class="panel"><h4>Sous-classe (niveau 3)</h4><div class="opt-grid">
+      <button class="opt ${!b.subHb ? "on" : ""}" data-a="setSub" data-v=""><b>${c.sub.n}</b><span>${c.sub.d}</span></button>
+      ${subs.map(([k, x]) => `<button class="opt ${b.subHb === k ? "on" : ""}" data-a="setSub" data-v="${k}"><b>${esc(x.n)}${hbTag(x)}</b><span>${esc(x.d || x.feats.map((f) => f.n).join(", "))}</span></button>`).join("")}
+      ${b.subHb && !hs ? `<button class="opt on" data-a="setSub" data-v=""><b>Sous-classe maison introuvable</b><span>Elle a été supprimée de l’aventure. Touchez pour revenir à ${c.sub.n}.</span></button>` : ""}
+    </div>${!subs.length && typeof FB !== "undefined" && FB.ok ? `<p class="mute small">Vous avez d’autres sous-classes dans vos livres ? Ajoutez-les dans <b>Contenu maison</b>, depuis l’onglet Aventure d’une fiche ou l’écran du MJ.</p>` : ""}</section>`;
     detail = `<section class="panel detail">
       <h3>${c.n}</h3>
       <dl class="facts">
@@ -2458,8 +2673,8 @@ function stepClass(b) {
         <div><dt>Armures</dt><dd>${compute(b, { inv: [] }).profs.armor}</dd></div>
         <div><dt>Armes</dt><dd>${compute(b, { inv: [] }).profs.weapons}</dd></div>
         <div><dt>Compétences</dt><dd>${c.skills.n} au choix ${c.skills.from === "all" ? "parmi toutes" : "parmi " + c.skills.from.map((k) => SKILLS[k].n).join(", ")}</dd></div>
-        <div><dt>Sous-classe (niv. 3)</dt><dd>${c.sub.n} — ${c.sub.d}</dd></div>
       </dl>
+      ${subPick}
       <h4>Aptitudes</h4><div class="feats">${feats.join("")}</div>
       <p class="mute small">Les aptitudes grisées arrivent à un niveau supérieur à celui choisi.</p>
     </section>`;
@@ -2471,9 +2686,9 @@ function stepClass(b) {
 function stepOrigin(b) {
   const bgs = Object.entries(BACKGROUNDS).map(([k, g]) => `
     <button class="pick-card ${b.bg === k ? "on" : ""}" data-a="setBg" data-v="${k}">
-      <span class="pc-head"><span class="pc-name">${g.n}</span></span>
-      <span class="pc-tag">${g.desc}</span>
-      <span class="pc-list"><span><b>Caractéristiques</b> ${g.ab.map((a) => ABIL[a].s).join(", ")}</span><span><b>Don</b> ${FEATS[g.feat].n}${g.featList ? " (" + MI_NAME[g.featList] + ")" : ""}</span><span><b>Compétences</b> ${g.skills.map((s) => SKILLS[s].n).join(", ")}</span><span><b>Outils</b> ${g.tool}</span></span>
+      <span class="pc-head"><span class="pc-name">${g.hb ? esc(g.n) : g.n}</span>${hbTag(g)}</span>
+      <span class="pc-tag">${g.hb ? esc(g.desc) : g.desc}</span>
+      <span class="pc-list"><span><b>Caractéristiques</b> ${g.ab.map((a) => ABIL[a].s).join(", ")}</span><span><b>Don</b> ${FEATS[g.feat] ? esc(FEATS[g.feat].n) : "—"}${g.featList ? " (" + MI_NAME[g.featList] + ")" : ""}</span><span><b>Compétences</b> ${g.skills.map((s) => SKILLS[s].n).join(", ")}</span><span><b>Outils</b> ${g.hb ? esc(g.tool) : g.tool}</span></span>
     </button>`).join("");
   const sps = Object.entries(SPECIES).map(([k, s]) => `
     <button class="pick-card ${b.species === k ? "on" : ""}" data-a="setSpecies" data-v="${k}">
@@ -2513,7 +2728,7 @@ function stepAbilities(b) {
     const pri = CLASSES[b.cls] && CLASSES[b.cls].prim.includes(k);
     return `<div class="ab-row ${pri ? "pri" : ""}"><span class="ab-name">${ABIL[k].n}${pri ? '<span class="tagp">principale</span>' : ""}</span>${ctrl}<span class="ab-bonus">${bonus ? "+" + bonus : "·"}</span>${b.level >= 4 ? `<span class="ab-bonus">${asi > 0 ? "+" + asi : "·"}</span>` : ""}<span class="ab-total">${ab[k]}</span><span class="ab-mod">${sg(mod(ab[k]))}</span></div>`;
   }).join("");
-  const bonusUi = bg ? `<section class="panel"><h4>Bonus d’historique (${bg.n})</h4>
+  const bonusUi = bg ? `<section class="panel"><h4>Bonus d’historique (${esc(bg.n)})</h4>
     <div class="chips">${chip("+2 et +1", b.bonus.mode === "21", "setBonusMode", 'data-v="21"')}${chip("+1 à trois", b.bonus.mode === "111", "setBonusMode", 'data-v="111"')}</div>
     ${b.bonus.mode === "21" ? `<div class="bonus-pick"><span>+2</span><div class="chips">${bg.ab.map((a) => chip(ABIL[a].n, b.bonus.p2 === a, "setP2", `data-v="${a}"`)).join("")}</div></div>
     <div class="bonus-pick"><span>+1</span><div class="chips">${bg.ab.filter((a) => a !== b.bonus.p2).map((a) => chip(ABIL[a].n, b.bonus.p1 === a, "setP1", `data-v="${a}"`)).join("")}</div></div>` : `<p class="mute small">+1 en ${bg.ab.map((a) => ABIL[a].n).join(", ")}.</p>`}
@@ -2521,9 +2736,9 @@ function stepAbilities(b) {
   const asiUi = activeAsiLevels(b).map((lv) => {
     const a = asiAt(b, lv), dl = `data-lv="${lv}"`;
     return `<section class="panel"><h4>Amélioration de caractéristique (niveau ${lv})</h4>
-    <div class="chips">${chip("+2 à une", a.mode === "2", "setAsiMode", 'data-v="2" ' + dl)}${chip("+1 à deux", a.mode === "11", "setAsiMode", 'data-v="11" ' + dl)}</div>
-    <div class="bonus-pick"><span>${a.mode === "2" ? "+2" : "+1"}</span><div class="chips">${ABK.map((x) => chip(ABIL[x].s, a.a === x, "setAsiA", `data-v="${x}" ${dl}`)).join("")}</div></div>
-    ${a.mode === "11" ? `<div class="bonus-pick"><span>+1</span><div class="chips">${ABK.filter((x) => x !== a.a).map((x) => chip(ABIL[x].s, a.b === x, "setAsiB", `data-v="${x}" ${dl}`)).join("")}</div></div>` : ""}
+    <div class="chips">${chip("+2 à une", a.mode === "2", "setAsiMode", 'data-v="2" ' + dl)}${chip("+1 à deux", a.mode === "11", "setAsiMode", 'data-v="11" ' + dl)}${chip("Un don", a.mode === "feat", "setAsiMode", 'data-v="feat" ' + dl)}</div>
+    ${a.mode === "feat" ? asiFeatUi(b, a, lv) : `<div class="bonus-pick"><span>${a.mode === "2" ? "+2" : "+1"}</span><div class="chips">${ABK.map((x) => chip(ABIL[x].s, a.a === x, "setAsiA", `data-v="${x}" ${dl}`)).join("")}</div></div>
+    ${a.mode === "11" ? `<div class="bonus-pick"><span>+1</span><div class="chips">${ABK.filter((x) => x !== a.a).map((x) => chip(ABIL[x].s, a.b === x, "setAsiB", `data-v="${x}" ${dl}`)).join("")}</div></div>` : ""}`}
   </section>`;
   }).join("") + (b.level >= 19 ? `<section class="panel"><h4>Faveur épique (niveau 19)</h4><p class="mute small">Un don épique et +1 à une caractéristique, jusqu’à 30.</p>
     <div class="opt-grid">${Object.entries(EPIC_BOONS).map(([k, x]) => `<button class="opt ${b.opts.boon.id === k ? "on" : ""}" data-a="boon" data-v="${k}"><b>${x.n}</b><span>${x.d}</span></button>`).join("")}</div>
@@ -2534,6 +2749,15 @@ function stepAbilities(b) {
   </section>
   <section class="panel abil-table"><div class="ab-row head"><span>Caractéristique</span><span>Base</span><span>Hist.</span>${b.level >= 4 ? "<span>Niveaux</span>" : ""}<span>Total</span><span>Mod.</span></div>${rows}</section>
   ${bonusUi}${asiUi}`;
+}
+
+function asiFeatUi(b, a, lv) {
+  const taken = new Set(featsOf(b).filter((f) => f.src !== "asi" + lv).map((f) => f.id));
+  const list = Object.entries(FEATS).filter(([k, f]) => f.cat === "general" && !taken.has(k));
+  const f = FEATS[a.feat], dl = `data-lv="${lv}"`;
+  return `<p class="mute small">Un don général à la place de l’amélioration.${typeof FB !== "undefined" && FB.ok ? " Ajoutez les dons de vos livres dans le contenu maison d’une aventure." : ""}</p>
+    <div class="opt-grid">${list.map(([k, x]) => `<button class="opt ${a.feat === k ? "on" : ""}" data-a="setAsiFeat" data-v="${k}" ${dl}><b>${esc(x.n)}${hbTag(x)}</b><span>${x.pre ? "<i>Prérequis : " + esc(x.pre) + "</i> · " : ""}${esc(x.d)}</span></button>`).join("")}</div>
+    ${f && (f.ab || []).length ? `<div class="bonus-pick"><span>+1</span><div class="chips">${f.ab.map((x) => chip(ABIL[x].s, a.a === x, "setAsiA", `data-v="${x}" ${dl}`)).join("")}</div></div>` : ""}`;
 }
 
 function skillChips(b, pool, selected, max, act, lockSet) {
@@ -2553,9 +2777,9 @@ function magicPicker(b, src) {
     ${src === "human" ? `<div class="chips">${Object.entries(MI_NAME).map(([k, n]) => chip("Liste " + n, m.list === k, "miList", `data-src="${src}" data-v="${k}"`)).join("")}</div>` : `<p class="mute small">Liste de sorts : ${MI_NAME[m.list]}</p>`}
     <div class="bonus-pick"><span>Carac.</span><div class="chips">${["int", "sag", "cha"].map((a) => chip(ABIL[a].n, m.ab === a, "miAb", `data-src="${src}" data-v="${a}"`)).join("")}</div></div>
     <p class="lbl">Deux tours de magie (${m.cant.length}/2)</p>
-    <div class="chips">${cants.map((id) => chip(SPELLS[id].n, m.cant.includes(id), "miCant", `data-src="${src}" data-v="${id}"`, !m.cant.includes(id) && m.cant.length >= 2 ? 'aria-disabled="true"' : "")).join("")}</div>
+    <div class="chips">${cants.map((id) => chip(esc(SPELLS[id].n), m.cant.includes(id), "miCant", `data-src="${src}" data-v="${id}"`, !m.cant.includes(id) && m.cant.length >= 2 ? 'aria-disabled="true"' : "")).join("")}</div>
     <p class="lbl">Un sort de niveau 1</p>
-    <div class="chips">${l1.map((id) => chip(SPELLS[id].n, m.spell === id, "miSpell", `data-src="${src}" data-v="${id}"`)).join("")}</div></div>`;
+    <div class="chips">${l1.map((id) => chip(esc(SPELLS[id].n), m.spell === id, "miSpell", `data-src="${src}" data-v="${id}"`)).join("")}</div></div>`;
 }
 
 function stepOptions(b) {
@@ -2568,12 +2792,13 @@ function stepOptions(b) {
     ${bg ? `<p class="mute small">Déjà acquises par l’historique : ${bg.skills.map((k) => SKILLS[k].n).join(", ")}.</p>` : ""}
     ${skillChips(b, classSkillPool(b), b.skillsClass, c.skills.n, "skClass", fromOthers(b.skillsClass))}</section>`);
   if (sp && sp.skillPick) out.push(`<section class="panel"><h4>Compétence d’espèce (${sp.n})</h4>${skillChips(b, sp.skillPick.from === "all" ? SKK : sp.skillPick.from, b.skillsSpecies, sp.skillPick.n, "skSpecies", fromOthers(b.skillsSpecies))}</section>`);
-  if (sp && sp.bonusFeat) out.push(`<section class="panel"><h4>Don d’origine (humain)</h4><div class="opt-grid">${Object.entries(FEATS).map(([k, f]) => `<button class="opt ${b.humanFeat === k ? "on" : ""}" data-a="humanFeat" data-v="${k}"><b>${f.n}</b><span>${f.d}</span></button>`).join("")}</div></section>`);
+  if (sp && sp.bonusFeat) out.push(`<section class="panel"><h4>Don d’origine (humain)</h4><div class="opt-grid">${Object.entries(FEATS).filter(([, f]) => f.cat !== "general").map(([k, f]) => `<button class="opt ${b.humanFeat === k ? "on" : ""}" data-a="humanFeat" data-v="${k}"><b>${esc(f.n)}${hbTag(f)}</b><span>${esc(f.d)}</span></button>`).join("")}</div></section>`);
   featsOf(b).forEach((f) => {
     if (f.id === "doue") out.push(`<section class="panel"><h4>Don Doué — ${b.skilled.length}/3</h4>${skillChips(b, SKK, b.skilled, 3, "skSkilled", fromOthers(b.skilled))}</section>`);
     if (f.id === "initie") out.push(`<section class="panel">${magicPicker(b, f.src)}</section>`);
   });
-  if (b.cls === "barde" && b.level >= 3) out.push(`<section class="panel"><h4>Collège du Savoir : trois compétences — ${b.skillsLore.length}/3</h4>${skillChips(b, SKK, b.skillsLore, 3, "skLore", fromOthers(b.skillsLore))}</section>`);
+  const std = srdSub(b);
+  if (b.cls === "barde" && b.level >= 3 && std) out.push(`<section class="panel"><h4>Collège du Savoir : trois compétences — ${b.skillsLore.length}/3</h4>${skillChips(b, SKK, b.skillsLore, 3, "skLore", fromOthers(b.skillsLore))}</section>`);
   if (b.cls === "barbare" && b.level >= 3) out.push(`<section class="panel"><h4>Savoir primitif : une compétence de barbare</h4>${skillChips(b, c.skills.from, b.skillPrimal ? [b.skillPrimal] : [], 1, "skPrimal", fromOthers(b.skillPrimal ? [b.skillPrimal] : []))}</section>`);
   const ex = expertiseCount(b);
   if (ex) out.push(`<section class="panel"><h4>Expertise — ${b.expertise.length}/${ex}</h4><p class="mute small">Bonus de maîtrise doublé.</p><div class="chips">${expertisePool(b).map((k) => chip(SKILLS[k].n, b.expertise.includes(k), "expertise", `data-v="${k}"`, !b.expertise.includes(k) && b.expertise.length >= ex ? 'aria-disabled="true"' : "")).join("")}</div></section>`);
@@ -2596,13 +2821,13 @@ function stepOptions(b) {
     out.push(`<section class="panel"><h4>Manifestations occultes — ${b.opts.inv.length}/${n}</h4><div class="opt-grid">${Object.entries(INVOCATIONS).filter(([, v]) => v.lv <= b.level).map(([k, v]) => `<button class="opt ${b.opts.inv.includes(k) ? "on" : ""}" data-a="inv" data-v="${k}" ${!b.opts.inv.includes(k) && b.opts.inv.length >= n ? 'aria-disabled="true"' : ""}><b>${v.n}</b><span>${v.d}</span></button>`).join("")}</div></section>`);
   }
   if (b.cls === "ensorceleur" && b.level >= 2) { const mc = metaCount(b); out.push(`<section class="panel"><h4>Métamagie — ${b.opts.meta.length}/${mc}</h4><div class="opt-grid">${Object.entries(METAMAGIC).map(([k, v]) => `<button class="opt ${b.opts.meta.includes(k) ? "on" : ""}" data-a="meta" data-v="${k}" ${!b.opts.meta.includes(k) && b.opts.meta.length >= mc ? 'aria-disabled="true"' : ""}><b>${v.n}</b><span>${v.d}</span></button>`).join("")}</div></section>`); }
-  if (b.cls === "ensorceleur" && b.level >= 6) out.push(`<section class="panel"><h4>Affinité élémentaire : type de dégâts</h4><p class="mute small">Celui de votre ascendance draconique.</p><div class="chips">${[K("acide"), K("froid"), K("feu"), K("foudre"), K("poison")].map((t) => chip(DMG[t][0].toUpperCase() + DMG[t].slice(1), b.opts.dragon === t, "dragon", `data-v="${t}"`)).join("")}</div></section>`);
-  if (b.cls === "guerrier" && b.level >= 7) out.push(`<section class="panel"><h4>Second style de combat (Champion)</h4><div class="opt-grid">${Object.entries(FIGHTING_STYLES).filter(([k]) => k !== b.opts.style).map(([k, f]) => `<button class="opt ${b.opts.style2 === k ? "on" : ""}" data-a="style2" data-v="${k}"><b>${f.n}</b><span>${f.d}</span></button>`).join("")}</div></section>`);
+  if (b.cls === "ensorceleur" && b.level >= 6 && std) out.push(`<section class="panel"><h4>Affinité élémentaire : type de dégâts</h4><p class="mute small">Celui de votre ascendance draconique.</p><div class="chips">${[K("acide"), K("froid"), K("feu"), K("foudre"), K("poison")].map((t) => chip(DMG[t][0].toUpperCase() + DMG[t].slice(1), b.opts.dragon === t, "dragon", `data-v="${t}"`)).join("")}</div></section>`);
+  if (b.cls === "guerrier" && b.level >= 7 && std) out.push(`<section class="panel"><h4>Second style de combat (Champion)</h4><div class="opt-grid">${Object.entries(FIGHTING_STYLES).filter(([k]) => k !== b.opts.style).map(([k, f]) => `<button class="opt ${b.opts.style2 === k ? "on" : ""}" data-a="style2" data-v="${k}"><b>${f.n}</b><span>${f.d}</span></button>`).join("")}</div></section>`);
   if (STRIKE_OPTS[b.cls] && b.level >= STRIKE_OPTS[b.cls].lvl) { const so = STRIKE_OPTS[b.cls]; out.push(`<section class="panel"><h4>${so.label} (niveau ${so.lvl})</h4><div class="opt-grid">${Object.entries(so.opts).map(([k, o]) => `<button class="opt ${b.opts.strike === k ? "on" : ""}" data-a="strike" data-v="${k}"><b>${o.n}</b><span>${o.d}</span></button>`).join("")}</div></section>`); }
-  if (b.cls === "rodeur" && b.level >= 3) out.push(`<section class="panel"><h4>Proie du chasseur</h4><div class="opt-grid">
+  if (b.cls === "rodeur" && b.level >= 3 && std) out.push(`<section class="panel"><h4>Proie du chasseur</h4><div class="opt-grid">
     <button class="opt ${b.opts.prey === "colosse" ? "on" : ""}" data-a="prey" data-v="colosse"><b>Tueur de colosses</b><span>Une fois par tour, +1d8 dégâts contre une cible blessée.</span></button>
     <button class="opt ${b.opts.prey === "horde" ? "on" : ""}" data-a="prey" data-v="horde"><b>Briseur de hordes</b><span>Une attaque de plus contre une autre créature proche de la cible.</span></button></div></section>`);
-  if (b.cls === "druide" && b.level >= 3) out.push(`<section class="panel"><h4>Cercle de la Terre : votre terre</h4><div class="opt-grid">${Object.entries(LAND_SPELLS).map(([k, l]) => `<button class="opt ${b.opts.land === k ? "on" : ""}" data-a="land" data-v="${k}"><b>${l.n}</b><span>${Object.values(l.s).flat().map((id) => SPELLS[id].n).join(", ")}</span></button>`).join("")}</div></section>`);
+  if (b.cls === "druide" && b.level >= 3 && std) out.push(`<section class="panel"><h4>Cercle de la Terre : votre terre</h4><div class="opt-grid">${Object.entries(LAND_SPELLS).map(([k, l]) => `<button class="opt ${b.opts.land === k ? "on" : ""}" data-a="land" data-v="${k}"><b>${l.n}</b><span>${Object.values(l.s).flat().map((id) => SPELLS[id].n).join(", ")}</span></button>`).join("")}</div></section>`);
   out.push(`<section class="panel"><h4>Langues — ${b.langs.length}/2</h4><p class="mute small">Vous parlez le commun et deux autres langues.</p><div class="chips">${LANGS.map((l) => chip(LANG_L[l], b.langs.includes(l), "lang", `data-v="${esc(l)}"`, !b.langs.includes(l) && b.langs.length >= 2 ? 'aria-disabled="true"' : "")).join("")}</div></section>`);
   return out.join("");
 }
@@ -2613,7 +2838,7 @@ function spellRow(id, on, act, disabled, locked, src) {
   return `<div class="spell-row ${on ? "on" : ""} ${locked ? "lock" : ""}">
     <button class="sr-main" data-a="${locked ? "toggleSpell" : act}" data-v="${id}" ${disabled && !on && !locked ? 'aria-disabled="true"' : ""} aria-pressed="${on}">
       <span class="sr-check">${on || locked ? ICON.check : ""}</span>
-      <span class="sr-name">${s.n}${s.co ? '<i class="tagc" title="Concentration">C</i>' : ""}${s.ri ? '<i class="tagc" title="Rituel">R</i>' : ""}</span>
+      <span class="sr-name">${esc(s.n)}${s.co ? '<i class="tagc" title="Concentration">C</i>' : ""}${s.ri ? '<i class="tagc" title="Rituel">R</i>' : ""}${hbTag(s)}</span>
       <span class="sr-meta">${src ? esc(src) : SC[s.e]}</span>
     </button>
     <button class="sr-info" data-a="toggleSpell" data-v="${id}" aria-label="Détails" aria-expanded="${open}">${open ? "−" : "i"}</button>
@@ -2621,7 +2846,8 @@ function spellRow(id, on, act, disabled, locked, src) {
   </div>`;
 }
 function spellDetail(s) {
-  return `<dl class="spell-facts"><div><dt>Incantation</dt><dd>${s.t}</dd></div><div><dt>Portée</dt><dd>${s.p}</dd></div><div><dt>Composantes</dt><dd>${s.c}</dd></div><div><dt>Durée</dt><dd>${s.co ? "Concentration, " : ""}${s.du}</dd></div></dl><p>${s.d}</p>${s.up ? `<p class="mute small">Niveau supérieur : ${s.up}</p>` : ""}`;
+  const e = s.hb ? esc : (x) => x;
+  return `<dl class="spell-facts"><div><dt>Incantation</dt><dd>${e(s.t)}</dd></div><div><dt>Portée</dt><dd>${e(s.p)}</dd></div><div><dt>Composantes</dt><dd>${e(s.c)}</dd></div><div><dt>Durée</dt><dd>${s.co ? "Concentration, " : ""}${e(s.du)}</dd></div></dl><p>${e(s.d)}</p>${s.up ? `<p class="mute small">Niveau supérieur : ${e(s.up)}</p>` : ""}`;
 }
 
 function stepSpells(b) {
@@ -2636,7 +2862,7 @@ function stepSpells(b) {
   const lvTabs = ["all", ...Array.from({ length: max }, (_, i) => i + 1)].map((l) => chip(l === "all" ? "Tous" : "Niveau " + l, S.spellLvl == l, "spellLvl", `data-v="${l}"`)).join("");
   const pool = [];
   for (let l = 1; l <= max; l++) if (S.spellLvl === "all" || S.spellLvl == l) pool.push(`<p class="lvl-sep">Niveau ${l}</p>` + classSpellPool(b, l).filter((id) => !gIds.has(id)).map((id) => spellRow(id, b.prep.includes(id), "pickPrep", b.prep.length >= np)).join(""));
-  if (b.cls === "barde" && b.level >= 6) {
+  if (b.cls === "barde" && b.level >= 6 && srdSub(b)) {
     const lp = []; for (let l = 0; l <= max; l++) lp.push(...Object.keys(SPELLS).filter((id) => SPELLS[id].l === l && !SPELLS[id].cl.includes("barde") && SPELLS[id].cl.some((x) => ["clerc", "druide", "magicien"].includes(x)) && !gIds.has(id) || b.opts.lore2.includes(id) && SPELLS[id].l === l));
     const uniq = [...new Set(lp)].sort((x, y) => SPELLS[x].l - SPELLS[y].l || SPELLS[x].n.localeCompare(SPELLS[y].n, "fr"));
     html += `<section class="panel"><h4>Découvertes magiques — ${b.opts.lore2.length}/2</h4><p class="mute small">Deux sorts de clerc, druide ou magicien, toujours préparés.</p>${uniq.map((id) => spellRow(id, b.opts.lore2.includes(id), "lore2", b.opts.lore2.length >= 2, false, SPELLS[id].l ? "niv. " + SPELLS[id].l : "tour")).join("")}</section>`;
@@ -2651,7 +2877,7 @@ function stepSpells(b) {
 
 function gearList(list) {
   return `<ul class="gear">${list.map(([ref, q]) => {
-    const n = ref.startsWith("w:") ? WEAPONS[ref.slice(2)].n : ref.startsWith("a:") ? ARMORS[ref.slice(2)].n : GEAR[ref];
+    const n = ref.startsWith("w:") ? WEAPONS[ref.slice(2)].n : ref.startsWith("a:") ? ARMORS[ref.slice(2)].n : GEAR[ref] || esc(ref);
     return `<li>${q && q > 1 ? `<b>${q}×</b> ` : ""}${n}</li>`;
   }).join("")}</ul>`;
 }
@@ -2663,7 +2889,7 @@ function stepEquip(b) {
   clsOpts.push([c.gearB ? "C" : "B", "Or uniquement", `<p class="gold big">${c.goldB} po</p><p class="mute small">Achetez votre équipement vous-même.</p>`]);
   const st = startingInventory(b);
   return `<section class="block"><h3 class="bh">${c.n}</h3><div class="opt-grid">${clsOpts.map(([k, n, h]) => `<button class="opt tall ${b.gear.cls === k ? "on" : ""}" data-a="gearCls" data-v="${k}"><b>${n}</b>${h}</button>`).join("")}</div></section>
-  <section class="block"><h3 class="bh">${bg.n}</h3><div class="opt-grid">
+  <section class="block"><h3 class="bh">${esc(bg.n)}</h3><div class="opt-grid">
     <button class="opt tall ${b.gear.bg === "A" ? "on" : ""}" data-a="gearBg" data-v="A"><b>Équipement d’historique</b>${gearList(bg.gear)}<p class="gold">+ ${bg.gold} po</p></button>
     <button class="opt tall ${b.gear.bg === "B" ? "on" : ""}" data-a="gearBg" data-v="B"><b>Or uniquement</b><p class="gold big">50 po</p></button></div></section>
   <section class="panel"><h4>Votre sac au départ</h4><p class="mute small">${st.inv.length} objets · ${st.gold} po. Les armes et la meilleure armure maîtrisée sont équipées automatiquement.</p></section>`;
@@ -2760,7 +2986,7 @@ function tabActions(ch, s) {
   const cantHtml = cantrips.map((x) => {
     const dice = x.dmg ? scaleCantrip(x, b.level) : null;
     return `<div class="atk spell">
-      <div class="atk-name"><b>${x.n}</b><span class="mute small">${x.p} · tour de magie</span></div>
+      <div class="atk-name"><b>${esc(x.n)}</b><span class="mute small">${esc(x.p)} · tour de magie</span></div>
       ${x.atk ? `<button class="rb hit" data-a="r20" data-l="${esc(x.n)} — attaque" data-m="${x.atk}">${sg(x.atk)}</button>` : `<span class="rb dc">DD ${x.dc}<small>${ABIL[x.sv].s}</small></span>`}
       ${dice ? `<button class="rb dmg" data-a="rDmg" data-l="${esc(x.n)} — ${DMG[x.ty]}" data-e="${dice}${x.dmgBonus ? (x.dmgBonus > 0 ? "+" : "") + x.dmgBonus : ""}">${dice}${x.dmgBonus ? sg(x.dmgBonus) : ""}<small>${x.beams ? beams(b.level) + " rayon" + (beams(b.level) > 1 ? "s" : "") : DMG[x.ty]}</small></button>` : ""}
     </div>`;
@@ -2774,13 +3000,13 @@ function tabActions(ch, s) {
   if (b.cls === "druide" && b.level >= 7 && b.opts.strike === "primale") extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Frappe primale" data-e="${b.level >= 15 ? "2d8" : "1d8"}">Frappe primale ${b.level >= 15 ? "2d8" : "1d8"}</button>`);
   if (b.cls === "paladin" && b.level >= 11) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Frappes radieuses" data-e="1d8">Frappes radieuses +1d8</button>`);
   if (b.cls === "barbare" && b.level >= 9) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Frappe brutale" data-e="${b.level >= 17 ? "2d10" : "1d10"}">Frappe brutale ${b.level >= 17 ? "2d10" : "1d10"}</button>`);
-  if (b.cls === "moine" && b.level >= 6) extras.push(`<button class="rb heal wide" data-a="rHeal" data-l="Plénitude du corps" data-e="${s.maDie}+${s.m.sag}">Plénitude du corps ${s.maDie}${sg(s.m.sag)}</button>`);
+  if (b.cls === "moine" && b.level >= 6 && srdSub(b)) extras.push(`<button class="rb heal wide" data-a="rHeal" data-l="Plénitude du corps" data-e="${s.maDie}+${s.m.sag}">Plénitude du corps ${s.maDie}${sg(s.m.sag)}</button>`);
   if (b.cls === "rodeur" && b.level >= 10) extras.push(`<button class="rb heal wide" data-a="rHeal" data-l="Infatigable (PV temporaires)" data-e="1d8+${s.m.sag}">Infatigable 1d8${sg(s.m.sag)}</button>`);
   if (b.cls === "clerc" && b.level >= 2) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Étincelle divine" data-e="1d8+${s.m.sag}">Étincelle divine 1d8${sg(s.m.sag)}</button>`);
   if (b.species === "drakeide") extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Souffle (JS Dex DD ${8 + s.m.con + s.pb})" data-e="${b.level >= 5 ? "2d10" : "1d10"}">Souffle ${b.level >= 5 ? "2d10" : "1d10"} · DD ${8 + s.m.con + s.pb}</button>`);
   if (b.cls === "rodeur" || s.spells.some((x) => x.id === "marquechasseur")) { const hm = b.cls === "rodeur" && b.level >= 20 ? "1d10" : "1d6"; extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Marque du chasseur" data-e="${hm}">Marque du chasseur +${hm}</button>`); }
-  if (b.cls === "rodeur" && b.opts.prey === "colosse" && b.level >= 3) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Tueur de colosses" data-e="1d8">Tueur de colosses +1d8</button>`);
-  if (b.cls === "barbare" && b.level >= 3) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Frénésie" data-e="${s.rageDmg}d6">Frénésie ${s.rageDmg}d6</button>`);
+  if (b.cls === "rodeur" && srdSub(b) && b.opts.prey === "colosse" && b.level >= 3) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Tueur de colosses" data-e="1d8">Tueur de colosses +1d8</button>`);
+  if (b.cls === "barbare" && b.level >= 3 && srdSub(b)) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Frénésie" data-e="${s.rageDmg}d6">Frénésie ${s.rageDmg}d6</button>`);
   return `<div class="cols">
     <section class="panel"><h3 class="ph">Attaques</h3><p class="mute small">Attaques par action : ${s.apa}${s.crit < 20 ? " · critique sur " + s.crit + "-20" : ""}${b.cls === "moine" ? " · arts martiaux " + s.maDie.slice(1) : ""}</p>
       ${atk}${cantHtml}${extras.length ? `<div class="extras">${extras.join("")}</div>` : ""}</section>
@@ -2830,7 +3056,7 @@ function tabSpells(ch, s) {
     const heal = x.heal ? x.heal + (x.id === "simulacredevie" ? "" : (x.mod >= 0 ? "+" : "") + x.mod) : null;
     return `<div class="spell-row sheet-spell ${p.conc === x.id ? "conc" : ""}">
       <button class="sr-main" data-a="toggleSpell" data-v="${x.id}" aria-expanded="${open}">
-        <span class="sr-name">${x.n}${x.co ? '<i class="tagc" title="Concentration">C</i>' : ""}${x.ri ? '<i class="tagc" title="Rituel">R</i>' : ""}</span>
+        <span class="sr-name">${esc(x.n)}${x.co ? '<i class="tagc" title="Concentration">C</i>' : ""}${x.ri ? '<i class="tagc" title="Rituel">R</i>' : ""}</span>
         <span class="sr-meta">${x.t} · ${x.p}${x.always ? " · " + esc(x.src) : ""}</span>
       </button>
       <div class="sr-acts">
@@ -2845,21 +3071,25 @@ function tabSpells(ch, s) {
   }).join("")).join("");
   return `<section class="panel">
     ${cast ? `<div class="cast-head"><div><span class="lbl">Caractéristique</span><b>${ABIL[cast.ab].n}</b></div><div><span class="lbl">DD des sorts</span><b>${cast.dc}</b></div><div><span class="lbl">Attaque de sort</span><b>${sg(cast.atk)}</b></div></div><div class="slots">${slots}</div>` : ""}
-    ${p.conc ? `<div class="conc-bar">Concentration : <b>${SPELLS[p.conc].n}</b><button class="btn small ghost" data-a="endConc">Terminer</button></div>` : ""}
+    ${p.conc ? `<div class="conc-bar">Concentration : <b>${SPELLS[p.conc] ? esc(SPELLS[p.conc].n) : ""}</b><button class="btn small ghost" data-a="endConc">Terminer</button></div>` : ""}
     ${groups}
   </section>`;
 }
 
 function tabInventory(ch) {
   const p = ch.p;
+  if (typeof srdLoad === "function" && p.inv.some((i) => i.ref && i.ref.startsWith("mi:"))) srdLoad();
   const rows = p.inv.map((i) => {
     const w = i.ref && i.ref.startsWith("w:") && WEAPONS[i.ref.slice(2)];
     const a = i.ref && i.ref.startsWith("a:") && ARMORS[i.ref.slice(2)];
-    const sub = w ? `${w.d} ${DMG[w.t]}${w.p.length ? " · " + w.p.map((x) => WPROP[x]).join(", ") : ""}` : a ? (a.t === "bouclier" ? "+2 CA" : `CA ${a.ac}${a.dex === 99 ? " + Dex" : a.dex ? " + Dex (max 2)" : ""}`) : "";
-    return `<div class="item">
-      ${w || a ? `<button class="eq ${i.eq ? "on" : ""}" data-a="equip" data-u="${i.uid}" aria-pressed="${i.eq}" title="${i.eq ? "Équipé" : "Équiper"}">${i.eq ? ICON.check : ""}</button>` : '<span class="eq none"></span>'}
-      <div class="it-name"><b>${esc(itemName(i))}</b>${sub ? `<span class="mute small">${sub}</span>` : ""}</div>
+    const mi = typeof miInfo === "function" ? miInfo(i) : null;
+    const sub = w ? `${w.d} ${DMG[w.t]}${w.p.length ? " · " + w.p.map((x) => WPROP[x]).join(", ") : ""}` : a ? (a.t === "bouclier" ? "+2 CA" : `CA ${a.ac}${a.dex === 99 ? " + Dex" : a.dex ? " + Dex (max 2)" : ""}`) : mi ? esc([mi.h, mi.r ? RAR_L[mi.r] || mi.r : "", mi.at ? "harmonisation" : ""].filter(Boolean).join(" · ")) : "";
+    const open = mi && S.openItem === i.uid;
+    return `<div class="item ${mi ? "magic" : ""}">
+      ${w || a ? `<button class="eq ${i.eq ? "on" : ""}" data-a="equip" data-u="${i.uid}" aria-pressed="${i.eq}" title="${i.eq ? "Équipé" : "Équiper"}">${i.eq ? ICON.check : ""}</button>` : mi && mi.at ? `<button class="eq att ${i.att ? "on" : ""}" data-a="attune" data-u="${i.uid}" aria-pressed="${!!i.att}" title="${i.att ? "Harmonisé" : "Se lier à l’objet"}">${i.att ? "✦" : ""}</button>` : '<span class="eq none"></span>'}
+      ${mi ? `<button class="it-name it-open" data-a="itemOpen" data-u="${i.uid}" aria-expanded="${open}"><b>${esc(itemName(i))}${mi.hb ? hbTag({ hb: 1 }) : ""}</b><span class="mute small">${sub}</span></button>` : `<div class="it-name"><b>${esc(itemName(i))}</b>${sub ? `<span class="mute small">${sub}</span>` : ""}</div>`}
       <div class="qty"><button class="mini" data-a="qty" data-u="${i.uid}" data-d="-1" aria-label="Moins">−</button><b>${i.q}</b><button class="mini" data-a="qty" data-u="${i.uid}" data-d="1" aria-label="Plus">+</button></div>
+      ${open ? `<div class="it-desc">${mi.d == null ? (typeof srdWait === "function" ? srdWait("de la description") : "") : mi.d ? sbText(mi.d, itemName(i)) : '<span class="mute">Pas de description.</span>'}</div>` : ""}
     </div>`;
   }).join("");
   const addables = [...Object.entries(WEAPONS).map(([k, w]) => ["w:" + k, w.n + " (arme)"]), ...Object.entries(ARMORS).map(([k, a]) => ["a:" + k, a.n + " (armure)"])].sort((x, y) => x[1].localeCompare(y[1], "fr"));
@@ -2868,6 +3098,7 @@ function tabInventory(ch) {
     <div class="add-item"><label class="field"><span>Ajouter un objet</span><input id="newItem" placeholder="Ex. Corde de chanvre (15 m)"></label><button class="btn small" data-a="addItem">Ajouter</button></div>
     <div class="add-item"><label class="field"><span>Ajouter une arme ou armure</span><select id="newRef">${addables.map(([k, n]) => `<option value="${k}">${n}</option>`).join("")}</select></label><button class="btn small" data-a="addRef">Ajouter</button></div>
   </section>
+  ${typeof invMagicPanel === "function" ? invMagicPanel(ch) : ""}
   <section class="panel"><h3 class="ph">Bourse</h3>
     <div class="gold-row"><b class="gold big">${p.gold} po</b></div>
     <div class="add-item"><label class="field"><span>Montant (po)</span><input id="goldAmt" type="number" inputmode="numeric" placeholder="10"></label><button class="btn small" data-a="gold" data-d="1">Gagner</button><button class="btn small ghost" data-a="gold" data-d="-1">Dépenser</button></div>
@@ -2914,7 +3145,7 @@ function viewModal() {
     if (cast && cast.slots.type === "pact" && cast.slots.lvl >= sp.l) { const left = cast.slots.n - (ch.p.pact || 0); opts.push(`<button class="btn" data-a="castDo" data-v="${m.v}" data-lv="pact" ${left > 0 ? "" : "disabled"}>Emplacement de pacte niv. ${cast.slots.lvl} <small>(${left}/${cast.slots.n})</small></button>`); }
     if (entry && entry.free) { const r = s.resources.find((x) => x.k === entry.free); if (r) { const left = r.max - (ch.p.res[r.k] || 0); opts.push(`<button class="btn ghost" data-a="castDo" data-v="${m.v}" data-lv="free" data-k="${r.k}" ${left > 0 ? "" : "disabled"}>Gratuit <small>(${left}/${r.max} par repos)</small></button>`); } }
     if (sp.ri) opts.push(`<button class="btn ghost" data-a="castDo" data-v="${m.v}" data-lv="ritual">En rituel (+10 minutes, sans emplacement)</button>`);
-    inner = `<h3>Lancer ${sp.n}</h3>${spellDetail(sp)}<div class="cast-opts">${opts.join("") || '<p class="mute">Aucun emplacement disponible pour ce sort.</p>'}</div>`;
+    inner = `<h3>Lancer ${esc(sp.n)}</h3>${spellDetail(sp)}<div class="cast-opts">${opts.join("") || '<p class="mute">Aucun emplacement disponible pour ce sort.</p>'}</div>`;
   } else if (m.k === "del") {
     inner = `<h3>Supprimer ${esc(ch.b.name)} ?</h3><p>Le personnage sera effacé définitivement. Exportez-le d’abord si vous voulez le garder.</p><div class="row-btns"><button class="btn dmgb" data-a="delDo">Supprimer définitivement</button><button class="btn ghost" data-a="closeModal">Annuler</button></div>`;
   } else if (m.k === "export") {
@@ -2998,7 +3229,7 @@ function setClass(b, k) {
   b.cls = k;
   b.skillsClass = []; b.expertise = []; b.skillsLore = []; b.skillPrimal = null;
   b.opts = { style: null, style2: null, order: null, strike: null, dragon: null, mastery: [], inv: [], meta: [], prey: null, land: null, lore2: [], arcanum: {}, asis: b.opts.asis || {}, boon: b.opts.boon || { id: null, a: null } };
-  b.cant = []; b.prep = []; b.gear.cls = "A";
+  b.cant = []; b.prep = []; b.gear.cls = "A"; b.subHb = null;
   if (b.method !== "points") assignStandard(b);
 }
 
@@ -3050,6 +3281,7 @@ async function act(a, d, el) {
     case "setP2": b.bonus.p2 = d.v; if (b.bonus.p1 === d.v) b.bonus.p1 = null; break;
     case "setP1": b.bonus.p1 = d.v; break;
     case "setAsiMode": b.opts.asis[d.lv] = { mode: d.v, a: null, b: null }; break;
+    case "setAsiFeat": { const x = asiAt(b, d.lv); x.feat = d.v; const f = FEATS[d.v]; x.a = f && f.ab && f.ab.length === 1 ? f.ab[0] : f && f.ab && f.ab.includes(x.a) ? x.a : null; x.b = null; break; }
     case "setAsiA": { const x = asiAt(b, d.lv); x.a = d.v; if (x.b === d.v) x.b = null; break; }
     case "setAsiB": asiAt(b, d.lv).b = d.v; break;
     case "boon": b.opts.boon.id = d.v; break;
@@ -3166,9 +3398,9 @@ async function act(a, d, el) {
     case "endConc": ch.p.conc = null; saveSoon(ch); break;
     case "equip": {
       const it = ch.p.inv.find((i) => i.uid === d.u);
-      if (!it) return;
+      if (!it || !it.ref) return;
       const isBody = it.ref.startsWith("a:") && it.ref !== "a:bouclier";
-      if (!it.eq && isBody) ch.p.inv.forEach((i) => { if (i.ref.startsWith("a:") && i.ref !== "a:bouclier") i.eq = false; });
+      if (!it.eq && isBody) ch.p.inv.forEach((i) => { if (i.ref && i.ref.startsWith("a:") && i.ref !== "a:bouclier") i.eq = false; });
       it.eq = !it.eq; saveSoon(ch); break;
     }
     case "qty": { const it = ch.p.inv.find((i) => i.uid === d.u); it.q += +d.d; if (it.q <= 0) ch.p.inv = ch.p.inv.filter((i) => i.uid !== d.u); saveSoon(ch); break; }
@@ -3285,6 +3517,7 @@ document.addEventListener("keydown", (e) => {
 /* ---------------- Démarrage ---------------- */
 async function boot() {
   render();
+  if (typeof HB !== "undefined") HB.boot();
   await Store.init();
   S.chars = (await Store.all()).map((c) => { migrate(c.b); return c; });
   S.loaded = true;
@@ -3297,7 +3530,7 @@ async function boot() {
     await Store.markSeeded();
   }
   render();
-  if (typeof FB !== "undefined") FB.init().then(() => { if (FB.ok) { S.chars.filter((c) => c.adv).forEach((c) => pushMember(c)); render(); if (typeof accountStart === "function") accountStart(); } else if (FB.err) render(); });
+  if (typeof FB !== "undefined") FB.init().then(() => { if (FB.ok) { S.chars.filter((c) => c.adv).forEach((c) => pushMember(c)); render(); if (typeof HB !== "undefined") HB.refresh().then(() => liveRender()); if (typeof accountStart === "function") accountStart(); } else if (FB.err) render(); });
 }
 function exampleCharacter() {
   const b = newBuild();
@@ -3359,6 +3592,7 @@ const Live = {
     this.code = code;
     this.unsub.push(FB.adv(code).onSnapshot((d) => { this.doc = d.exists ? d.data() : null; liveRender(); }, () => { }));
     this.unsub.push(FB.members(code).onSnapshot((q) => { this.members = q.docs.map((d) => ({ id: d.id, ...d.data() })); liveRender(); }, () => { }));
+    if (typeof HB !== "undefined") this.unsub.push(FB.adv(code).collection("homebrew").onSnapshot((q) => { HB.set(code, q.docs.map((d) => d.data()), this.doc && this.doc.name); liveRender(); }, () => { }));
   },
   stop() { this.unsub.forEach((u) => u()); this.unsub = []; this.code = null; this.doc = null; this.members = []; },
 };
@@ -3412,7 +3646,7 @@ function tabAdventure(ch) {
     <section class="panel"><div class="adv-head"><div><span class="eyebrow">Aventure</span><h3 class="ph">${esc(doc ? doc.name : "Chargement…")}</h3></div><span class="code-chip">${esc(ch.adv)}</span></div>
       <p class="lbl">Le groupe</p>
       <div class="party-mini">${mem.length ? mem.map(({ m, s }) => `<div class="pm ${m.charId === ch.id ? "me" : ""}"><div class="pm-top"><b>${esc(m.name)}</b><span class="mute small">${CLASSES[m.b.cls] ? CLASSES[m.b.cls].n : ""} ${m.b.level}</span></div>${hpBar(m.p.hp, s.hpMax)}<span class="mute small">${m.p.hp}/${s.hpMax} PV${m.p.cond && m.p.cond.length ? " · " + m.p.cond.map((x) => esc(COND_L[x] || x)).join(", ") : ""}</span></div>`).join("") : '<p class="mute small">Personne pour l’instant.</p>'}</div>
-      <div class="row-btns"><button class="btn small ghost danger" data-a="advLeave">Quitter l’aventure</button></div>
+      <div class="row-btns"><button class="btn small" data-a="hbOpen" data-code="${esc(ch.adv)}">Contenu maison${HB.defs(ch.adv).length ? " (" + HB.defs(ch.adv).length + ")" : ""}</button><button class="btn small ghost danger" data-a="advLeave">Quitter l’aventure</button></div>
     </section>
     <section class="panel"><h3 class="ph">Initiative</h3>
       ${ord.list.length ? `<p class="mute small">Round ${ord.round}</p><ol class="init-ro">${ord.list.map((e, i) => `<li class="${i === ord.turn ? "now" : ""} ${e.kind}"><span class="iv">${e.v}</span><b>${esc(e.name)}</b>${i === ord.turn ? '<span class="turn-tag">à son tour</span>' : ""}</li>`).join("")}</ol>` : '<p class="mute small">Le MJ n’a pas encore lancé de combat.</p>'}
@@ -3436,15 +3670,15 @@ function viewGM() {
   Live.watch(code);
   const doc = Live.doc;
   if (doc && doc.gm !== FB.uid) return `<header class="topbar"><button class="icon-btn" data-a="home" aria-label="Retour">${ICON.back}</button><div class="tb-title"><strong>Accès refusé</strong></div></header><main class="sheet"><p class="mute">Seul le maître du jeu qui a créé cette aventure peut ouvrir cet écran, depuis l’appareil où il l’a créée.</p></main>`;
-  const tabs = [["groupe", "Groupe"], ["init", "Initiative"], ["notes", "Notes"]];
-  const body = { groupe: gmParty, init: gmInit, notes: gmNotes }[S.gmTab || "groupe"](doc);
+  const tabs = [["groupe", "Groupe"], ["init", "Initiative"], ["bestiaire", "Bestiaire"], ["notes", "Notes"]];
+  const body = { groupe: gmParty, init: gmInit, bestiaire: gmBestiary, notes: gmNotes }[S.gmTab || "groupe"](doc);
   return `<header class="topbar">
     <button class="icon-btn" data-a="home" aria-label="Retour">${ICON.back}</button>
     <div class="tb-title"><strong>${esc(doc ? doc.name : "Chargement…")}</strong><span class="eyebrow">Écran du maître du jeu</span></div>
     <button class="code-chip big" data-a="copyCode" title="Copier le code">${esc(code)}</button>
   </header>
   <main class="sheet">
-    <nav class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" class="tab ${(S.gmTab || "groupe") === k ? "on" : ""}" data-a="gmTab" data-v="${k}">${n}</button>`).join("")}</nav>
+    <nav class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" class="tab ${(S.gmTab || "groupe") === k ? "on" : ""}" data-a="gmTab" data-v="${k}">${n}</button>`).join("")}<button class="tab" data-a="hbOpen" data-code="${esc(code)}">Contenu maison${HB.defs(code).length ? " (" + HB.defs(code).length + ")" : ""}</button></nav>
     <section class="tab-body">${body}</section>
   </main>`;
 }
@@ -3464,7 +3698,7 @@ function gmParty() {
       <div class="pc-stats"><div><span class="lbl">CA</span><b>${s.ac}</b></div><div><span class="lbl">Init.</span><b>${sg(s.init)}</b></div><div><span class="lbl">Perc.</span><b>${10 + s.perc}</b></div><div><span class="lbl">Vit.</span><b>${fmtM(s.speed)}</b></div>${s.casting ? `<div><span class="lbl">DD</span><b>${s.casting.dc}</b></div>` : ""}</div>
       ${down ? `<p class="pc-alert">À terre · réussites ${p.ds ? p.ds.s : 0}/3 · échecs ${p.ds ? p.ds.f : 0}/3</p>` : ""}
       ${p.cond && p.cond.length ? `<div class="pc-cond">${p.cond.map((x) => `<span>${esc(COND_L[x] || x)}</span>`).join("")}</div>` : ""}
-      ${p.conc && SPELLS[p.conc] ? `<p class="pc-conc">Concentration : ${SPELLS[p.conc].n}</p>` : ""}
+      ${p.conc && SPELLS[p.conc] ? `<p class="pc-conc">Concentration : ${esc(SPELLS[p.conc].n)}</p>` : ""}
       ${slots ? `<div class="pc-slots">${slots}</div>` : ""}
       <button class="btn small ghost" data-a="gmDetail" data-id="${esc(m.id)}">Voir la fiche</button>
     </article>`;
@@ -3476,8 +3710,8 @@ function gmDetailModal(m) {
   if (!s) return "<p>Fiche illisible.</p>";
   const b = m.b, p = m.p;
   const byLv = {};
-  s.spells.forEach((x) => (byLv[x.l] = byLv[x.l] || []).push(x.n));
-  return `<h3>${esc(b.name)}</h3><p class="mute">${SPECIES[b.species].n} · ${CLASSES[b.cls].n} ${b.level}${s.sub ? " · " + esc(s.sub) : ""} · ${esc(ALIGN_L[b.align] || b.align)}</p>
+  s.spells.forEach((x) => (byLv[x.l] = byLv[x.l] || []).push(esc(x.n)));
+  return `<h3>${esc(b.name)}</h3><p class="mute">${SPECIES[b.species].n} · ${CLASSES[b.cls].n} ${b.level}${BACKGROUNDS[b.bg] ? " · " + esc(BACKGROUNDS[b.bg].n) : ""}${s.sub ? " · " + esc(s.sub) : ""} · ${esc(ALIGN_L[b.align] || b.align)}</p>
     <div class="ro-abil">${ABK.map((k) => { const sv = s.saves.find((x) => x.k === k); return `<div><span class="lbl">${ABIL[k].s}</span><b>${sg(s.m[k])}</b><small>${s.ab[k]} · JS ${sg(sv.v)}${sv.pr ? "●" : ""}</small></div>`; }).join("")}</div>
     <dl class="facts"><div><dt>PV</dt><dd>${p.hp}/${s.hpMax}${p.temp ? " (+" + p.temp + " temp.)" : ""} · dés de vie ${b.level - (p.hdUsed || 0)}/${b.level}</dd></div>
       <div><dt>Défense</dt><dd>CA ${s.ac} (${esc(s.acNote)}) · initiative ${sg(s.init)} · vitesse ${fmtM(s.speed)}</dd></div>
@@ -3507,7 +3741,7 @@ function gmInit(doc) {
     if (e.kind === "monstre") hp = `<span class="ihp">${e.hp}/${e.max}</span>${hpBar(e.hp, e.max)}<div class="ihp-btns"><button class="mini dmg" data-a="monHp" data-id="${e.id}" data-d="-1" aria-label="Dégâts">−</button><input class="mon-amt" id="mon-${e.id}" type="number" inputmode="numeric" placeholder="PV"><button class="mini heal" data-a="monHp" data-id="${e.id}" data-d="1" aria-label="Soins">+</button></div>`;
     return `<li class="irow ${i === ord.turn ? "now" : ""} ${e.kind} ${e.kind === "monstre" && e.hp <= 0 ? "dead" : ""}">
       <div class="iv-ctl"><button class="mini" data-a="initAdj" data-id="${e.id}" data-d="1" aria-label="Augmenter">▲</button><span class="iv">${e.v}</span><button class="mini" data-a="initAdj" data-id="${e.id}" data-d="-1" aria-label="Diminuer">▼</button></div>
-      <div class="i-main"><b>${esc(e.name)}</b>${e.kind === "monstre" ? `<span class="mute small">CA ${e.ac}</span>` : ""}<div class="i-hp">${hp}</div></div>
+      <div class="i-main"><b>${esc(e.name)}</b>${e.kind === "monstre" ? `<span class="mute small">CA ${e.ac}${e.mk ? ` · <button class="linkish" data-a="monView" data-k="${esc(e.mk)}">voir la fiche</button>` : ""}</span>` : ""}<div class="i-hp">${hp}</div></div>
       <button class="icon-btn" data-a="initDel" data-id="${e.id}" aria-label="Retirer">${ICON.close}</button>
     </li>`;
   }).join("");
@@ -3519,6 +3753,7 @@ function gmInit(doc) {
       <button class="btn" data-a="initParty">${ICON.d20} Lancer l’initiative du groupe</button>
       <p class="mute small">Lance d20 + initiative pour chaque personnage du groupe et remplace leurs entrées.</p>
       <h4>Ajouter des monstres</h4>
+      <p class="mute small">Depuis le <button class="linkish" data-a="gmTab" data-v="bestiaire">bestiaire du SRD</button> (statistiques complètes), ou à la main :</p>
       <label class="field"><span>Nom</span><input id="monName" placeholder="Ex. Gobelin"></label>
       <div class="mon-grid">
         <label class="field"><span>Nombre</span><input id="monN" type="number" inputmode="numeric" value="1" min="1" max="20"></label>
@@ -3548,6 +3783,8 @@ async function saveInit(mutator) {
 function sortedIds(it) { return it.list.slice().sort((a, b) => b.v - a.v || (b.dex || 0) - (a.dex || 0)).map((e) => e.id); }
 
 async function advAct(a, d, el) {
+  if (typeof hbAct === "function" && (await hbAct(a, d, el))) return true;
+  if (typeof srdAct === "function" && (await srdAct(a, d, el))) return true;
   if (typeof accAct === "function" && (await accAct(a, d, el))) return true;
   const ch = curChar();
   switch (a) {
@@ -3595,6 +3832,8 @@ async function advAct(a, d, el) {
       try {
         const q = await FB.members(S.gmCode).get();
         await Promise.all(q.docs.map((x) => x.ref.delete()));
+        const h = await FB.adv(S.gmCode).collection("homebrew").get();
+        await Promise.all(h.docs.map((x) => x.ref.delete()));
         await FB.adv(S.gmCode).delete();
       } catch (e) { }
       GmList.remove(S.gmCode); Live.stop(); S.modal = null; S.view = "home"; toast("Aventure supprimée");
@@ -3638,9 +3877,13 @@ async function advAct(a, d, el) {
 function advModal(m) {
   const am = typeof accountModal === "function" ? accountModal(m) : null;
   if (am) return am;
+  const hm = typeof hbModal === "function" ? hbModal(m) : null;
+  if (hm) return hm;
+  const sm = typeof srdModal === "function" ? srdModal(m) : null;
+  if (sm) return sm;
   if (m.k === "advCreate") return `<h3>Nouvelle aventure</h3><p class="mute">Vous en serez le maître du jeu. Un code sera créé pour vos joueurs.</p><label class="field big"><span>Nom de l’aventure</span><input id="advName" placeholder="Ex. La Mine perdue" autocomplete="off"></label><div class="row-btns"><button class="btn primary" data-a="advCreate">Créer</button></div>`;
   if (m.k === "gmDetail") { const mm = Live.members.find((x) => x.id === m.id); return mm ? gmDetailModal(mm) : "<p>Ce personnage a quitté le groupe.</p>"; }
-  if (m.k === "advDelete") return `<h3>Supprimer l’aventure ?</h3><p>Le groupe, l’initiative et vos notes seront effacés. Les fiches des joueurs restent sur leurs appareils.</p><div class="row-btns"><button class="btn dmgb" data-a="advDelete">Supprimer définitivement</button><button class="btn ghost" data-a="closeModal">Annuler</button></div>`;
+  if (m.k === "advDelete") return `<h3>Supprimer l’aventure ?</h3><p>Le groupe, l’initiative, le contenu maison et vos notes seront effacés. Les fiches des joueurs restent sur leurs appareils.</p><div class="row-btns"><button class="btn dmgb" data-a="advDelete">Supprimer définitivement</button><button class="btn ghost" data-a="closeModal">Annuler</button></div>`;
   return null;
 }
 
@@ -3866,7 +4109,7 @@ function accountStart() { if (Account.user()) syncAccount(); }
 
 /* Forge des Héros — page Compte et réglages : thème, langue, support, version */
 
-const APP_VERSION = "1.7.1";
+const APP_VERSION = "1.8.0";
 
 /* ---------- Thème ---------- */
 const Theme = {
@@ -4014,6 +4257,549 @@ async function settingsAct(a, d) {
   }
   return false;
 }
+
+/* Forge des Héros — contenu maison partagé par l’aventure.
+   Les entrées sont stockées dans adventures/{code}/homebrew/{id} et visibles par les membres.
+   Chaque personnage garde une copie des entrées qu’il utilise (b.hb) pour rester lisible hors ligne et par le MJ. */
+
+const HBSUB = {};        // sous-classes maison, clé "hb_<id>"
+const HBITEMS = {};      // objets maison
+const HB_RAW = {};       // définitions brutes, clé "hb_<id>"
+const HB_TYPES = [["sub", "Sous-classe"], ["bg", "Historique"], ["feat", "Don"], ["spell", "Sort"], ["item", "Objet"]];
+const HB_TYPE_L = Object.fromEntries(HB_TYPES);
+const HB_RARITY = [K("commun"), K("peu commun"), K("rare"), K("très rare"), K("légendaire"), K("artefact")];
+const HB_RARITY_L = { [K("commun")]: "Commun", [K("peu commun")]: "Peu commun", [K("rare")]: "Rare", [K("très rare")]: "Très rare", [K("légendaire")]: "Légendaire", [K("artefact")]: "Artefact" };
+
+/* Aptitudes de sous-classe du SRD sans étiquette entre parenthèses (remplacées par une sous-classe maison) */
+const SUB_UNTAGGED = {
+  clerc: ["Disciple de la vie", "Préservation de la vie"],
+  druide: ["Sorts du cercle", "Aide de la terre"],
+  moine: ["Technique de la main ouverte"],
+  rodeur: ["Savoir du chasseur", "Proie du chasseur"],
+  ensorceleur: ["Résilience draconique", "Sorts draconiques"],
+  magicien: ["Savant en évocation", "Tour de magie puissant"],
+};
+function isSubFeat(cls, n) {
+  const m = String(n).match(/\(([^)]*)\)$/);
+  if (m && !/\d/.test(m[1])) return true;
+  return (SUB_UNTAGGED[cls] || []).includes(n);
+}
+
+const hbKey = (d) => "hb_" + d.id;
+const clampLv = (v, lo, hi) => Math.max(lo, Math.min(hi, parseInt(v, 10) || lo));
+function parseGear(txt) {
+  return String(txt || "").split(/[,\n;]+/).map((x) => x.trim()).filter(Boolean).slice(0, 30).map((x) => {
+    const m = x.match(/^(\d+)\s*[x×]?\s+(.+)$/i) || x.match(/^(.+?)\s*[x×]\s*(\d+)$/i);
+    if (!m) return [x, 1];
+    return /^\d+$/.test(m[1]) ? [m[2], +m[1]] : [m[1], +m[2]];
+  });
+}
+
+/* Transforme une entrée brute en objet compatible avec les données du SRD */
+function hbShape(d) {
+  const base = { n: d.n || "Sans nom", hb: true, hbId: d.id, adv: d.adv || null };
+  switch (d.type) {
+    case "sub": return { ...base, cls: d.cls, d: d.d || "", feats: (d.feats || []).filter((f) => f && f.n).map((f) => ({ l: clampLv(f.l, 3, 20), n: f.n, d: f.d || "" })), spells: d.spells || {} };
+    case "bg": return { ...base, ab: (d.ab || []).slice(0, 3), skills: (d.skills || []).slice(0, 2), tool: d.tool || "—", feat: d.feat || "vigilant", featList: d.feat === "initie" ? d.featList || "clr" : undefined, desc: d.d || "", gear: parseGear(d.gear), gold: Math.max(0, parseInt(d.gold, 10) || 0) };
+    case "feat": return { ...base, d: d.d || "", cat: d.cat === "general" ? "general" : "origine", ab: d.ab || [], pre: d.pre || "" };
+    case "spell": {
+      const o = { ...base, l: clampLv(d.l, 0, 9), e: SC[d.e] ? d.e : "evo", t: d.t || "1 action", p: d.p || "—", c: d.c || "V, S", du: d.du || "Instantanée", co: !!d.co, ri: !!d.ri, cl: (d.cl || []).filter((k) => CLASSES[k]), d: d.d || "" };
+      if (d.dmg) { o.dmg = d.dmg; o.ty = DMG[d.ty] ? d.ty : "force"; }
+      if (d.heal) o.heal = d.heal;
+      if (d.atk === "cac" || d.atk === "dist") o.atk = d.atk;
+      else if (ABIL[d.atk]) o.sv = d.atk;
+      if (d.up) o.up = d.up;
+      return o;
+    }
+    case "item": return { ...base, d: d.d || "", rarity: d.rarity || K("peu commun"), attune: !!d.attune, kind: d.kind || "" };
+  }
+  return null;
+}
+
+/* Enregistre une entrée dans les tables de l’app. force = remplace une version plus ancienne */
+function hbRegister(d, force) {
+  if (!d || !d.id || !d.type) return;
+  const k = hbKey(d);
+  if (HB_RAW[k] && !force) return;
+  const shaped = hbShape(d);
+  if (!shaped) return;
+  HB_RAW[k] = d;
+  const tgt = { sub: HBSUB, bg: BACKGROUNDS, feat: FEATS, spell: SPELLS, item: HBITEMS }[d.type];
+  if (tgt) tgt[k] = shaped;
+}
+function hbUnregister(k) {
+  delete HB_RAW[k];
+  [HBSUB, BACKGROUNDS, FEATS, SPELLS, HBITEMS].forEach((t) => { if (t[k] && t[k].hb) delete t[k]; });
+}
+
+/* Entrées utilisées par un personnage, copiées dans b.hb */
+function hbUsed(b) {
+  const ids = new Set();
+  const add = (k) => { if (typeof k === "string" && k.startsWith("hb_")) ids.add(k); };
+  add(b.bg); add(b.humanFeat); add(b.subHb);
+  if (b.bg && BACKGROUNDS[b.bg]) add(BACKGROUNDS[b.bg].feat);
+  Object.values(b.opts.asis || {}).forEach((a) => a && add(a.feat));
+  [...(b.cant || []), ...(b.prep || []), ...(b.opts.lore2 || []), ...Object.values(b.opts.arcanum || {})].forEach(add);
+  Object.values(b.magic || {}).forEach((m) => { (m.cant || []).forEach(add); add(m.spell); });
+  const hs = b.subHb && HBSUB[b.subHb];
+  if (hs) Object.values(hs.spells || {}).flat().forEach(add);
+  return ids;
+}
+function hbEmbed(b) {
+  if (!b || !b.opts) return;
+  const out = {};
+  hbUsed(b).forEach((k) => { const d = HB_RAW[k] || (b.hb && b.hb[k]); if (d) out[k] = d; });
+  if (Object.keys(out).length) b.hb = out; else delete b.hb;
+}
+
+/* Cache local : { code: { name, defs: [...] } } */
+const HB = {
+  cache: {},
+  boot() {
+    try { this.cache = JSON.parse(localStorage.getItem("forge-hb") || "{}") || {}; } catch (e) { this.cache = {}; }
+    Object.values(this.cache).forEach((a) => (a.defs || []).forEach((d) => hbRegister(d, true)));
+  },
+  persist() { try { localStorage.setItem("forge-hb", JSON.stringify(this.cache)); } catch (e) { } },
+  set(code, defs, name) {
+    const prev = this.cache[code];
+    (prev ? prev.defs || [] : []).forEach((d) => { if (!defs.some((x) => x.id === d.id)) hbUnregister(hbKey(d)); });
+    this.cache[code] = { name: name || (prev && prev.name) || code, defs };
+    defs.forEach((d) => hbRegister(d, true));
+    this.persist();
+  },
+  codes() {
+    const s = new Set();
+    if (typeof GmList !== "undefined") GmList.get().forEach((x) => s.add(x.code));
+    S.chars.forEach((c) => c.adv && s.add(c.adv));
+    return [...s];
+  },
+  advName(code) {
+    const g = typeof GmList !== "undefined" && GmList.get().find((x) => x.code === code);
+    if (g) return g.name;
+    const ch = S.chars.find((c) => c.adv === code && c.advName);
+    return ch ? ch.advName : (this.cache[code] && this.cache[code].name) || code;
+  },
+  defs(code) { return (this.cache[code] && this.cache[code].defs) || []; },
+  async refresh() {
+    if (typeof FB === "undefined" || !FB.ok) return;
+    await Promise.all(this.codes().map(async (code) => {
+      try { const q = await FB.adv(code).collection("homebrew").get(); this.set(code, q.docs.map((d) => d.data()), this.advName(code)); } catch (e) { }
+    }));
+  },
+};
+
+const hbTag = (o) => (o && o.hb ? `<span class="hb-tag" title="Contenu maison">Maison</span>` : "");
+function hbCanEdit(d, code) {
+  if (typeof FB === "undefined" || !FB.ok) return false;
+  if (d.by === FB.uid) return true;
+  return !!(Live.code === code && Live.doc && Live.doc.gm === FB.uid);
+}
+
+/* ---------- Écran « Contenu maison » ---------- */
+function hbMeta(d) {
+  const o = hbShape(d);
+  if (!o) return "";
+  switch (d.type) {
+    case "sub": return (CLASSES[o.cls] ? CLASSES[o.cls].n : "") + " · " + o.feats.length + " aptitude" + (o.feats.length > 1 ? "s" : "");
+    case "bg": return o.ab.map((a) => ABIL[a].s).join(", ") + " · " + o.skills.map((k) => SKILLS[k] ? SKILLS[k].n : k).join(", ") + (FEATS[o.feat] ? " · " + FEATS[o.feat].n : "");
+    case "feat": return o.cat === "general" ? "Don général (niveau 4 et plus)" : "Don d’origine";
+    case "spell": return (o.l ? "Niveau " + o.l : "Tour de magie") + " · " + SC[o.e] + (o.cl.length ? " · " + o.cl.map((k) => CLASSES[k].n).join(", ") : "");
+    case "item": return (o.kind ? o.kind + " · " : "") + (HB_RARITY_L[o.rarity] || o.rarity) + (o.attune ? " · harmonisation" : "");
+  }
+  return "";
+}
+
+function viewHB() {
+  const code = S.hbCode;
+  if (typeof FB === "undefined" || !FB.ok) return `<header class="topbar"><button class="icon-btn" data-a="hbBack" aria-label="Retour">${ICON.back}</button><div class="tb-title"><strong>Contenu maison</strong></div></header><main class="sheet"><p class="mute">Le contenu maison demande une connexion à l’aventure.</p></main>`;
+  Live.watch(code);
+  if (S.hbf) return viewHBForm();
+  const defs = HB.defs(code).slice().sort((a, b) => (a.type === b.type ? (a.n || "").localeCompare(b.n || "", "fr") : HB_TYPES.findIndex((t) => t[0] === a.type) - HB_TYPES.findIndex((t) => t[0] === b.type)));
+  const f = S.hbFilter || "all";
+  const shown = defs.filter((d) => f === "all" || d.type === f);
+  const counts = {}; defs.forEach((d) => (counts[d.type] = (counts[d.type] || 0) + 1));
+  return `<header class="topbar">
+    <button class="icon-btn" data-a="hbBack" aria-label="Retour">${ICON.back}</button>
+    <div class="tb-title"><strong>Contenu maison</strong><span class="eyebrow">${esc(HB.advName(code))} · ${esc(code)}</span></div>
+    <button class="btn small primary" data-a="hbNew">${ICON.plus}<span class="hide-s">Ajouter</span></button>
+  </header>
+  <main class="sheet hb-page">
+    <section class="panel hb-intro"><p>Ajoutez ici les sous-classes, historiques, dons, sorts et objets de vos livres ou de vos créations. Ils apparaissent dans le créateur de personnage et sur les fiches de tous les membres de cette aventure.</p>
+      <p class="mute small">Ce contenu n’est visible que par les personnes qui ont le code de l’aventure. Chacun peut ajouter des entrées ; seuls leur auteur et le MJ peuvent les modifier.</p></section>
+    <div class="chips hb-filter">${chip("Tout (" + defs.length + ")", f === "all", "hbFilter", 'data-v="all"')}${HB_TYPES.map(([k, n]) => chip(n + (counts[k] ? " (" + counts[k] + ")" : ""), f === k, "hbFilter", `data-v="${k}"`)).join("")}</div>
+    ${shown.length ? `<div class="hb-list">${shown.map((d) => `<article class="hb-card">
+      <div class="hb-top"><span class="hb-type">${HB_TYPE_L[d.type] || ""}</span><b>${esc(d.n)}</b></div>
+      <span class="mute small">${esc(hbMeta(d))}</span>
+      ${d.d ? `<p class="hb-desc">${esc(d.d.length > 220 ? d.d.slice(0, 220) + "…" : d.d)}</p>` : ""}
+      <div class="hb-foot"><span class="mute small">${d.byName ? "Par " + esc(d.byName) : ""}</span>${hbCanEdit(d, code) ? `<span class="row-btns"><button class="btn small ghost" data-a="hbEdit" data-id="${esc(d.id)}">Modifier</button><button class="btn small ghost danger" data-a="hbDelAsk" data-id="${esc(d.id)}">Supprimer</button></span>` : ""}</div>
+    </article>`).join("")}</div>` : `<section class="panel empty-state"><h3 class="ph">${defs.length ? "Rien dans cette catégorie" : "Aucun contenu maison"}</h3><p>Touchez <b>Ajouter</b> pour créer votre première entrée.</p></section>`}
+  </main>`;
+}
+
+function hbBlank(type) {
+  return { type, n: "", d: "", cls: S.hbCls || "barbare", feats: [{ l: 3, n: "", d: "" }], spellsTxt: "", ab: [], skills: [], tool: "", feat: "vigilant", featList: "clr", gear: "", gold: 15, cat: "origine", pre: "", fab: [], l: 1, e: "evo", t: "1 action", p: "18 m", c: "V, S", du: "Instantanée", co: false, ri: false, cl: [], dmg: "", ty: "feu", heal: "", atk: "", up: "", rarity: K("peu commun"), attune: false, kind: "" };
+}
+function hbFormFrom(d) {
+  const f = { ...hbBlank(d.type), ...clone(d) };
+  if (d.type === "feat") f.fab = d.ab || [];
+  if (d.type === "sub" && (!f.feats || !f.feats.length)) f.feats = [{ l: 3, n: "", d: "" }];
+  return f;
+}
+
+function hbInput(k, label, ph, opts = {}) {
+  const v = S.hbf[k];
+  return `<label class="field ${opts.big ? "big" : ""}"><span>${label}</span>${opts.area ? `<textarea data-hbf="${k}" rows="${opts.rows || 4}" placeholder="${ph}">${esc(v)}</textarea>` : `<input data-hbf="${k}" value="${esc(v)}" placeholder="${ph}" ${opts.num ? 'type="number" inputmode="numeric"' : ""} autocomplete="off">`}</label>`;
+}
+
+function viewHBForm() {
+  const f = S.hbf;
+  const t = f.type;
+  const multi = (key, opts, max, label) => `<div class="field"><span>${label}${max ? ` — ${f[key].length}/${max}` : ""}</span><div class="chips">${opts.map(([k, n]) => chip(n, f[key].includes(k), "hbToggle", `data-k="${key}" data-v="${k}" data-max="${max || ""}"`, !f[key].includes(k) && max && f[key].length >= max ? 'aria-disabled="true"' : "")).join("")}</div></div>`;
+  const one = (key, opts, label) => `<div class="field"><span>${label}</span><div class="chips">${opts.map(([k, n]) => chip(n, String(f[key]) === String(k), "hbSet", `data-k="${key}" data-v="${k}"`)).join("")}</div></div>`;
+  let body = "";
+  if (t === "sub") {
+    body = `${one("cls", Object.entries(CLASSES).map(([k, c]) => [k, c.n]), "Classe")}
+      <p class="mute small">Les aptitudes de la sous-classe du SRD (${esc(CLASSES[f.cls].sub.n)}) seront remplacées par celles-ci. Les aptitudes de base de la classe restent.</p>
+      <div class="field"><span>Aptitudes</span></div>
+      ${f.feats.map((x, i) => `<div class="hb-feat"><div class="hb-feat-top"><label class="field lv"><span>Niveau</span><input data-hbf="feats.${i}.l" type="number" inputmode="numeric" min="3" max="20" value="${esc(x.l)}"></label><label class="field"><span>Nom</span><input data-hbf="feats.${i}.n" value="${esc(x.n)}" placeholder="Ex. Frappe tonitruante" autocomplete="off"></label><button class="icon-btn" data-a="hbFeatDel" data-i="${i}" aria-label="Retirer l’aptitude">${ICON.close}</button></div>
+        <label class="field"><span>Effet</span><textarea data-hbf="feats.${i}.d" rows="3" placeholder="Ce que fait l’aptitude">${esc(x.d)}</textarea></label></div>`).join("")}
+      <button class="btn small ghost" data-a="hbFeatAdd">${ICON.plus} Ajouter une aptitude</button>
+      ${hbInput("spellsTxt", "Sorts toujours préparés (facultatif)", "Une ligne par niveau, par exemple : 3 : Bénédiction, Soins", { area: true, rows: 4 })}
+      ${f.spellsTxt ? `<p class="mute small">${hbSpellPreview(f.spellsTxt)}</p>` : ""}`;
+  } else if (t === "bg") {
+    const origin = Object.entries(FEATS).filter(([, x]) => x.cat !== "general");
+    body = `${multi("ab", ABK.map((k) => [k, ABIL[k].n]), 3, "Trois caractéristiques")}
+      ${multi("skills", SKK.map((k) => [k, SKILLS[k].n]), 2, "Deux compétences")}
+      ${one("feat", origin.map(([k, x]) => [k, x.n]), "Don d’origine")}
+      ${f.feat === "initie" ? one("featList", Object.entries(MI_NAME), "Liste de sorts du don") : ""}
+      ${hbInput("tool", "Outil maîtrisé", "Ex. Outils de menuisier")}
+      ${hbInput("gear", "Équipement", "Séparez par des virgules : Outils de menuisier, Vêtements de voyage, 2 Torches", { area: true, rows: 3 })}
+      ${hbInput("gold", "Pièces d’or", "15", { num: true })}`;
+  } else if (t === "feat") {
+    body = `${one("cat", [["origine", "Don d’origine"], ["general", "Don général (niveau 4+)"]], "Catégorie")}
+      <p class="mute small">${f.cat === "general" ? "Proposé à la place d’une amélioration de caractéristique, à partir du niveau 4." : "Proposé aux historiques maison et au don d’origine des humains."}</p>
+      ${hbInput("pre", "Prérequis (facultatif)", "Ex. Force 13 ou plus")}
+      ${multi("fab", ABK.map((k) => [k, ABIL[k].n]), 0, "+1 à une caractéristique au choix parmi (facultatif)")}`;
+  } else if (t === "spell") {
+    body = `${one("l", Array.from({ length: 10 }, (_, i) => [i, i ? String(i) : "Tour"]), "Niveau")}
+      ${one("e", Object.entries(SC), "École")}
+      ${multi("cl", Object.entries(CLASSES).filter(([, c]) => c.caster).map(([k, c]) => [k, c.n]), 0, "Classes qui y ont accès")}
+      <div class="two-col">${hbInput("t", "Temps d’incantation", "1 action")}${hbInput("p", "Portée", "18 m")}</div>
+      <div class="two-col">${hbInput("c", "Composantes", "V, S, M")}${hbInput("du", "Durée", "Instantanée")}</div>
+      <div class="chips">${chip("Concentration", f.co, "hbFlag", 'data-k="co"')}${chip("Rituel", f.ri, "hbFlag", 'data-k="ri"')}</div>
+      ${one("atk", [["", "Aucun jet"], ["cac", "Attaque au corps à corps"], ["dist", "Attaque à distance"], ...ABK.map((k) => [k, "JS de " + ABIL[k].n])], "Jet")}
+      <div class="two-col">${hbInput("dmg", "Dégâts (facultatif)", "Ex. 3d6")}${hbInput("heal", "Soins (facultatif)", "Ex. 2d8")}</div>
+      ${f.dmg ? `<label class="field"><span>Type de dégâts</span><select data-hbf="ty">${Object.entries(DMG).map(([k, n]) => `<option value="${k}" ${f.ty === k ? "selected" : ""}>${n}</option>`).join("")}</select></label>` : ""}
+      ${hbInput("up", "Aux niveaux supérieurs (facultatif)", "Ex. +1d6 par niveau")}`;
+  } else if (t === "item") {
+    body = `${hbInput("kind", "Catégorie", "Ex. Anneau, Arme (épée longue), Objet merveilleux")}
+      ${one("rarity", HB_RARITY.map((r) => [r, HB_RARITY_L[r]]), "Rareté")}
+      <div class="chips">${chip("Harmonisation requise", f.attune, "hbFlag", 'data-k="attune"')}</div>`;
+  }
+  return `<header class="topbar">
+    <button class="icon-btn" data-a="hbCancel" aria-label="Retour">${ICON.back}</button>
+    <div class="tb-title"><strong>${f.id ? "Modifier" : "Nouveau contenu"}</strong><span class="eyebrow">${esc(HB.advName(S.hbCode))}</span></div>
+  </header>
+  <main class="sheet hb-page"><section class="panel hb-form">
+    ${f.id ? `<p class="lbl">${HB_TYPE_L[t]}</p>` : `<div class="field"><span>Type</span><div class="chips">${HB_TYPES.map(([k, n]) => chip(n, t === k, "hbType", `data-v="${k}"`)).join("")}</div></div>`}
+    ${hbInput("n", "Nom", t === "sub" ? "Ex. Voie du Zélateur" : t === "bg" ? "Ex. Artisan" : t === "feat" ? "Ex. Robuste" : t === "spell" ? "Ex. Lame tonnerre" : "Ex. Anneau de protection", { big: true })}
+    ${hbInput("d", "Description", t === "sub" ? "Présentation de la sous-classe" : t === "item" ? "Effets de l’objet" : t === "spell" ? "Effet du sort" : "Description", { area: true, rows: t === "sub" || t === "bg" ? 3 : 6 })}
+    ${body}
+    ${f.err ? `<p class="bad">${esc(f.err)}</p>` : ""}
+    <div class="row-btns"><button class="btn primary" data-a="hbSave">${f.id ? "Enregistrer" : "Ajouter à l’aventure"}</button><button class="btn ghost" data-a="hbCancel">Annuler</button></div>
+  </section></main>`;
+}
+
+/* « 3 : Bénédiction, Soins » → { 3: ["benediction", "soins"] } */
+const normName = (s) => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[’']/g, "'").replace(/\s+/g, " ").trim();
+function hbParseSpells(txt) {
+  const out = {}, unknown = [];
+  const byName = {};
+  Object.entries(SPELLS).forEach(([id, s]) => (byName[normName(s.n)] = id));
+  String(txt || "").split("\n").forEach((line) => {
+    const m = line.match(/^\s*(\d+)\s*[:\-–]\s*(.+)$/);
+    if (!m) { if (line.trim()) unknown.push(line.trim()); return; }
+    const lv = clampLv(m[1], 1, 20);
+    m[2].split(/[,;]/).map((x) => x.trim()).filter(Boolean).forEach((n) => {
+      const id = byName[normName(n)];
+      if (id) (out[lv] = out[lv] || []).push(id); else unknown.push(n);
+    });
+  });
+  return { spells: out, unknown };
+}
+function hbSpellPreview(txt) {
+  const r = hbParseSpells(txt);
+  const ok = Object.values(r.spells).flat().length;
+  return `${ok} sort${ok > 1 ? "s" : ""} reconnu${ok > 1 ? "s" : ""}${r.unknown.length ? ` · introuvables : ${r.unknown.map(esc).join(", ")} (créez-les d’abord comme sorts maison, ou vérifiez l’orthographe)` : ""}`;
+}
+
+function hbAuthorName() {
+  const u = typeof Account !== "undefined" && Account.user ? Account.user() : null;
+  if (u && u.displayName) return u.displayName;
+  if (Live.doc && Live.doc.gm === FB.uid) return "MJ";
+  const ch = S.chars.find((c) => c.adv === S.hbCode);
+  return ch ? ch.b.name : "Joueur";
+}
+
+function hbValidate(f) {
+  if (!f.n.trim()) return "Donnez un nom.";
+  if (f.type === "sub" && !f.feats.some((x) => x.n.trim())) return "Ajoutez au moins une aptitude.";
+  if (f.type === "bg" && f.ab.length !== 3) return "Choisissez trois caractéristiques.";
+  if (f.type === "bg" && f.skills.length !== 2) return "Choisissez deux compétences.";
+  if (f.type === "spell" && !f.cl.length) return "Choisissez au moins une classe.";
+  if (f.type === "spell" && f.dmg && !/^\d*d\d+([+-]\d+)?$/i.test(f.dmg.replace(/\s/g, ""))) return "Dégâts : utilisez une formule comme 3d6 ou 2d8+2.";
+  if (f.type === "spell" && f.heal && !/^\d*d\d+([+-]\d+)?$/i.test(f.heal.replace(/\s/g, ""))) return "Soins : utilisez une formule comme 2d8.";
+  return null;
+}
+function hbToDoc(f) {
+  const d = { id: f.id || uid(), type: f.type, n: f.n.trim().slice(0, 120), d: (f.d || "").slice(0, 6000), adv: S.hbCode, updated: Date.now() };
+  if (f.type === "sub") { d.cls = f.cls; d.feats = f.feats.filter((x) => x.n.trim()).slice(0, 30).map((x) => ({ l: clampLv(x.l, 3, 20), n: x.n.trim().slice(0, 120), d: (x.d || "").slice(0, 3000) })); d.spellsTxt = (f.spellsTxt || "").slice(0, 2000); d.spells = hbParseSpells(f.spellsTxt).spells; }
+  if (f.type === "bg") Object.assign(d, { ab: f.ab, skills: f.skills, tool: f.tool.slice(0, 120), feat: f.feat, featList: f.featList, gear: f.gear.slice(0, 1000), gold: Math.max(0, parseInt(f.gold, 10) || 0) });
+  if (f.type === "feat") Object.assign(d, { cat: f.cat, pre: f.pre.slice(0, 200), ab: f.fab });
+  if (f.type === "spell") Object.assign(d, { l: +f.l, e: f.e, cl: f.cl, t: f.t.slice(0, 80), p: f.p.slice(0, 80), c: f.c.slice(0, 200), du: f.du.slice(0, 80), co: !!f.co, ri: !!f.ri, atk: f.atk, dmg: f.dmg.replace(/\s/g, ""), ty: f.ty, heal: f.heal.replace(/\s/g, ""), up: f.up.slice(0, 200) });
+  if (f.type === "item") Object.assign(d, { kind: f.kind.slice(0, 120), rarity: f.rarity, attune: !!f.attune });
+  return d;
+}
+
+async function hbAct(a, d, el) {
+  switch (a) {
+    case "hbOpen": S.hbCode = d.code; S.hbBack = { view: S.view, tab: S.tab, gmTab: S.gmTab }; S.hbf = null; S.hbFilter = "all"; S.view = "hb"; window.scrollTo(0, 0); return true;
+    case "hbBack": { const bk = S.hbBack || { view: "home" }; S.view = bk.view; if (bk.tab) S.tab = bk.tab; if (bk.gmTab) S.gmTab = bk.gmTab; S.hbf = null; window.scrollTo(0, 0); return true; }
+    case "hbFilter": S.hbFilter = d.v; return true;
+    case "hbNew": S.hbf = hbBlank(S.hbFilter && S.hbFilter !== "all" ? S.hbFilter : "sub"); window.scrollTo(0, 0); return true;
+    case "hbType": { const keep = { n: S.hbf.n, d: S.hbf.d }; S.hbf = { ...hbBlank(d.v), ...keep }; return true; }
+    case "hbEdit": { const def = HB.defs(S.hbCode).find((x) => x.id === d.id); if (def) { S.hbf = hbFormFrom(def); window.scrollTo(0, 0); } return true; }
+    case "hbCancel": S.hbf = null; return true;
+    case "hbSet": { const f = S.hbf; f[d.k] = d.k === "l" ? +d.v : d.v; if (d.k === "cls") S.hbCls = d.v; return true; }
+    case "hbFlag": S.hbf[d.k] = !S.hbf[d.k]; return true;
+    case "hbToggle": { if (el && el.getAttribute("aria-disabled") === "true") return true; toggleIn(S.hbf[d.k], d.v, d.max ? +d.max : null); return true; }
+    case "hbFeatAdd": { const last = S.hbf.feats[S.hbf.feats.length - 1]; S.hbf.feats.push({ l: last ? last.l : 3, n: "", d: "" }); return true; }
+    case "hbFeatDel": S.hbf.feats.splice(+d.i, 1); if (!S.hbf.feats.length) S.hbf.feats.push({ l: 3, n: "", d: "" }); return true;
+    case "hbSave": {
+      const f = S.hbf, err = hbValidate(f);
+      if (err) { f.err = err; return true; }
+      const doc = hbToDoc(f);
+      const prev = HB.defs(S.hbCode).find((x) => x.id === doc.id);
+      doc.by = prev ? prev.by : FB.uid;
+      doc.byName = prev ? prev.byName : hbAuthorName();
+      try {
+        await FB.adv(S.hbCode).collection("homebrew").doc(doc.id).set(doc);
+        HB.set(S.hbCode, [...HB.defs(S.hbCode).filter((x) => x.id !== doc.id), doc]);
+        S.hbf = null; S.hbFilter = doc.type;
+        toast(prev ? "Modifications enregistrées" : "« " + doc.n + " » ajouté à l’aventure");
+      } catch (e) { f.err = e && e.code === "permission-denied" ? "Enregistrement refusé : publiez les nouvelles règles Firestore (voir FIREBASE.md)." : "Enregistrement impossible. Vérifiez votre connexion."; }
+      return true;
+    }
+    case "hbDelAsk": S.modal = { k: "hbDel", id: d.id }; return true;
+    case "hbDel": {
+      try {
+        await FB.adv(S.hbCode).collection("homebrew").doc(d.id).delete();
+        HB.set(S.hbCode, HB.defs(S.hbCode).filter((x) => x.id !== d.id));
+        toast("Entrée supprimée");
+      } catch (e) { toast("Suppression impossible."); }
+      S.modal = null; return true;
+    }
+    case "setSub": { const b = S.draft; b.subHb = d.v || null; cleanBuild(b); return true; }
+  }
+  return false;
+}
+
+function hbModal(m) {
+  if (m.k === "hbDel") {
+    const def = HB.defs(S.hbCode).find((x) => x.id === m.id);
+    return `<h3>Supprimer « ${esc(def ? def.n : "")} » ?</h3><p>L’entrée disparaît de l’aventure. Les personnages qui l’utilisent déjà en gardent une copie.</p><div class="row-btns"><button class="btn dmgb" data-a="hbDel" data-id="${esc(m.id)}">Supprimer</button><button class="btn ghost" data-a="closeModal">Annuler</button></div>`;
+  }
+  return null;
+}
+
+document.addEventListener("input", (e) => {
+  const t = e.target;
+  if (!t.dataset || !t.dataset.hbf || !S.hbf) return;
+  const path = t.dataset.hbf.split(".");
+  let o = S.hbf;
+  for (let i = 0; i < path.length - 1; i++) o = o[path[i]];
+  o[path[path.length - 1]] = t.value;
+});
+document.addEventListener("change", (e) => {
+  const t = e.target;
+  if (t.dataset && t.dataset.hbf === "ty" && S.hbf) S.hbf.ty = t.value;
+  if (t.dataset && (t.dataset.hbf === "dmg" || t.dataset.hbf === "spellsTxt") && S.hbf) render();
+});
+
+/* Forge des Héros — bestiaire et objets magiques du SRD 5.2.
+   Les données (MONSTERS, MAGIC_ITEMS) sont dans srd.js, chargé à la demande pour garder l’app légère. */
+
+const SRD = { st: "", p: null };
+const srdOk = () => typeof MONSTERS !== "undefined";
+function srdLoad() {
+  if (srdOk()) return Promise.resolve();
+  if (SRD.p) return SRD.p;
+  SRD.st = "loading";
+  SRD.p = new Promise((res) => {
+    const s = document.createElement("script");
+    s.src = "srd.js";
+    s.onload = () => { SRD.st = "ok"; res(); liveRender(); };
+    s.onerror = () => { SRD.st = "err"; SRD.p = null; s.remove(); res(); liveRender(); };
+    document.head.appendChild(s);
+  });
+  return SRD.p;
+}
+function srdWait(what) {
+  srdLoad();
+  return SRD.st === "err"
+    ? `<p class="mute">Impossible de charger ${what}. Vérifiez votre connexion. <button class="btn small ghost" data-a="srdRetry">Réessayer</button></p>`
+    : `<p class="mute">Chargement ${what}…</p>`;
+}
+
+const crNum = (c) => (c === "1/8" ? 0.125 : c === "1/4" ? 0.25 : c === "1/2" ? 0.5 : +c);
+const normQ = (s) => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[’']/g, "'");
+
+/* ---------- Bestiaire (écran du MJ) ---------- */
+function monMatches() {
+  const q = normQ(S.monQ), ty = S.monTy || "";
+  return Object.entries(MONSTERS)
+    .filter(([, m]) => (!ty || m.ty === ty) && (!q || normQ(m.n).includes(q) || (m.en && normQ(m.en).includes(q))))
+    .sort((a, b) => (S.monSort === "cr" ? crNum(a[1].cr) - crNum(b[1].cr) : 0) || a[1].n.localeCompare(b[1].n, "fr"));
+}
+function monRows() {
+  const list = monMatches();
+  if (!list.length) return `<p class="mute">Aucune créature ne correspond.</p>`;
+  return list.slice(0, 120).map(([k, m]) => `<button class="mon-row" data-a="monView" data-k="${k}"><b>${esc(m.n)}</b><span class="mute small">${esc(m.ty)} · ${esc(m.sz)}</span><span class="mon-cr">FP ${esc(m.cr)}</span><span class="mon-vit">CA ${m.ac} · PV ${m.hp}</span></button>`).join("") + (list.length > 120 ? `<p class="mute small">${list.length - 120} autres résultats : affinez la recherche.</p>` : "");
+}
+function gmBestiary() {
+  if (!srdOk()) return `<section class="panel">${srdWait("du bestiaire")}</section>`;
+  const types = [...new Set(Object.values(MONSTERS).map((m) => m.ty))].sort((a, b) => a.localeCompare(b, "fr"));
+  return `<section class="panel"><div class="adv-head"><h3 class="ph">Bestiaire</h3><span class="mute small">${Object.keys(MONSTERS).length} créatures du SRD 5.2</span></div>
+    <div class="mon-filters">
+      <label class="field"><span>Rechercher</span><input id="monQ" value="${esc(S.monQ || "")}" placeholder="Ex. gobelin, dragon, loup…" autocomplete="off"></label>
+      <label class="field"><span>Type</span><select id="monTy"><option value="">Tous</option>${types.map((t) => `<option ${S.monTy === t ? "selected" : ""}>${esc(t)}</option>`).join("")}</select></label>
+    </div>
+    <div class="chips">${chip("Par nom", S.monSort !== "cr", "monSort", 'data-v="name"')}${chip("Par facteur de puissance", S.monSort === "cr", "monSort", 'data-v="cr"')}</div>
+    <div class="mon-list" id="monList">${monRows()}</div>
+  </section>`;
+}
+
+/* Texte d’un bloc : dés et bonus d’attaque deviennent des boutons de jet */
+function sbText(t, label) {
+  return esc(t)
+    .replace(/((?:Jet d’attaque[^:<]*?|Attack Roll) ?: )([+−-]\d+)/g, (_, a, b) => `${a}<button class="sb-roll" data-a="r20" data-l="${esc(label)} — attaque" data-m="${b.replace("−", "-")}">${b}</button>`)
+    .replace(/(\d+) \((\d+d\d+(?: [+−-] \d+)?)\)/g, (_, n, d) => `<button class="sb-roll dmg" data-a="rDmg" data-l="${esc(label)}" data-e="${d.replace(/\s/g, "").replace("−", "-")}">${n} (${d})</button>`)
+    .replace(/\n/g, "<br>");
+}
+function statBlock(k, inGM) {
+  const m = MONSTERS[k];
+  if (!m) return "<p>Créature introuvable.</p>";
+  const mods = m.ab.map((v) => mod(v));
+  const sv = Object.fromEntries((m.sv || []).map(([a, v]) => [a, v]));
+  const sec = (title, arr) => (arr && arr.length ? `<h4 class="sb-h">${title}</h4>${arr.map(([n, d]) => `<p class="sb-p"><b>${esc(n)}.</b> ${sbText(d, m.n + " — " + n.replace(/ \(.*$/, ""))}</p>`).join("")}` : "");
+  const imm = [m.imm, m.ci].filter(Boolean).join(" ; ");
+  return `<div class="statblock">
+    <h3>${esc(m.n)}</h3><p class="mute sb-sub">${esc(m.sz)} · ${esc(m.ty)} · ${esc(m.al)}</p>
+    <div class="sb-vit"><div><span class="lbl">CA</span><b>${m.ac}</b>${m.acn ? `<small>${esc(m.acn)}</small>` : ""}</div>
+      <div><span class="lbl">PV</span><b>${m.hp}</b><button class="sb-roll" data-a="rDmg" data-l="${esc(m.n)} — PV" data-e="${esc(m.hd.replace("−", "-"))}">${esc(m.hd)}</button></div>
+      <div><span class="lbl">Initiative</span><button class="sb-roll big" data-a="r20" data-l="${esc(m.n)} — initiative" data-m="${mods[1]}">${sg(mods[1])}</button></div>
+      <div><span class="lbl">FP</span><b>${esc(m.cr)}</b><small>${m.xp.toLocaleString(LANG === "en" ? "en" : "fr")} PX</small></div></div>
+    <p class="sb-speed"><span class="lbl">Vitesse</span> ${esc(m.sp)}</p>
+    <div class="ro-abil">${ABK.map((a, i) => `<div><span class="lbl">${ABIL[a].s}</span><button class="sb-roll" data-a="r20" data-l="${esc(m.n)} — ${ABIL[a].n}" data-m="${mods[i]}">${sg(mods[i])}</button><small>${m.ab[i]} · JS <button class="sb-roll" data-a="r20" data-l="${esc(m.n)} — sauvegarde de ${ABIL[a].n}" data-m="${sv[a] != null ? sv[a] : mods[i]}">${sg(sv[a] != null ? sv[a] : mods[i])}</button></small></div>`).join("")}</div>
+    <dl class="facts sb-facts">
+      ${m.sk ? `<div><dt>Compétences</dt><dd>${m.sk.map(([s, v]) => `${SKILLS[s].n} <button class="sb-roll" data-a="r20" data-l="${esc(m.n)} — ${SKILLS[s].n}" data-m="${v}">${sg(v)}</button>`).join(", ")}</dd></div>` : ""}
+      ${m.vul ? `<div><dt>Vulnérabilités</dt><dd>${esc(m.vul)}</dd></div>` : ""}
+      ${m.res ? `<div><dt>Résistances</dt><dd>${esc(m.res)}</dd></div>` : ""}
+      ${imm ? `<div><dt>Immunités</dt><dd>${esc(imm)}</dd></div>` : ""}
+      <div><dt>Sens</dt><dd>${m.sen ? esc(m.sen) + " ; " : ""}Perception passive ${m.pp}</dd></div>
+      <div><dt>Langues</dt><dd>${esc(m.lang || "—")}</dd></div>
+      <div><dt>Maîtrise</dt><dd>${sg(m.pb)}</dd></div>
+      ${m.gear ? `<div><dt>Équipement</dt><dd>${esc(m.gear)}</dd></div>` : ""}
+    </dl>
+    ${sec("Traits", m.tr)}${sec("Actions", m.act)}${sec("Actions bonus", m.ba)}${sec("Réactions", m.re)}${sec("Actions légendaires", m.la)}
+    ${inGM ? `<div class="mon-add"><label class="field"><span>Nombre</span><input id="monAddN" type="number" inputmode="numeric" value="${esc(S.monAddN || 1)}" min="1" max="20"></label>
+      <div class="field"><span>Points de vie</span><div class="chips">${chip("Moyenne (" + m.hp + ")", !S.monHpRoll, "monHpMode", 'data-v="avg"')}${chip("Lancer " + esc(m.hd), !!S.monHpRoll, "monHpMode", 'data-v="roll"')}</div></div>
+      <button class="btn primary" data-a="monAddSrd" data-k="${k}">${ICON.plus} Ajouter au combat</button></div>` : ""}
+    <p class="legal">SRD 5.2 · Wizards of the Coast LLC · CC-BY-4.0${LANG === "fr" ? " · traduction non officielle" : ""}</p>
+  </div>`;
+}
+
+/* ---------- Objets magiques (inventaire) ---------- */
+const RAR_L = { [K("commun")]: "commun", [K("peu commun")]: "peu commun", [K("rare")]: "rare", [K("très rare")]: "très rare", [K("légendaire")]: "légendaire", [K("artefact")]: "artefact" };
+function miAll() {
+  const out = [];
+  if (srdOk()) Object.entries(MAGIC_ITEMS).forEach(([k, x]) => { if (!x.vg) out.push({ ref: "mi:" + k, n: x.n, en: x.en, r: x.r, at: x.at, h: x.h }); });
+  Object.entries(HBITEMS).forEach(([k, x]) => out.push({ ref: "hb:" + k, n: x.n, r: x.rarity, at: x.attune, h: x.kind, hb: true }));
+  return out;
+}
+function miRows() {
+  const q = normQ(S.miQ);
+  if (!q) return `<p class="mute small">Tapez quelques lettres : potion, anneau, épée…</p>`;
+  const list = miAll().filter((x) => normQ(x.n).includes(q) || (x.en && normQ(x.en).includes(q))).sort((a, b) => a.n.localeCompare(b.n, "fr"));
+  if (!list.length) return `<p class="mute small">Aucun objet ne correspond.</p>`;
+  return list.slice(0, 40).map((x) => `<button class="mi-row" data-a="miAdd" data-ref="${esc(x.ref)}"><b>${esc(x.n)}${x.hb ? hbTag({ hb: 1 }) : ""}</b><span class="mute small">${esc(x.h || "")}${x.r ? " · " + esc(RAR_L[x.r] || x.r) : ""}${x.at ? " · harmonisation" : ""}</span><span class="mi-plus">${ICON.plus}</span></button>`).join("");
+}
+function miInfo(i) {
+  if (i.ref && i.ref.startsWith("mi:")) { const x = srdOk() && MAGIC_ITEMS[i.ref.slice(3)]; return x ? { h: x.h, r: x.r, at: x.at, d: x.d } : { h: "", r: i.r, at: i.at, d: null }; }
+  if (i.ref && i.ref.startsWith("hb:")) { const x = HBITEMS[i.ref.slice(3)]; return { h: x ? x.kind : i.h, r: x ? x.rarity : i.r, at: x ? x.attune : i.at, d: x ? x.d : i.d, hb: true }; }
+  return null;
+}
+function invMagicPanel(ch) {
+  const att = ch.p.inv.filter((i) => i.att).length;
+  return `<section class="panel"><h3 class="ph">Objets magiques</h3>
+    ${att ? `<p class="mute small">Harmonisation : <b class="${att > 3 ? "bad" : ""}">${att}/3</b></p>` : ""}
+    <label class="field"><span>Ajouter un objet magique</span><input id="miQ" value="${esc(S.miQ || "")}" placeholder="Rechercher dans le SRD${typeof HB !== "undefined" ? " et le contenu maison" : ""}" autocomplete="off"></label>
+    <div class="mi-list" id="miList">${srdOk() ? miRows() : srdWait("des objets magiques")}</div>
+  </section>`;
+}
+
+async function srdAct(a, d, el) {
+  switch (a) {
+    case "srdRetry": SRD.st = ""; srdLoad(); return true;
+    case "monSort": S.monSort = d.v; return true;
+    case "monView": S.modal = { k: "mon", key: d.k }; return true;
+    case "monHpMode": S.monHpRoll = d.v === "roll"; return true;
+    case "monAddSrd": {
+      const m = MONSTERS[d.k];
+      const n = Math.max(1, Math.min(20, parseInt(($("#monAddN") || {}).value, 10) || 1));
+      const bonus = mod(m.ab[1]);
+      await saveInit((it) => {
+        for (let i = 0; i < n; i++) {
+          const hp = S.monHpRoll ? Math.max(1, rollExpr(m.hd).total) : m.hp;
+          const r = rollD20(bonus, "normal");
+          it.list.push({ id: "m_" + uid(), kind: "monstre", mk: d.k, name: n > 1 ? `${m.n} ${i + 1}` : m.n, v: r.total, dex: bonus, hp, max: hp, ac: m.ac });
+        }
+      });
+      S.modal = null; S.gmTab = "init"; S.monAddN = 1;
+      toast(n > 1 ? n + " × " + m.n + " ajoutés au combat" : m.n + " ajouté au combat");
+      return true;
+    }
+    case "miAdd": {
+      const ch = curChar(); if (!ch) return true;
+      let it = null;
+      if (d.ref.startsWith("mi:")) { const x = MAGIC_ITEMS[d.ref.slice(3)]; if (x) it = { uid: uid(), ref: d.ref, n: x.n, q: 1, eq: false, r: x.r, at: x.at ? 1 : 0 }; }
+      if (d.ref.startsWith("hb:")) { const x = HBITEMS[d.ref.slice(3)]; if (x) it = { uid: uid(), ref: d.ref, n: x.n, q: 1, eq: false, r: x.rarity, at: x.attune ? 1 : 0, h: x.kind, d: x.d }; }
+      if (!it) return true;
+      const same = ch.p.inv.find((i) => i.ref === it.ref);
+      if (same) same.q += 1; else ch.p.inv.push(it);
+      S.miQ = ""; saveSoon(ch); toast(it.n + " ajouté");
+      return true;
+    }
+    case "itemOpen": S.openItem = S.openItem === d.u ? null : d.u; return true;
+    case "attune": { const ch = curChar(), it = ch && ch.p.inv.find((i) => i.uid === d.u); if (it) { it.att = it.att ? 0 : 1; saveSoon(ch); } return true; }
+  }
+  return false;
+}
+function srdModal(m) {
+  if (m.k === "mon") return srdOk() ? statBlock(m.key, S.view === "gm") : srdWait("du bestiaire");
+  return null;
+}
+
+/* Recherche en direct sans tout redessiner */
+document.addEventListener("input", (e) => {
+  const t = e.target;
+  if (t.id === "monQ") { S.monQ = t.value; const l = $("#monList"); if (l && srdOk()) l.innerHTML = monRows(); }
+  if (t.id === "monAddN") S.monAddN = t.value;
+  if (t.id === "miQ") { S.miQ = t.value; const l = $("#miList"); if (l && srdOk()) l.innerHTML = miRows(); }
+});
+document.addEventListener("change", (e) => {
+  if (e.target.id === "monTy") { S.monTy = e.target.value; const l = $("#monList"); if (l && srdOk()) l.innerHTML = monRows(); }
+});
 
 boot();
 if ("serviceWorker" in navigator) {

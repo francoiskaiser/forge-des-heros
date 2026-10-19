@@ -25,7 +25,7 @@ function newBuild() {
     skillsClass: [], skillsSpecies: [], skilled: [], skillsLore: [], skillPrimal: null, expertise: [],
     humanFeat: null, magic: { bg: { list: "clr", cant: [], spell: null, ab: "sag" }, human: { list: "clr", cant: [], spell: null, ab: "sag" } },
     opts: { style: null, style2: null, order: null, strike: null, dragon: null, mastery: [], inv: [], meta: [], prey: null, land: null, lore2: [], arcanum: {}, asis: {}, boon: { id: null, a: null } },
-    cant: [], prep: [], gear: { cls: "A", bg: "A" }, langs: [], align: "Neutre",
+    cant: [], prep: [], gear: { cls: "A", bg: "A" }, langs: [], align: "Neutre", subHb: null,
     details: { age: "", taille: "", divinite: "", apparence: "", personnalite: "", ideaux: "", liens: "", defauts: "", histoire: "" },
     created: Date.now(),
   };
@@ -42,12 +42,17 @@ const MI_NAME = { clr: "Clerc", drd: "Druide", mag: "Magicien" };
 
 function featsOf(b) {
   const out = [];
-  if (b.bg) out.push({ id: BACKGROUNDS[b.bg].feat, src: "bg" });
+  if (b.bg && BACKGROUNDS[b.bg]) out.push({ id: BACKGROUNDS[b.bg].feat, src: "bg" });
   if (b.species === "humain" && b.humanFeat) out.push({ id: b.humanFeat, src: "human" });
-  return out;
+  activeAsiLevels(b).forEach((lv) => { const a = b.opts.asis[lv]; if (a && a.mode === "feat" && a.feat) out.push({ id: a.feat, src: "asi" + lv }); });
+  return out.filter((f) => FEATS[f.id]);
 }
 
 function subActive(b) { return b.level >= 3; }
+/* Sous-classe : celle du SRD, ou une sous-classe maison (b.subHb) */
+function hbSub(b) { const h = b.subHb && typeof HBSUB !== "undefined" && HBSUB[b.subHb]; return h && h.cls === b.cls ? h : null; }
+function srdSub(b) { return !b.subHb; }
+function subName(b) { const c = CLASSES[b.cls]; if (!c) return null; const h = hbSub(b); return h ? h.n : srdSub(b) ? c.sub.n : null; }
 
 function migrate(b) {
   const o = b.opts;
@@ -58,6 +63,8 @@ function migrate(b) {
   if (!o.arcanum) o.arcanum = {};
   ["style2", "strike", "dragon"].forEach((k) => { if (!(k in o)) o[k] = null; });
   if (b.details && !("divinite" in b.details)) b.details.divinite = "";
+  if (!("subHb" in b)) b.subHb = null;
+  if (b.hb && typeof hbRegister === "function") Object.values(b.hb).forEach((d) => hbRegister(d, false));
   return b;
 }
 function asiAt(b, lv) { if (!b.opts.asis[lv]) b.opts.asis[lv] = { mode: "2", a: null, b: null }; return b.opts.asis[lv]; }
@@ -89,6 +96,7 @@ function abilities(b) {
     if (!a) return;
     if (a.mode === "2" && a.a) out[a.a] = Math.min(20, out[a.a] + 2);
     if (a.mode === "11") { if (a.a) out[a.a] = Math.min(20, out[a.a] + 1); if (a.b && a.b !== a.a) out[a.b] = Math.min(20, out[a.b] + 1); }
+    if (a.mode === "feat" && a.feat && FEATS[a.feat] && a.a && (FEATS[a.feat].ab || []).includes(a.a)) out[a.a] = Math.min(20, out[a.a] + 1);
   });
   if (b.level >= 19 && b.opts.boon.a) out[b.opts.boon.a] = Math.min(30, out[b.opts.boon.a] + 1);
   if (b.level >= 20 && b.cls === "barbare") ["for", "con"].forEach((k) => (out[k] = Math.max(out[k], Math.min(25, out[k] + 4))));
@@ -104,11 +112,11 @@ function classSkillPool(b) {
 
 function profSkills(b) {
   const s = new Set();
-  if (b.bg) BACKGROUNDS[b.bg].skills.forEach((k) => s.add(k));
+  if (b.bg && BACKGROUNDS[b.bg]) BACKGROUNDS[b.bg].skills.forEach((k) => s.add(k));
   b.skillsClass.forEach((k) => s.add(k));
   b.skillsSpecies.forEach((k) => s.add(k));
   featsOf(b).forEach((f) => { if (f.id === "doue") b.skilled.forEach((k) => s.add(k)); });
-  if (b.cls === "barde" && b.level >= 3) b.skillsLore.forEach((k) => s.add(k));
+  if (b.cls === "barde" && b.level >= 3 && srdSub(b)) b.skillsLore.forEach((k) => s.add(k));
   if (b.cls === "barbare" && b.level >= 3 && b.skillPrimal) s.add(b.skillPrimal);
   return s;
 }
@@ -178,8 +186,9 @@ function grantedSpells(b) {
   if (c) {
     if (c.always) Object.entries(c.always).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: "Classe", ab: c.sab, always: true, free: b.cls === "paladin" ? "smite" : b.cls === "rodeur" ? "ennemi" : null })); });
     if (b.cls === "druide") out.push({ id: "comanimaux", src: "Druidique", ab: c.sab, always: true });
-    if (subActive(b) && c.sub.spells) Object.entries(c.sub.spells).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: c.sub.n, ab: c.sab, always: true })); });
-    if (b.cls === "druide" && subActive(b) && b.opts.land) Object.entries(LAND_SPELLS[b.opts.land].s).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: "Cercle de la Terre", ab: c.sab, always: true })); });
+    const hs = hbSub(b), subSpells = hs ? hs.spells : srdSub(b) ? c.sub.spells : null;
+    if (subActive(b) && subSpells) Object.entries(subSpells).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: subName(b), ab: c.sab || "sag", always: true })); });
+    if (b.cls === "druide" && subActive(b) && srdSub(b) && b.opts.land) Object.entries(LAND_SPELLS[b.opts.land].s).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: "Cercle de la Terre", ab: c.sab, always: true })); });
   }
   if (sp) {
     const opt = sp.choice && b.sChoice && sp.choice.opts[b.sChoice];
@@ -188,7 +197,7 @@ function grantedSpells(b) {
     });
     if (sp.extraSpells) sp.extraSpells.forEach((id) => out.push({ id, src: sp.n, ab: b.sSpellAb, always: true }));
   }
-  if (b.cls === "barde" && b.level >= 6) b.opts.lore2.forEach((id) => out.push({ id, src: "Découvertes magiques", ab: "cha", always: true }));
+  if (b.cls === "barde" && b.level >= 6 && srdSub(b)) b.opts.lore2.forEach((id) => out.push({ id, src: "Découvertes magiques", ab: "cha", always: true }));
   if (b.cls === "occultiste") Object.entries(b.opts.arcanum).forEach(([lv, id]) => { if (id && b.level >= ARCANUM_LV[lv]) out.push({ id, src: "Arcanum mystique", ab: "cha", always: true, free: "arc_" + lv }); });
   featsOf(b).forEach((f) => {
     if (f.id !== "initie") return;
@@ -217,25 +226,25 @@ function hpMax(b, ab) {
   let hp = Math.max(1, c.hd + cm);
   for (let l = 2; l <= b.level; l++) hp += Math.max(1, c.hd / 2 + 1 + cm);
   hp += speciesHPBonus(b);
-  if (b.cls === "ensorceleur" && b.level >= 3) hp += b.level;
+  if (b.cls === "ensorceleur" && b.level >= 3 && srdSub(b)) hp += b.level;
   return hp;
 }
 
 function resources(b, ab) {
-  const L = b.level, pb = pbOf(L), r = [];
+  const L = b.level, pb = pbOf(L), r = [], std = srdSub(b);
   const add = (k, n, max, reset, note) => max > 0 && r.push({ k, n, max, reset, note });
   switch (b.cls) {
-    case "barbare": add("rage", "Rage", L >= 17 ? 6 : L >= 12 ? 5 : L >= 6 ? 4 : L >= 3 ? 3 : 2, "short1", "+" + rageDmg(L) + " dégâts"); if (L >= 11) add("relent", "Rage implacable (DD 10, +5 par usage)", 1, "short"); if (L >= 14) add("intim", "Présence intimidante", 1, "long"); if (L >= 15) add("persist", "Rage persistante", 1, "long"); break;
+    case "barbare": add("rage", "Rage", L >= 17 ? 6 : L >= 12 ? 5 : L >= 6 ? 4 : L >= 3 ? 3 : 2, "short1", "+" + rageDmg(L) + " dégâts"); if (L >= 11) add("relent", "Rage implacable (DD 10, +5 par usage)", 1, "short"); if (L >= 14 && std) add("intim", "Présence intimidante", 1, "long"); if (L >= 15) add("persist", "Rage persistante", 1, "long"); break;
     case "barde": add("insp", "Inspiration bardique", Math.max(1, mod(ab.cha)), L >= 5 ? "short" : "long", bardDie(L)); break;
     case "clerc": if (L >= 2) add("cd", "Conduit divin", L >= 18 ? 4 : L >= 6 ? 3 : 2, "short1"); if (L >= 10) add("interv", "Intervention divine", 1, "long"); break;
-    case "druide": if (L >= 2) add("ws", "Forme sauvage", L >= 17 ? 4 : L >= 6 ? 3 : 2, "short1"); if (L >= 6 && b.opts.land) add("natrec", "Récupération naturelle", 1, "long"); break;
+    case "druide": if (L >= 2) add("ws", "Forme sauvage", L >= 17 ? 4 : L >= 6 ? 3 : 2, "short1"); if (L >= 6 && std && b.opts.land) add("natrec", "Récupération naturelle", 1, "long"); break;
     case "guerrier": add("sw", "Second souffle", L >= 10 ? 4 : L >= 4 ? 3 : 2, "short1", "1d10+" + L); if (L >= 2) add("surge", "Fougue", L >= 17 ? 2 : 1, "short"); if (L >= 9) add("indom", "Inflexible", L >= 17 ? 3 : L >= 13 ? 2 : 1, "long", "+" + L); break;
-    case "moine": if (L >= 2) add("focus", "Points de focalisation", L, "short"); if (L >= 2) add("meta", "Métabolisme extraordinaire", 1, "long"); if (L >= 6) add("whole", "Plénitude du corps", Math.max(1, mod(ab.sag)), "long"); break;
-    case "paladin": add("loh", "Imposition des mains (PV)", 5 * L, "long", "réserve"); if (L >= 2) add("smite", "Châtiment gratuit", 1, "long"); if (L >= 3) add("cd", "Conduit divin", L >= 11 ? 3 : 2, "short1"); if (L >= 5) add("steed", "Destrier gratuit", 1, "long"); if (L >= 20) add("nimbe", "Nimbe sacré", 1, "long"); break;
+    case "moine": if (L >= 2) add("focus", "Points de focalisation", L, "short"); if (L >= 2) add("meta", "Métabolisme extraordinaire", 1, "long"); if (L >= 6 && std) add("whole", "Plénitude du corps", Math.max(1, mod(ab.sag)), "long"); break;
+    case "paladin": add("loh", "Imposition des mains (PV)", 5 * L, "long", "réserve"); if (L >= 2) add("smite", "Châtiment gratuit", 1, "long"); if (L >= 3) add("cd", "Conduit divin", L >= 11 ? 3 : 2, "short1"); if (L >= 5) add("steed", "Destrier gratuit", 1, "long"); if (L >= 20 && std) add("nimbe", "Nimbe sacré", 1, "long"); break;
     case "rodeur": add("ennemi", "Marque du chasseur gratuite", L >= 17 ? 6 : L >= 13 ? 5 : L >= 9 ? 4 : L >= 5 ? 3 : 2, "long", L >= 20 ? "d10" : "d6"); if (L >= 10) add("tireless", "Infatigable", Math.max(1, mod(ab.sag)), "long"); if (L >= 14) add("veil", "Voile de la nature", Math.max(1, mod(ab.sag)), "long"); break;
     case "roublard": if (L >= 20) add("luck", "Coup de chance", 1, "short"); break;
-    case "ensorceleur": add("innate", "Sorcellerie innée", 2, "long"); if (L >= 2) add("sp", "Points de sorcellerie", L, "long"); if (L >= 5) add("sorcrest", "Restauration ensorcelante", 1, "long"); if (L >= 14) add("wings", "Ailes de dragon", 1, "long"); break;
-    case "occultiste": if (L >= 2) add("cunning", "Astuce magique", 1, "long"); if (L >= 6) add("darkluck", "Chance du ténébreux", Math.max(1, mod(ab.cha)), "long", "1d10"); if (L >= 9) add("patron", "Contacter le protecteur", 1, "long"); if (L >= 14) add("hurl", "Jeter en enfer", 1, "long", "8d10"); break;
+    case "ensorceleur": add("innate", "Sorcellerie innée", 2, "long"); if (L >= 2) add("sp", "Points de sorcellerie", L, "long"); if (L >= 5) add("sorcrest", "Restauration ensorcelante", 1, "long"); if (L >= 14 && std) add("wings", "Ailes de dragon", 1, "long"); break;
+    case "occultiste": if (L >= 2) add("cunning", "Astuce magique", 1, "long"); if (L >= 6 && std) add("darkluck", "Chance du ténébreux", Math.max(1, mod(ab.cha)), "long", "1d10"); if (L >= 9) add("patron", "Contacter le protecteur", 1, "long"); if (L >= 14 && std) add("hurl", "Jeter en enfer", 1, "long", "8d10"); break;
     case "magicien": add("arcrec", "Restauration arcanique", 1, "long"); break;
   }
   switch (b.species) {
@@ -249,8 +258,7 @@ function resources(b, ab) {
   featsOf(b).forEach((f) => { if (f.id === "initie" && b.magic[f.src].spell) add("mi_" + f.src, SPELLS[b.magic[f.src].spell].n + " (gratuit)", 1, "long"); });
   if (b.cls === "occultiste") Object.entries(b.opts.arcanum).forEach(([lv, id]) => { if (id && L >= ARCANUM_LV[lv]) add("arc_" + lv, SPELLS[id].n + " (arcanum)", 1, "long"); });
   if (L >= 19 && b.opts.boon.id === "destin") add("boonfate", "Faveur du destin", 1, "short", "2d4");
-  if (L >= 19 && b.opts.boon.id === "rappel") add("boonrecall", "Rappel de sort", 1, "long");
-  if (b.cls === "barde" && L >= 3) r.forEach((x) => { if (x.k === "insp") x.note += " · Mots cinglants"; });
+  if (b.cls === "barde" && L >= 3 && std) r.forEach((x) => { if (x.k === "insp") x.note += " · Mots cinglants"; });
   return r;
 }
 
@@ -269,16 +277,20 @@ function features(b) {
     const opt = sp.choice && b.sChoice && sp.choice.opts[b.sChoice];
     if (opt) out.push({ n: sp.choice.label + " : " + opt.n, d: opt.d || ("Dégâts de " + DMG[opt.t] + "."), src: sp.n });
   }
-  if (c) for (let l = 1; l <= b.level; l++) (c.feats[l] || []).forEach(([n, d]) => out.push({ n, d, src: c.n + " " + l, lvl: l }));
-  featsOf(b).forEach((f) => out.push({ n: FEATS[f.id].n, d: FEATS[f.id].d, src: f.src === "bg" ? "Historique" : "Humain" }));
+  const hs = hbSub(b);
+  if (c) for (let l = 1; l <= b.level; l++) {
+    (c.feats[l] || []).forEach(([n, d]) => { if (b.subHb && isSubFeat(b.cls, n)) return; out.push({ n, d, src: c.n + " " + l, lvl: l }); });
+    if (hs && l >= 3) hs.feats.filter((f) => f.l === l).forEach((f) => out.push({ n: f.n + " (" + hs.n + ")", d: f.d, src: c.n + " " + l, lvl: l }));
+  }
+  featsOf(b).forEach((f) => out.push({ n: FEATS[f.id].n, d: FEATS[f.id].d, src: f.src === "bg" ? "Historique" : f.src === "human" ? "Humain" : "Don (niv. " + f.src.slice(3) + ")" }));
   if (b.opts.style && FIGHTING_STYLES[b.opts.style]) out.push({ n: "Style : " + FIGHTING_STYLES[b.opts.style].n, d: FIGHTING_STYLES[b.opts.style].d, src: c.n });
-  if (b.cls === "guerrier" && b.level >= 7 && b.opts.style2 && FIGHTING_STYLES[b.opts.style2]) out.push({ n: "Style : " + FIGHTING_STYLES[b.opts.style2].n, d: FIGHTING_STYLES[b.opts.style2].d, src: "Champion" });
+  if (b.cls === "guerrier" && b.level >= 7 && srdSub(b) && b.opts.style2 && FIGHTING_STYLES[b.opts.style2]) out.push({ n: "Style : " + FIGHTING_STYLES[b.opts.style2].n, d: FIGHTING_STYLES[b.opts.style2].d, src: "Champion" });
   const so = STRIKE_OPTS[b.cls];
   if (so && b.level >= so.lvl && b.opts.strike && so.opts[b.opts.strike]) out.push({ n: so.label + " : " + so.opts[b.opts.strike].n, d: so.opts[b.opts.strike].d, src: c.n });
-  if (b.cls === "ensorceleur" && b.level >= 6 && b.opts.dragon) out.push({ n: "Affinité : " + DMG[b.opts.dragon], d: "Résistance aux dégâts de " + DMG[b.opts.dragon] + " ; + mod. Cha aux dégâts de ce type de vos sorts.", src: "Sorcellerie draconique" });
+  if (b.cls === "ensorceleur" && b.level >= 6 && srdSub(b) && b.opts.dragon) out.push({ n: "Affinité : " + DMG[b.opts.dragon], d: "Résistance aux dégâts de " + DMG[b.opts.dragon] + " ; + mod. Cha aux dégâts de ce type de vos sorts.", src: "Sorcellerie draconique" });
   if (b.level >= 19 && b.opts.boon.id) out.push({ n: EPIC_BOONS[b.opts.boon.id].n, d: EPIC_BOONS[b.opts.boon.id].d, src: "Faveur épique" });
-  if (b.cls === "rodeur" && b.level >= 3 && b.opts.prey) out.push({ n: b.opts.prey === "colosse" ? "Tueur de colosses" : "Briseur de hordes", d: b.opts.prey === "colosse" ? "Une fois par tour, +1d8 dégâts contre une créature qui n’a pas tous ses PV." : "Une fois par tour, attaque supplémentaire contre une autre créature à 1,50 m de la cible initiale.", src: "Chasseur" });
-  if (b.cls === "druide" && b.level >= 3 && b.opts.land) out.push({ n: "Terre : " + LAND_SPELLS[b.opts.land].n, d: "Sorts du cercle toujours préparés.", src: "Cercle de la Terre" });
+  if (b.cls === "rodeur" && b.level >= 3 && srdSub(b) && b.opts.prey) out.push({ n: b.opts.prey === "colosse" ? "Tueur de colosses" : "Briseur de hordes", d: b.opts.prey === "colosse" ? "Une fois par tour, +1d8 dégâts contre une créature qui n’a pas tous ses PV." : "Une fois par tour, attaque supplémentaire contre une autre créature à 1,50 m de la cible initiale.", src: "Chasseur" });
+  if (b.cls === "druide" && b.level >= 3 && srdSub(b) && b.opts.land) out.push({ n: "Terre : " + LAND_SPELLS[b.opts.land].n, d: "Sorts du cercle toujours préparés.", src: "Cercle de la Terre" });
   b.opts.inv.forEach((k) => INVOCATIONS[k] && out.push({ n: INVOCATIONS[k].n, d: INVOCATIONS[k].d, src: "Manifestation" }));
   b.opts.meta.forEach((k) => METAMAGIC[k] && out.push({ n: METAMAGIC[k].n, d: METAMAGIC[k].d, src: "Métamagie" }));
   return out;
@@ -286,7 +298,7 @@ function features(b) {
 
 function compute(b, p) {
   const c = CLASSES[b.cls], sp = SPECIES[b.species], bg = BACKGROUNDS[b.bg];
-  const L = b.level, pb = pbOf(L);
+  const L = b.level, pb = pbOf(L), std = srdSub(b);
   const ab = abilities(b), m = {};
   ABK.forEach((k) => (m[k] = mod(ab[k])));
   const feats = featsOf(b).map((f) => f.id);
@@ -317,12 +329,12 @@ function compute(b, p) {
   let ac, acNote;
   if (armor) {
     ac = armor.ac + Math.min(m.dex, armor.dex); acNote = armor.n;
-    if ((b.opts.style === "defense" && (b.cls === "guerrier" || b.cls === "paladin" || b.cls === "rodeur")) || (b.cls === "guerrier" && L >= 7 && b.opts.style2 === "defense")) ac += 1;
+    if ((b.opts.style === "defense" && (b.cls === "guerrier" || b.cls === "paladin" || b.cls === "rodeur")) || (b.cls === "guerrier" && L >= 7 && std && b.opts.style2 === "defense")) ac += 1;
   } else {
     const opts = [{ v: 10 + m.dex, n: "Sans armure" }];
     if (b.cls === "barbare") opts.push({ v: 10 + m.dex + m.con, n: "Défense sans armure" });
     if (b.cls === "moine" && !eqShield) opts.push({ v: 10 + m.dex + m.sag, n: "Défense sans armure" });
-    if (b.cls === "ensorceleur" && L >= 3) opts.push({ v: 10 + m.dex + m.cha, n: "Résilience draconique" });
+    if (b.cls === "ensorceleur" && L >= 3 && std) opts.push({ v: 10 + m.dex + m.cha, n: "Résilience draconique" });
     const best = opts.sort((x, y) => y.v - x.v)[0];
     ac = best.v; acNote = best.n;
   }
@@ -344,8 +356,8 @@ function compute(b, p) {
   // Attaques
   const attacks = [];
   const maDie = martialDie(L);
-  const archery = b.opts.style === "archerie" || (b.cls === "guerrier" && L >= 7 && b.opts.style2 === "archerie");
-  const crit = b.cls === "guerrier" ? (L >= 15 ? 18 : L >= 3 ? 19 : 20) : 20;
+  const archery = b.opts.style === "archerie" || (b.cls === "guerrier" && L >= 7 && std && b.opts.style2 === "archerie");
+  const crit = b.cls === "guerrier" && std ? (L >= 15 ? 18 : L >= 3 ? 19 : 20) : 20;
   inv.filter((i) => i.eq && i.ref && i.ref.startsWith("w:")).forEach((i) => {
     const w = WEAPONS[i.ref.slice(2)];
     if (!w) return;
@@ -378,8 +390,8 @@ function compute(b, p) {
   const dmgBonus = (s) => {
     let v = 0, why = [];
     if (s.l === 0 && potent && s.cl.includes(b.cls)) { v += m.sag; why.push("Incantation puissante"); }
-    if (b.cls === "magicien" && L >= 10 && s.e === "evo" && s.l > 0 && s.cl.includes("magicien")) { v += m.int; why.push("Évocation surpuissante"); }
-    if (b.cls === "ensorceleur" && L >= 6 && b.opts.dragon && s.ty === b.opts.dragon) { v += m.cha; why.push("Affinité élémentaire"); }
+    if (b.cls === "magicien" && L >= 10 && std && s.e === "evo" && s.l > 0 && s.cl.includes("magicien")) { v += m.int; why.push("Évocation surpuissante"); }
+    if (b.cls === "ensorceleur" && L >= 6 && std && b.opts.dragon && s.ty === b.opts.dragon) { v += m.cha; why.push("Affinité élémentaire"); }
     if (b.cls === "occultiste" && s.id === "dechargeocculte" && b.opts.inv.includes("dechiree")) { v += m.cha; why.push("Décharge déchirante"); }
     return { v, why };
   };
@@ -412,7 +424,7 @@ function compute(b, p) {
       weapons: c ? c.weapons.map((w) => ({ simple: "Armes simples", guerre: "Armes de guerre", guerreLegere: "Armes de guerre légères", guerreFinesse: "Armes de guerre (finesse ou légères)" })[w]).join(", ") + ((b.cls === "clerc" && b.opts.order === "protecteur") || (b.cls === "druide" && b.opts.order === "gardien") ? ", armes de guerre" : "") : "",
       tools: [c && c.tools !== "—" ? c.tools : null, bg ? bg.tool : null].filter(Boolean).join(", ") || "Aucun",
     },
-    sub: c && L >= 3 ? c.sub.n : null,
+    sub: c && L >= 3 ? subName(b) : null,
   };
 }
 
@@ -429,6 +441,7 @@ function itemName(i) {
   if (i.ref && i.ref.startsWith("w:") && WEAPONS[i.ref.slice(2)]) return WEAPONS[i.ref.slice(2)].n;
   if (i.ref && i.ref.startsWith("a:") && ARMORS[i.ref.slice(2)]) return ARMORS[i.ref.slice(2)].n;
   if (i.ref && i.ref.startsWith("g:") && GEAR[i.ref.slice(2)]) return GEAR[i.ref.slice(2)];
+  if (i.ref && i.ref.startsWith("mi:") && typeof MAGIC_ITEMS !== "undefined" && MAGIC_ITEMS[i.ref.slice(3)]) return MAGIC_ITEMS[i.ref.slice(3)].n;
   return i.n;
 }
 function startingInventory(b) {
@@ -468,11 +481,16 @@ function issues(b) {
   if (!sp) out.origine.push("Choisissez une espèce");
   if (sp && sp.choice && !b.sChoice) out.origine.push(sp.choice.label);
   if (!bg) out.origine.push("Choisissez un historique");
+  if (c && b.subHb && !hbSub(b)) out.classe.push("Sous-classe maison introuvable");
   if (bg && b.bonus.mode === "21" && (!b.bonus.p2 || !b.bonus.p1 || b.bonus.p1 === b.bonus.p2)) out.carac.push("Répartissez les bonus d’historique");
   if (b.method === "points") { const spent = ABK.reduce((t, k) => t + (PB_COST[b.base[k]] ?? 99), 0); if (spent > 27) out.carac.push("Trop de points dépensés"); }
   if (b.method === "roll" && !b.rolled) out.carac.push("Lancez les dés");
   migrate(b);
-  activeAsiLevels(b).forEach((lv) => { const a = b.opts.asis[lv]; if (!a || !a.a || (a.mode === "11" && (!a.b || a.b === a.a))) out.carac.push("Amélioration (niv. " + lv + ")"); });
+  activeAsiLevels(b).forEach((lv) => {
+    const a = b.opts.asis[lv];
+    if (a && a.mode === "feat") { const f = FEATS[a.feat]; if (!f || ((f.ab || []).length && !a.a)) out.carac.push("Don (niv. " + lv + ")"); return; }
+    if (!a || !a.a || (a.mode === "11" && (!a.b || a.b === a.a))) out.carac.push("Amélioration (niv. " + lv + ")");
+  });
   if (b.level >= 19 && (!b.opts.boon.id || !b.opts.boon.a)) out.carac.push("Faveur épique (niv. 19)");
   if (c) {
     const need = c.skills.n;
@@ -482,22 +500,22 @@ function issues(b) {
     if (b.species === "humain" && !b.humanFeat) out.options.push("Don d’origine (humain)");
     featsOf(b).forEach((f) => { if (f.id === "initie") { const mm = b.magic[f.src]; if (mm.cant.length < 2 || !mm.spell) out.options.push("Sorts d’Initié à la magie"); } });
     const ex = expertiseCount(b); if (b.expertise.length < ex) out.options.push(`Expertise (${b.expertise.length}/${ex})`);
-    if (b.cls === "barde" && b.level >= 3 && b.skillsLore.length < 3) out.options.push("Compétences du Collège du Savoir");
+    if (b.cls === "barde" && b.level >= 3 && srdSub(b) && b.skillsLore.length < 3) out.options.push("Compétences du Collège du Savoir");
     if (b.cls === "barbare" && b.level >= 3 && !b.skillPrimal) out.options.push("Savoir primitif");
     if (c.mastery && b.opts.mastery.length < c.mastery) out.options.push(`Maîtrise d’arme (${b.opts.mastery.length}/${c.mastery})`);
     if ((b.cls === "guerrier" || (["paladin", "rodeur"].includes(b.cls) && b.level >= 2)) && !b.opts.style) out.options.push("Style de combat");
     if ((b.cls === "clerc" || b.cls === "druide") && !b.opts.order) out.options.push(b.cls === "clerc" ? "Ordre divin" : "Ordre primitif");
     if (b.cls === "occultiste" && b.opts.inv.length < c.inv[b.level - 1]) out.options.push(`Manifestations (${b.opts.inv.length}/${c.inv[b.level - 1]})`);
     if (b.cls === "ensorceleur" && b.level >= 2 && b.opts.meta.length < metaCount(b)) out.options.push(`Métamagie (${b.opts.meta.length}/${metaCount(b)})`);
-    if (b.cls === "ensorceleur" && b.level >= 6 && !b.opts.dragon) out.options.push("Affinité élémentaire");
-    if (b.cls === "guerrier" && b.level >= 7 && !b.opts.style2) out.options.push("Second style de combat");
+    if (b.cls === "ensorceleur" && b.level >= 6 && srdSub(b) && !b.opts.dragon) out.options.push("Affinité élémentaire");
+    if (b.cls === "guerrier" && b.level >= 7 && srdSub(b) && !b.opts.style2) out.options.push("Second style de combat");
     if (STRIKE_OPTS[b.cls] && b.level >= STRIKE_OPTS[b.cls].lvl && !b.opts.strike) out.options.push(STRIKE_OPTS[b.cls].label);
-    if (b.cls === "rodeur" && b.level >= 3 && !b.opts.prey) out.options.push("Proie du chasseur");
-    if (b.cls === "druide" && b.level >= 3 && !b.opts.land) out.options.push("Type de terre");
+    if (b.cls === "rodeur" && b.level >= 3 && srdSub(b) && !b.opts.prey) out.options.push("Proie du chasseur");
+    if (b.cls === "druide" && b.level >= 3 && srdSub(b) && !b.opts.land) out.options.push("Type de terre");
     if (c.caster) {
       if (b.cant.length < cantripCount(b)) out.sorts.push(`Tours de magie (${b.cant.length}/${cantripCount(b)})`);
       if (b.prep.length < prepCount(b)) out.sorts.push(`Sorts préparés (${b.prep.length}/${prepCount(b)})`);
-      if (b.cls === "barde" && b.level >= 6 && b.opts.lore2.length < 2) out.sorts.push(`Découvertes magiques (${b.opts.lore2.length}/2)`);
+      if (b.cls === "barde" && b.level >= 6 && srdSub(b) && b.opts.lore2.length < 2) out.sorts.push(`Découvertes magiques (${b.opts.lore2.length}/2)`);
       if (b.cls === "occultiste") Object.entries(ARCANUM_LV).forEach(([sl, lv]) => { if (b.level >= lv && !b.opts.arcanum[sl]) out.sorts.push("Arcanum de niveau " + sl); });
     }
   }

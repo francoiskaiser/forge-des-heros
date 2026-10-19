@@ -231,6 +231,8 @@ const FEATS = {
   initie: { n: "Initié à la magie", d: "Vous apprenez deux tours de magie et un sort de niveau 1 d’une liste (clerc, druide ou magicien). Vous pouvez lancer ce sort une fois par repos long sans emplacement, ou avec vos emplacements.", magic: true },
   sauvage: { n: "Attaquant sauvage", d: "Une fois par tour, quand vous touchez avec une arme, vous pouvez relancer ses dés de dégâts et garder le résultat de votre choix." },
   doue: { n: "Doué", d: "Vous gagnez la maîtrise de trois compétences de votre choix.", skills: 3 },
+  // Don général (niveau 4 et plus, à la place d’une amélioration de caractéristique)
+  lutteur: { n: "Lutteur", cat: "general", ab: ["for", "dex"], d: "+1 en Force ou en Dextérité (max 20). Quand vous touchez avec une frappe à mains nues lors de l’action d’Attaque, vous pouvez infliger les dégâts et agripper (une fois par tour). Avantage aux attaques contre une créature que vous agrippez, et la déplacer ne vous coûte pas de mouvement supplémentaire si elle est de votre taille ou plus petite." },
 };
 
 /* ---------- Historiques ---------- */

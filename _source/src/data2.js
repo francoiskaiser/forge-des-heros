@@ -37,7 +37,7 @@ const EPIC_BOONS = {
   voyage: { n: "Faveur du voyage dimensionnel", d: "Après une action d’Attaque ou de Magie, vous pouvez vous téléporter jusqu’à 9 m dans un espace que vous voyez." },
   destin: { n: "Faveur du destin", d: "Quand une créature à 18 m fait un test d20, vous pouvez lancer 2d4 et l’ajouter ou le soustraire. Récupérée à l’initiative ou au repos court." },
   offensive: { n: "Faveur de l’offensive irrésistible", d: "Vos dégâts contondants, perforants et tranchants ignorent la résistance. Sur un 20 naturel, dégâts supplémentaires égaux à la caractéristique augmentée." },
-  rappel: { n: "Faveur du rappel de sort", d: "Une fois par repos long, vous lancez un sort de niveau 1 à 4 préparé sans dépenser d’emplacement." },
+  rappel: { n: "Faveur du rappel de sort", d: "Quand vous lancez un sort avec un emplacement de niveau 1 à 4, lancez 1d4 : si le résultat est égal au niveau de l’emplacement, celui-ci n’est pas dépensé." },
   vision: { n: "Faveur de vision véritable", d: "Vous gagnez la vision véritable sur 18 m." },
 };
 
