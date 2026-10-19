@@ -10,11 +10,17 @@ function srdLoad() {
   SRD.p = new Promise((res) => {
     const s = document.createElement("script");
     s.src = "srd.js";
-    s.onload = () => { SRD.st = "ok"; res(); liveRender(); };
+    s.onload = () => { SRD.st = "ok"; res(); liveRender(); srdLists(); };
     s.onerror = () => { SRD.st = "err"; SRD.p = null; s.remove(); res(); liveRender(); };
     document.head.appendChild(s);
   });
   return SRD.p;
+}
+/* listes de recherche déjà ouvertes (un champ en cours de saisie bloque le rendu complet) */
+function srdLists() {
+  const e = $("#eqList"); if (e && typeof eqRows === "function") e.innerHTML = eqRows();
+  const m = $("#miList"); if (m) m.innerHTML = miRows();
+  const n = $("#monList"); if (n) n.innerHTML = monRows();
 }
 function srdWait(what) {
   srdLoad();
@@ -144,12 +150,12 @@ async function srdAct(a, d, el) {
     case "miAdd": {
       const ch = curChar(); if (!ch) return true;
       let it = null;
-      if (d.ref.startsWith("mi:")) { const x = MAGIC_ITEMS[d.ref.slice(3)]; if (x) it = { uid: uid(), ref: d.ref, n: x.n, q: 1, eq: false, r: x.r, at: x.at ? 1 : 0 }; }
+      if (d.ref.startsWith("mi:")) { const x = MAGIC_ITEMS[d.ref.slice(3)]; if (x) { it = { uid: uid(), ref: d.ref, n: x.n, q: 1, eq: false, r: x.r, at: x.at ? 1 : 0, h: x.h }; const g = gearOf(it); if (g.bonus) it.mb = g.bonus; } }
       if (d.ref.startsWith("hb:")) { const x = HBITEMS[d.ref.slice(3)]; if (x) it = { uid: uid(), ref: d.ref, n: x.n, q: 1, eq: false, r: x.rarity, at: x.attune ? 1 : 0, h: x.kind, d: x.d }; }
       if (!it) return true;
       const same = ch.p.inv.find((i) => i.ref === it.ref);
       if (same) same.q += 1; else ch.p.inv.push(it);
-      S.miQ = ""; saveSoon(ch); toast(it.n + " ajouté");
+      S.miQ = ""; S.eqQ = ""; saveSoon(ch); toast(it.n + " ajouté");
       return true;
     }
     case "itemOpen": S.openItem = S.openItem === d.u ? null : d.u; return true;
@@ -167,6 +173,7 @@ document.addEventListener("input", (e) => {
   const t = e.target;
   if (t.id === "monQ") { S.monQ = t.value; const l = $("#monList"); if (l && srdOk()) l.innerHTML = monRows(); }
   if (t.id === "monAddN") S.monAddN = t.value;
+  if (t.id === "eqQ") { S.eqQ = t.value; const l = $("#eqList"); if (l) l.innerHTML = eqRows(); }
   if (t.id === "miQ") { S.miQ = t.value; const l = $("#miList"); if (l && srdOk()) l.innerHTML = miRows(); }
 });
 document.addEventListener("change", (e) => {

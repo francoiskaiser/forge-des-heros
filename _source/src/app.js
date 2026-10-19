@@ -575,11 +575,16 @@ function resRow(ch, r) {
 /* Attaques, tours de magie offensifs et bonus de classe (onglet Actions et mode combat) */
 function actionParts(ch, s) {
   const b = ch.b;
-  const atk = s.attacks.map((a) => `<div class="atk">
-    <div class="atk-name"><b>${esc(a.n)}</b><span class="mute small">${a.range}${a.props ? " · " + a.props : ""}${a.mastery ? ` · <span class="mast" title="${esc(MASTERY[a.mastery])}">${MASTERY[a.mastery].split(" — ")[0]}</span>` : ""}${a.prof ? "" : " · <span class='bad'>non maîtrisée</span>"}</span></div>
+  const xdBtn = (a) => {
+    if (!a.xd) return "";
+    const xm = /^\+?\s*(\d*d\d+(?:\s*[+-]\s*\d+)?)\s*(.*)$/i.exec(a.xd.trim());
+    return xm ? `<button class="rb dmg alt xd" data-a="rDmg" data-l="${esc(a.n)} — ${esc(xm[2] || "dégâts en plus")}" data-e="${esc(xm[1].replace(/\s/g, ""))}">+${esc(xm[1])}<small>${esc(xm[2] || "en plus")}</small></button>` : `<span class="chipline">${esc(a.xd)}</span>`;
+  };
+  const atk = s.attacks.map((a) => `<div class="atk ${a.bonus || a.xd ? "magic" : ""}">
+    <${a.uid ? `button class="atk-name lnk" data-a="itemEdit" data-u="${a.uid}"` : 'div class="atk-name"'}><b>${esc(a.n)}${a.bonus ? ` <span class="magicb">+${a.bonus}</span>` : ""}</b><span class="mute small">${a.base ? esc(a.base) + " · " : ""}${a.range}${a.props ? " · " + a.props : ""}${a.mastery ? ` · <span class="mast" title="${esc(MASTERY[a.mastery])}">${MASTERY[a.mastery].split(" — ")[0]}</span>` : ""}${a.prof ? "" : " · <span class='bad'>non maîtrisée</span>"}${a.note ? " · " + esc(a.note.length > 70 ? a.note.slice(0, 68) + "…" : a.note) : ""}</span></${a.uid ? "button" : "div"}>
     <button class="rb hit" data-a="r20" data-l="${esc(a.n)} — attaque" data-m="${a.hit}" data-crit="${a.crit}">${sg(a.hit)}</button>
     <button class="rb dmg" data-a="rDmg" data-l="${esc(a.n)} — dégâts ${a.ty}" data-e="${a.dmg}${a.rage ? "" : ""}">${esc(a.dmg)}<small>${a.ty}</small></button>
-    ${a.alt ? `<button class="rb dmg alt" data-a="rDmg" data-l="${esc(a.n)} à deux mains" data-e="${a.alt}">${esc(a.alt)}<small>2 mains</small></button>` : ""}
+    ${a.alt ? `<button class="rb dmg alt" data-a="rDmg" data-l="${esc(a.n)} à deux mains" data-e="${a.alt}">${esc(a.alt)}<small>2 mains</small></button>` : ""}${xdBtn(a)}
   </div>`).join("");
   const cantrips = s.spells.filter((x) => x.l === 0 && (x.atk || x.sv || x.dmg));
   const cantHtml = cantrips.map((x) => {
@@ -688,34 +693,110 @@ function tabSpells(ch, s) {
   </section>`;
 }
 
-function tabInventory(ch) {
+/* ---------- Inventaire et équipement ---------- */
+function invSub(i, g, mi) {
+  const nm = itemName(i), w = g.w, a = g.a, bits = [];
+  const baseN = (x) => (gNorm(x.n) !== gNorm(nm) ? x.n + " · " : "");
+  if (w) bits.push(`${baseN(w)}${w.d} ${DMG[w.t]}${g.bonus ? ` · <b class="magicb">+${g.bonus}</b>` : ""}${g.xd ? " · +" + esc(g.xd) : ""}${w.p.length ? " · " + w.p.map((x) => WPROP[x]).join(", ") : ""}`);
+  else if (a) bits.push(baseN(a) + (a.t === "bouclier" ? `+${2 + g.bonus} CA` : `CA ${a.ac + g.bonus}${a.dex === 99 ? " + Dex" : a.dex ? " + Dex (max 2)" : ""}`));
+  else if (mi) bits.push(esc([mi.h, mi.r ? RAR_L[mi.r] || mi.r : ""].filter(Boolean).join(" · ")));
+  if (g.acb) bits.push(`+${g.acb} CA`);
+  if (mi && mi.at) bits.push(i.att ? "harmonisé" : "harmonisation");
+  if (g.note) bits.push(esc(g.note.length > 60 ? g.note.slice(0, 58) + "…" : g.note));
+  return bits.join(" · ");
+}
+function invRow(i) {
+  const g = gearOf(i), mi = typeof miInfo === "function" ? miInfo(i) : null;
+  const needsBase = !g.base && /^(arme|armure|weapon|armor)/.test(gNorm(mi ? mi.h : ""));
+  const sub = invSub(i, g, mi);
+  const left = g.base
+    ? `<button class="eq ${i.eq ? "on" : ""}" data-a="equip" data-u="${i.uid}" aria-pressed="${!!i.eq}" title="${i.eq ? "Équipé" : "Équiper"}" aria-label="${i.eq ? "Retirer" : "Équiper"} ${esc(itemName(i))}">${i.eq ? ICON.check : ""}</button>`
+    : needsBase ? `<button class="eq pick" data-a="itemEdit" data-u="${i.uid}" title="Choisir l’arme ou l’armure">?</button>`
+    : mi && mi.at ? `<button class="eq att ${i.att ? "on" : ""}" data-a="attune" data-u="${i.uid}" aria-pressed="${!!i.att}" title="${i.att ? "Harmonisé" : "Se lier à l’objet"}">${i.att ? "✦" : ""}</button>`
+    : '<span class="eq none"></span>';
+  return `<div class="item ${mi || g.magic ? "magic" : ""} ${g.w ? "is-w" : g.a ? "is-a" : ""}">
+    ${left}
+    <button class="it-name it-open" data-a="itemEdit" data-u="${i.uid}"><b>${esc(itemName(i))}${mi && mi.hb ? hbTag({ hb: 1 }) : ""}</b>${sub ? `<span class="mute small">${sub}</span>` : ""}</button>
+    <div class="qty"><button class="mini" data-a="qty" data-u="${i.uid}" data-d="-1" aria-label="Moins">−</button><b>${i.q}</b><button class="mini" data-a="qty" data-u="${i.uid}" data-d="1" aria-label="Plus">+</button></div>
+  </div>`;
+}
+/* catalogue unique : armes, armures, matériel, objets magiques et créations */
+const EQ_CATS = [["", "Tout"], ["w", "Armes"], ["a", "Armures"], ["g", "Matériel"], ["m", "Objets magiques"]];
+function eqAll() {
+  const out = [];
+  Object.entries(WEAPONS).forEach(([k, w]) => out.push({ c: "w", ref: "w:" + k, n: w.n, sub: `${w.d} ${DMG[w.t]} · ${w.c === "simple" ? "arme courante" : "arme de guerre"}` }));
+  Object.entries(ARMORS).forEach(([k, a]) => out.push({ c: "a", ref: "a:" + k, n: a.n, sub: a.t === "bouclier" ? "+2 CA" : `CA ${a.ac}${a.dex === 99 ? " + Dex" : a.dex ? " + Dex (max 2)" : ""}` }));
+  const seen = new Set();
+  [GEAR, GEAR_MORE].forEach((t) => Object.entries(t).forEach(([k, n]) => { if (seen.has(n)) return; seen.add(n); out.push({ c: "g", ref: "g:" + k, n, sub: GEAR_D[k] ? "effet en jeu" : "" }); }));
+  if (typeof miAll === "function") miAll().forEach((x) => out.push({ c: "m", ref: x.ref, n: x.n, en: x.en, hb: x.hb, sub: [x.h, x.r ? RAR_L[x.r] || x.r : "", x.at ? "harmonisation" : ""].filter(Boolean).join(" · ") }));
+  return out;
+}
+const EQ_TAG = { tw: "Arme", ta: "Armure", tg: "Matériel", tm: "Magique" };
+function eqRows() {
+  const q = normQ(S.eqQ), cat = S.eqCat || "";
+  if (!q && !cat) return `<p class="mute small">Tapez un nom (corde, dague, potion…) ou choisissez une catégorie.</p>`;
+  const list = eqAll().filter((x) => (!cat || x.c === cat) && (!q || normQ(x.n).includes(q) || (x.en && normQ(x.en).includes(q)))).sort((a, b) => a.n.localeCompare(b.n, "fr"));
+  const wait = (cat === "m" || (!cat && q)) && typeof srdOk === "function" && !srdOk() ? srdWait("des objets magiques") : "";
+  const rows = list.slice(0, 50).map((x) => `<button class="mi-row eq-row c-${x.c}" data-a="eqAdd" data-ref="${esc(x.ref)}"><span class="eq-tag">${EQ_TAG["t" + x.c]}</span><b>${esc(x.n)}${x.hb ? hbTag({ hb: 1 }) : ""}</b><span class="mute small">${esc(x.sub)}</span><span class="mi-plus">${ICON.plus}</span></button>`).join("");
+  const more = list.length > 50 ? `<p class="mute small">${list.length - 50} autres résultats : précisez la recherche.</p>` : "";
+  const free = q ? `<button class="btn small ghost eq-free" data-a="eqFree">${ICON.plus}Ajouter « ${esc(S.eqQ.trim())} » tel quel</button>` : "";
+  return (rows || (wait ? "" : `<p class="mute small">Rien de tel dans le catalogue.</p>`)) + more + wait + free;
+}
+function tabInventory(ch, s) {
   const p = ch.p;
-  if (typeof srdLoad === "function" && p.inv.some((i) => i.ref && i.ref.startsWith("mi:"))) srdLoad();
-  const rows = p.inv.map((i) => {
-    const w = i.ref && i.ref.startsWith("w:") && WEAPONS[i.ref.slice(2)];
-    const a = i.ref && i.ref.startsWith("a:") && ARMORS[i.ref.slice(2)];
-    const mi = typeof miInfo === "function" ? miInfo(i) : null;
-    const sub = w ? `${w.d} ${DMG[w.t]}${w.p.length ? " · " + w.p.map((x) => WPROP[x]).join(", ") : ""}` : a ? (a.t === "bouclier" ? "+2 CA" : `CA ${a.ac}${a.dex === 99 ? " + Dex" : a.dex ? " + Dex (max 2)" : ""}`) : mi ? esc([mi.h, mi.r ? RAR_L[mi.r] || mi.r : "", mi.at ? "harmonisation" : ""].filter(Boolean).join(" · ")) : "";
-    const open = mi && S.openItem === i.uid;
-    return `<div class="item ${mi ? "magic" : ""}">
-      ${w || a ? `<button class="eq ${i.eq ? "on" : ""}" data-a="equip" data-u="${i.uid}" aria-pressed="${i.eq}" title="${i.eq ? "Équipé" : "Équiper"}">${i.eq ? ICON.check : ""}</button>` : mi && mi.at ? `<button class="eq att ${i.att ? "on" : ""}" data-a="attune" data-u="${i.uid}" aria-pressed="${!!i.att}" title="${i.att ? "Harmonisé" : "Se lier à l’objet"}">${i.att ? "✦" : ""}</button>` : '<span class="eq none"></span>'}
-      ${mi ? `<button class="it-name it-open" data-a="itemOpen" data-u="${i.uid}" aria-expanded="${open}"><b>${esc(itemName(i))}${mi.hb ? hbTag({ hb: 1 }) : ""}</b><span class="mute small">${sub}</span></button>` : `<div class="it-name"><b>${esc(itemName(i))}</b>${sub ? `<span class="mute small">${sub}</span>` : ""}</div>`}
-      <div class="qty"><button class="mini" data-a="qty" data-u="${i.uid}" data-d="-1" aria-label="Moins">−</button><b>${i.q}</b><button class="mini" data-a="qty" data-u="${i.uid}" data-d="1" aria-label="Plus">+</button></div>
-      ${open ? `<div class="it-desc">${mi.d == null ? (typeof srdWait === "function" ? srdWait("de la description") : "") : mi.d ? sbText(mi.d, itemName(i)) : '<span class="mute">Pas de description.</span>'}</div>` : ""}
-    </div>`;
-  }).join("");
-  const addables = [...Object.entries(WEAPONS).map(([k, w]) => ["w:" + k, w.n + " (arme)"]), ...Object.entries(ARMORS).map(([k, a]) => ["a:" + k, a.n + " (armure)"])].sort((x, y) => x[1].localeCompare(y[1], "fr"));
+  s = s || compute(ch.b, p);
+  if (typeof srdLoad === "function") srdLoad();
+  const eqd = p.inv.filter((i) => (i.eq && gearOf(i).base) || i.att);
+  const bag = p.inv.filter((i) => !eqd.includes(i));
+  const att = p.inv.filter((i) => i.att).length;
   return `<div class="cols">
-  <section class="panel"><h3 class="ph">Sac</h3>${rows || '<p class="mute">Inventaire vide.</p>'}
-    <div class="add-item"><label class="field"><span>Ajouter un objet</span><input id="newItem" placeholder="Ex. Corde de chanvre (15 m)"></label><button class="btn small" data-a="addItem">Ajouter</button></div>
-    <div class="add-item"><label class="field"><span>Ajouter une arme ou armure</span><select id="newRef">${addables.map(([k, n]) => `<option value="${k}">${n}</option>`).join("")}</select></label><button class="btn small" data-a="addRef">Ajouter</button></div>
+  <section class="panel eq-panel"><div class="adv-head"><h3 class="ph">Équipé</h3><span class="eq-sum"><span class="pill">${ICON.shield || ""}CA ${s.ac}</span>${att ? `<span class="pill ${att > 3 ? "bad" : ""}">✦ ${att}/3</span>` : ""}</span></div>
+    ${eqd.map(invRow).join("") || `<p class="mute small">Rien d’équipé. Touchez le carré à gauche d’une arme ou d’une armure pour l’équiper : elle compte alors dans votre CA ou vos attaques.</p>`}
+    <p class="mute small eq-ca">${esc(s.acNote || "")}</p>
   </section>
-  ${typeof invMagicPanel === "function" ? invMagicPanel(ch) : ""}
+  <section class="panel"><h3 class="ph">Sac</h3>${bag.map(invRow).join("") || '<p class="mute small">Sac vide.</p>'}
+    <p class="mute small">Touchez un objet pour voir son détail, le personnaliser (arme de base, bonus magique, dégâts en plus) ou le retirer.</p></section>
+  <section class="panel eq-add"><h3 class="ph">Ajouter de l’équipement</h3>
+    <label class="field"><span>Rechercher</span><input id="eqQ" value="${esc(S.eqQ || "")}" placeholder="Arme, armure, matériel, objet magique…" autocomplete="off"></label>
+    <div class="chips eq-cats">${EQ_CATS.map(([k, n]) => chip(n, (S.eqCat || "") === k, "eqCat", `data-v="${k}"`)).join("")}</div>
+    <div class="mi-list" id="eqList">${eqRows()}</div>
+  </section>
   <section class="panel"><h3 class="ph">Bourse</h3>
     <div class="gold-row"><b class="gold big">${p.gold} po</b></div>
     <div class="add-item"><label class="field"><span>Montant (po)</span><input id="goldAmt" type="number" inputmode="numeric" placeholder="10"></label><button class="btn small" data-a="gold" data-d="1">Gagner</button><button class="btn small ghost" data-a="gold" data-d="-1">Dépenser</button></div>
-    <p class="mute small">Équipez une armure ou un bouclier pour mettre à jour votre CA, et une arme pour l’afficher dans les attaques.</p>
   </section></div>`;
+}
+/* Détail d’un objet + réglages (arme de base, bonus, dégâts en plus, notes) */
+function itemModal(ch, m) {
+  const i = ch.p.inv.find((x) => x.uid === m.u);
+  if (!i) return `<p class="mute">Objet introuvable.</p>`;
+  const g = gearOf(i), mi = typeof miInfo === "function" ? miInfo(i) : null, nm = itemName(i);
+  const fixed = i.ref && /^[wa]:/.test(i.ref);
+  const gk = i.ref && i.ref.startsWith("g:") ? i.ref.slice(2) : null;
+  const needsBase = !g.base && /^(arme|armure|weapon|armor)/.test(gNorm(mi ? mi.h : ""));
+  const desc = mi ? (mi.d == null ? (typeof srdWait === "function" ? srdWait("de la description") : "") : mi.d ? sbText(mi.d, nm) : "") : gk && GEAR_D[gk] ? `<p>${GEAR_D[gk]}</p>` : "";
+  const s = compute(ch.b, ch.p), atk = s.attacks.find((x) => x.uid === i.uid);
+  const w = g.w, a = g.a;
+  const stats = w ? `<dl class="facts it-stats"><div><dt>Arme</dt><dd>${w.n} · ${w.c === "simple" ? "arme courante" : "arme de guerre"} · ${w.k === "dist" ? "à distance" : "corps à corps"}</dd></div><div><dt>Dégâts</dt><dd>${w.d} ${DMG[w.t]}${w.v ? ` (${w.v} à deux mains)` : ""}${g.bonus ? ` · <b class="magicb">+${g.bonus}</b>` : ""}${g.xd ? " · +" + esc(g.xd) : ""}</dd></div>${w.p.length ? `<div><dt>Propriétés</dt><dd>${w.p.map((x) => WPROP[x]).join(", ")}${w.r ? " · " + w.r : ""}</dd></div>` : ""}${atk ? `<div><dt>Avec vous</dt><dd>${sg(atk.hit)} pour toucher · ${esc(atk.dmg)} ${atk.ty}</dd></div>` : `<div><dt>Avec vous</dt><dd class="mute">Équipez-la pour l’ajouter à vos attaques.</dd></div>`}</dl>`
+    : a ? `<dl class="facts it-stats"><div><dt>Armure</dt><dd>${a.n}</dd></div><div><dt>CA</dt><dd>${a.t === "bouclier" ? `+${2 + g.bonus}` : `${a.ac + g.bonus}${a.dex === 99 ? " + Dex" : a.dex ? " + Dex (max 2)" : ""}`}</dd></div>${a.str ? `<div><dt>Force</dt><dd>${a.str} minimum</dd></div>` : ""}${a.st ? `<div><dt>Discrétion</dt><dd>désavantage</dd></div>` : ""}</dl>` : "";
+  const opts = (t, pre) => Object.entries(t).sort((x, y) => x[1].n.localeCompare(y[1].n, "fr")).map(([k, x]) => `<option value="${pre + k}" ${g.base === pre + k ? "selected" : ""}>${x.n}</option>`).join("");
+  const num = (id, v) => `<select id="${id}">${[0, 1, 2, 3].map((n) => `<option value="${n}" ${+v === n ? "selected" : ""}>${n ? "+" + n : "aucun"}</option>`).join("")}</select>`;
+  return `<h3>${esc(nm)}${mi && mi.hb ? hbTag({ hb: 1 }) : ""}</h3>
+    ${mi ? `<p class="mute small">${esc([mi.h, mi.r ? RAR_L[mi.r] || mi.r : "", mi.at ? "harmonisation requise" : ""].filter(Boolean).join(" · "))}</p>` : ""}
+    ${needsBase ? `<p class="hint-box">Choisissez ci-dessous l’arme ou l’armure exacte de cet objet pour pouvoir l’équiper.</p>` : ""}
+    ${stats}${g.note ? `<p class="it-note">${esc(g.note)}</p>` : ""}
+    ${desc ? `<div class="it-desc">${desc}</div>` : ""}
+    <div class="row-btns">${g.base ? `<button class="btn ${i.eq ? "ghost" : "primary"}" data-a="equip" data-u="${i.uid}">${i.eq ? "Ranger dans le sac" : "Équiper"}</button>` : ""}${mi && mi.at ? `<button class="btn ${i.att ? "ghost" : ""}" data-a="attune" data-u="${i.uid}">${i.att ? "Rompre l’harmonisation" : "S’harmoniser"}</button>` : ""}</div>
+    <details class="it-edit" ${needsBase ? "open" : ""}><summary>Personnaliser</summary>
+      <label class="field"><span>Nom</span><input id="itN" value="${esc(i.nn || "")}" placeholder="${esc(nm)}"></label>
+      ${fixed ? "" : `<label class="field"><span>Arme ou armure de base</span><select id="itBase"><option value="">Aucune (objet simple)</option><optgroup label="Armes">${opts(WEAPONS, "w:")}</optgroup><optgroup label="Armures">${opts(ARMORS, "a:")}</optgroup></select></label>`}
+      <div class="two"><label class="field"><span>Bonus magique (attaque et dégâts, ou CA)</span>${num("itBonus", g.bonus)}</label>
+      ${g.base ? "" : `<label class="field"><span>Bonus à la CA (anneau, cape…)</span>${num("itAcb", g.acb)}</label>`}</div>
+      ${a ? "" : `<label class="field"><span>Dégâts en plus quand l’arme touche</span><input id="itXd" value="${esc(i.xd || "")}" placeholder="Ex. 2d10 poison"></label>`}
+      <label class="field"><span>Notes</span><textarea id="itNote" rows="3" placeholder="Ex. Action bonus : enduire la lame de poison, une fois par jour">${esc(i.note || "")}</textarea></label>
+      <div class="row-btns"><button class="btn primary" data-a="itemSave" data-u="${i.uid}">Enregistrer</button></div>
+    </details>
+    <div class="row-btns it-del"><button class="btn small ghost danger" data-a="itemDel" data-u="${i.uid}">${ICON.trash} Retirer de l’inventaire</button></div>`;
 }
 
 /* Bloc « Dons » : les dons du personnage, d’où ils viennent, et comment les changer */
@@ -781,6 +862,8 @@ function viewModal() {
     if (entry && entry.free) { const r = s.resources.find((x) => x.k === entry.free); if (r) { const left = r.max - (ch.p.res[r.k] || 0); opts.push(`<button class="btn ghost" data-a="castDo" data-v="${m.v}" data-lv="free" data-k="${r.k}" ${left > 0 ? "" : "disabled"}>Gratuit <small>(${left}/${r.max} par repos)</small></button>`); } }
     if (sp.ri) opts.push(`<button class="btn ghost" data-a="castDo" data-v="${m.v}" data-lv="ritual">En rituel (+10 minutes, sans emplacement)</button>`);
     inner = `<h3>${T_CAST} ${esc(sp.n)}</h3>${spellDetail(sp)}<div class="cast-opts">${opts.join("") || '<p class="mute">Aucun emplacement disponible pour ce sort.</p>'}</div>`;
+  } else if (m.k === "item") {
+    inner = itemModal(ch, m);
   } else if (m.k === "del") {
     inner = `<h3>Supprimer ${esc(ch.b.name)} ?</h3><p>Le personnage sera effacé définitivement. Exportez-le d’abord si vous voulez le garder.</p><div class="row-btns"><button class="btn dmgb" data-a="delDo">Supprimer définitivement</button><button class="btn ghost" data-a="closeModal">Annuler</button></div>`;
   } else if (m.k === "export") {
@@ -1061,14 +1144,42 @@ async function act(a, d, el) {
     case "endConc": ch.p.conc = null; saveSoon(ch); break;
     case "equip": {
       const it = ch.p.inv.find((i) => i.uid === d.u);
-      if (!it || !it.ref) return;
-      const isBody = it.ref.startsWith("a:") && it.ref !== "a:bouclier";
-      if (!it.eq && isBody) ch.p.inv.forEach((i) => { if (i.ref && i.ref.startsWith("a:") && i.ref !== "a:bouclier") i.eq = false; });
-      it.eq = !it.eq; saveSoon(ch); break;
+      const g = it && gearOf(it);
+      if (!g || !g.base) return;
+      const kind = (x) => (x.a ? (x.a.t === "bouclier" ? "shield" : "body") : "w");
+      const k = kind(g);
+      if (!it.eq && k !== "w") ch.p.inv.forEach((i) => { if (i !== it && i.eq) { const gi = gearOf(i); if (gi.a && kind(gi) === k) i.eq = false; } });
+      it.eq = !it.eq; saveSoon(ch);
+      toast(itemName(it) + (it.eq ? " équipé" : " rangé dans le sac")); break;
     }
     case "qty": { const it = ch.p.inv.find((i) => i.uid === d.u); it.q += +d.d; if (it.q <= 0) ch.p.inv = ch.p.inv.filter((i) => i.uid !== d.u); saveSoon(ch); break; }
-    case "addItem": { const v = $("#newItem").value.trim(); if (!v) { toast("Saisissez le nom de l’objet."); return; } ch.p.inv.push({ uid: uid(), ref: null, n: v, q: 1, eq: false }); saveSoon(ch); break; }
-    case "addRef": { const v = $("#newRef").value; const it = itemFrom([v, 1]); ch.p.inv.push(it); saveSoon(ch); toast(itemName(it) + " ajouté"); break; }
+    case "eqCat": S.eqCat = d.v; break;
+    case "eqAdd": {
+      if (/^(mi|hb):/.test(d.ref)) { await srdAct("miAdd", d); break; }
+      const key = d.ref.startsWith("g:") ? d.ref.slice(2) : d.ref;
+      const it = itemFrom([key, 1]);
+      const same = it.ref.startsWith("g:") && ch.p.inv.find((i) => i.ref === it.ref && !i.nn);
+      if (same) same.q += 1; else ch.p.inv.push(it);
+      S.eqQ = ""; saveSoon(ch); toast(itemName(it) + " ajouté"); break;
+    }
+    case "eqFree": { const v = String(S.eqQ || "").trim(); if (!v) return; ch.p.inv.push({ uid: uid(), ref: null, n: v.slice(0, 80), q: 1, eq: false }); S.eqQ = ""; saveSoon(ch); toast(v + " ajouté"); break; }
+    case "itemEdit": S.modal = { k: "item", u: d.u }; break;
+    case "itemDel": ch.p.inv = ch.p.inv.filter((i) => i.uid !== d.u); S.modal = null; saveSoon(ch); toast("Objet retiré"); break;
+    case "itemSave": {
+      const it = ch.p.inv.find((i) => i.uid === d.u); if (!it) return;
+      const val = (id) => { const e = $("#" + id); return e ? e.value : null; };
+      const nn = (val("itN") || "").trim().slice(0, 80);
+      if (nn && nn !== itemName({ ...it, nn: "" })) it.nn = nn; else delete it.nn;
+      // une valeur laissée telle qu’affichée reste automatique ; seule une valeur changée est gardée
+      const shown = gearOf(it), auto = (patch) => gearOf({ ...it, ...patch });
+      if (val("itBase") != null) { const v = val("itBase"); if (v === (auto({ base: undefined }).base || "")) delete it.base; else it.base = v; }
+      if (val("itBonus") != null) { const v = +val("itBonus"); if (v !== shown.bonus) { if (v === auto({ bonus: undefined }).bonus) delete it.bonus; else it.bonus = v; } }
+      if (val("itAcb") != null) { const v = +val("itAcb"); if (v !== shown.acb) { if (v === auto({ acb: undefined }).acb) delete it.acb; else it.acb = v; } }
+      if (val("itXd") != null) { const v = val("itXd").trim().slice(0, 40); if (v) it.xd = v; else delete it.xd; }
+      const note = (val("itNote") || "").trim().slice(0, 500); if (note) it.note = note; else delete it.note;
+      if (!gearOf(it).base) it.eq = false;
+      saveSoon(ch); toast("Objet enregistré"); break;
+    }
     case "gold": { const n = Math.abs(parseInt($("#goldAmt").value, 10) || 0); if (!n) { toast("Saisissez un montant."); return; } ch.p.gold = Math.max(0, ch.p.gold + n * +d.d); saveSoon(ch); break; }
     case "delAsk": S.modal = { k: "del" }; break;
     case "delDo": if (ch.adv && typeof FB !== "undefined" && FB.ok) { try { await FB.members(ch.adv).doc(FB.uid + "_" + ch.id).delete(); } catch (e) { } } await Store.del(ch.id); S.chars = S.chars.filter((c) => c.id !== ch.id); S.modal = null; S.view = "home"; toast("Personnage supprimé"); break;

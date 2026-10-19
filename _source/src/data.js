@@ -108,6 +108,39 @@ const GEAR = {
   vetvoyage: "Vêtements de voyage", jeu: "Jeu (cartes ou dés)", soins: "Trousse de soins", outilartisan: "Outils d’artisan ou instrument",
 };
 
+/* matériel d’aventurier (catalogue de recherche de l’inventaire) */
+const GEAR_MORE = {
+  sacados: "Sac à dos", couchage: "Sac de couchage", couverture: "Couverture", tente: "Tente", rations: "Rations (1 jour)", gourde: "Outre",
+  corde: "Corde (15 m)", grappin: "Grappin", torche: "Torche", lanterne: "Lanterne à capuchon", lanternesourde: "Lanterne sourde", bougie: "Bougie",
+  huile: "Huile (flasque)", amadou: "Briquet à amadou", chaine: "Chaîne (3 m)", cadenas: "Cadenas", menottes: "Menottes", pitons: "Pitons (10)",
+  pelle: "Pelle", perche: "Perche (3 m)", echelle: "Échelle (3 m)", miroir: "Miroir", longuevue: "Longue-vue", loupe: "Loupe", sablier: "Sablier",
+  craie: "Craie", encre: "Encre (fiole)", plume: "Plume d’écriture", livre: "Livre", carte: "Carte", fiole: "Fiole", flasque: "Flasque", coffre: "Coffre",
+  seau: "Seau", panier: "Panier", sacgrande: "Sac de toile", sifflet: "Sifflet", cloche: "Clochette", billes: "Billes (sac)", chaussetrappes: "Chausse-trappes (sac)",
+  piege: "Piège de chasse", filet: "Filet", acide: "Acide (fiole)", feugregeois: "Feu grégeois (flasque)", eaubenite: "Eau bénite (flasque)",
+  antitoxine: "Antitoxine (fiole)", poison: "Poison basique (fiole)", carreaux: "Carreaux (20)", billesfronde: "Billes de fronde (20)", aiguilles: "Aiguilles de sarbacane (50)",
+  vetfins: "Vêtements fins", costume: "Costume", cape: "Cape", baguette: "Baguette (focaliseur arcanique)", batonarc: "Bâton (focaliseur arcanique)",
+  amulette: "Amulette (symbole sacré)", embleme: "Emblème (symbole sacré)", reliquaire: "Reliquaire (symbole sacré)", branche: "Branche d’if (focaliseur druidique)",
+  deguisement: "Matériel de déguisement", contrefacon: "Matériel de contrefaçon", empoisonneur: "Matériel d’empoisonneur", forgeron: "Outils de forgeron",
+  cartographe: "Outils de cartographe", navigation: "Instruments de navigation", luth: "Luth", flute: "Flûte", tambour: "Tambour",
+};
+/* effets en jeu, en quelques mots (pour le détail de l’objet) */
+const GEAR_D = {
+  poison: "Action bonus : enduisez une arme ou jusqu’à trois munitions. Pendant 1 minute, une cible touchée subit 1d4 dégâts de poison en plus.",
+  acide: "Action d’attaque : lancez la fiole jusqu’à 6 m. La cible fait un JS de Dextérité (DD 8 + mod. Dex + maîtrise) ou subit 2d6 dégâts d’acide.",
+  feugregeois: "Action d’attaque : lancez la flasque jusqu’à 6 m. La cible fait un JS de Dextérité (DD 8 + mod. Dex + maîtrise) ou subit 1d4 dégâts de feu et prend feu.",
+  eaubenite: "Action d’attaque : lancez la flasque jusqu’à 6 m. Un fiélon ou un mort-vivant fait un JS de Dextérité (DD 8 + mod. Dex + maîtrise) ou subit 2d8 dégâts radiants.",
+  antitoxine: "Action bonus : vous avez l’avantage aux JS contre l’état empoisonné pendant 1 heure.",
+  huile: "Action d’attaque : lancez la flasque jusqu’à 6 m, ou versez-la au sol (1,50 m). Si elle s’enflamme, 5 dégâts de feu.",
+  chaussetrappes: "Action : couvrez un carré de 1,50 m. Qui y entre fait un JS de Dextérité DD 15 ou subit 1 dégât perforant et voit sa vitesse réduite à 0 jusqu’au début de son prochain tour.",
+  billes: "Action : couvrez un carré de 3 m. Qui y entre fait un JS de Dextérité DD 10 ou tombe à terre.",
+  torche: "Lumière vive sur 6 m et faible sur 6 m de plus, pendant 1 heure. Peut servir d’arme : 1 dégât de feu.",
+  lanterne: "Lumière vive sur 9 m et faible sur 9 m de plus, pendant 6 heures par flasque d’huile.",
+  menottes: "Entravent une créature de taille Petite ou Moyenne. S’en libérer : Dextérité (Escamotage) DD 20 ; les briser : Force (Athlétisme) DD 25.",
+  filet: "Action d’attaque : une créature à 4,50 m fait un JS de Dextérité (DD 8 + mod. Dex + maîtrise) ou est entravée.",
+  piege: "Action : armez-le. Qui marche dessus fait un JS de Dextérité DD 13 ou subit 1d4 dégâts perforants, vitesse 0 jusqu’à ce qu’il se libère.",
+  grappin: "Action d’attaque : accrochez-le à 15 m (avec une corde) en réussissant un test de Dextérité (Acrobaties) DD 13.",
+};
+
 /* ---------- Espèces ---------- */
 const SPECIES = {
   drakeide: {

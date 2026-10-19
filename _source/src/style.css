@@ -954,3 +954,39 @@ body.dice-rolling .last-roll b { visibility: hidden; }
   .cb-stats .lbl { font-size: .58rem; }
   .cb-hpq { margin: 6px 0 8px; }
 }
+
+/* ---------- 1.14 Équipement ---------- */
+.eq.pick { color: var(--ember); border-style: dashed; border-color: var(--ember); font-weight: 700; }
+.it-name.it-open { display: grid; min-width: 0; color: inherit; font: inherit; }
+.it-name.it-open b { overflow-wrap: anywhere; }
+.item.magic .it-name b { color: var(--arc); }
+.magicb { color: var(--arc); font-weight: 700; }
+.eq-panel { border-color: rgba(214, 140, 69, .35); }
+.eq-sum { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+.pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line2); background: var(--bg2); font-weight: 700; font-size: .85rem; font-variant-numeric: tabular-nums; }
+.pill svg { width: 14px; height: 14px; }
+.pill.bad { color: var(--bad, #e06c5a); border-color: currentColor; }
+.eq-ca { margin: 8px 0 0; }
+.eq-cats { margin: 8px 0 10px; }
+.eq-row { grid-template-columns: auto minmax(0, 1fr) auto; }
+.eq-row .eq-tag { grid-row: 1 / span 2; align-self: center; font-size: .66rem; text-transform: uppercase; letter-spacing: .05em; padding: 3px 6px; border-radius: 6px; border: 1px solid var(--line2); color: var(--mute); min-width: 62px; text-align: center; }
+.eq-row.c-w .eq-tag { color: var(--dmgink); border-color: currentColor; }
+.eq-row.c-a .eq-tag { color: var(--ember2); border-color: currentColor; }
+.eq-row.c-m .eq-tag { color: var(--arc); border-color: currentColor; }
+.eq-row b, .eq-row .mute { grid-column: 2; }
+.eq-row .mi-plus { grid-column: 3; }
+.eq-free { justify-self: start; margin-top: 4px; }
+.it-stats > div { grid-template-columns: 110px 1fr; }
+.it-note { padding: 8px 12px; border-left: 3px solid var(--arc); background: var(--bg2); border-radius: 0 8px 8px 0; white-space: pre-wrap; }
+.it-edit { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
+.it-edit summary { cursor: pointer; font-weight: 700; color: var(--ember2); padding: 4px 0; }
+.it-edit .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.it-del { margin-top: 10px; }
+.hint-box { padding: 8px 12px; border-radius: 10px; border: 1px dashed var(--ember); color: var(--ember2); font-size: .92rem; }
+.atk-name.lnk { text-align: left; background: none; border: 0; padding: 0; color: inherit; font: inherit; cursor: pointer; }
+.atk-name.lnk b { text-decoration: underline dotted var(--line2); text-underline-offset: 3px; }
+.atk.magic .atk-name b { color: var(--arc); }
+.atk:has(.xd) { grid-template-columns: repeat(4, auto) minmax(0, 1fr); }
+.atk:has(.xd) .atk-name { grid-column: 1 / -1; }
+.rb.xd { color: var(--arc); border-color: rgba(168, 154, 232, .45); }
+@media (max-width: 520px) { .it-edit .two { grid-template-columns: 1fr; } .it-stats > div { grid-template-columns: 1fr; gap: 2px; } }

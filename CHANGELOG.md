@@ -2,6 +2,13 @@
 
 Chaque version correspond à un commit Git dont le message commence par son numéro. Pour revenir en arrière, voir la section en bas.
 
+## 1.14.0 — 19 octobre 2026
+- **Équipement** : dans l'onglet Sac, une section « Équipé » (armure, bouclier, armes en main, objets harmonisés, CA détaillée) et une recherche unique « Ajouter de l'équipement » : armes, armures, matériel d'aventurier (corde, torche, poison basique, feu grégeois…), objets magiques et créations, avec ajout libre si l'objet n'est pas au catalogue.
+- **Armes et armures magiques équipables** : une Dague venimeuse, une Épée longue +1 ou un Bouclier +1 se rangent sous leur arme ou armure de base et comptent dans les attaques (bonus au toucher et aux dégâts) et dans la CA. Pour une « Arme +1 » ou « Armure +1 », l'app demande laquelle.
+- **Détail et réglages d'un objet** (toucher son nom) : description, statistiques avec votre bonus, Équiper / S'harmoniser, et « Personnaliser » : nom, arme ou armure de base, bonus magique, dégâts en plus (ex. 2d10 poison, avec son propre bouton de jet en combat), notes.
+- Un objet saisi à la main dont le nom commence par une arme (« Dague empoisonnée ») est reconnu comme cette arme.
+- Cape et anneau de protection harmonisés : +1 à la CA et aux jets de sauvegarde.
+
 ## 1.13.0 — 19 octobre 2026
 - **Mode combat du joueur** (bouton Combat sur la fiche) : tout ce que le personnage peut faire, classé par Action, Action bonus et Réaction (attaques, sorts, aptitudes, actions de base) ; suivi du tour (action, action bonus, mouvement, réaction) ; PV, ressources, emplacements et états à portée de main ; ordre d'initiative de l'aventure en direct avec « À vous de jouer ! ».
 - **Mode combat du MJ** (onglet Initiative › Mode combat plein écran) : ordre des tours, fiche du combattant en cours, dégâts et soins, états, actions du monstre avec jets cliquables.

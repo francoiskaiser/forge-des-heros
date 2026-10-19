@@ -975,6 +975,42 @@ body.dice-rolling .last-roll b { visibility: hidden; }
   .cb-hpq { margin: 6px 0 8px; }
 }
 
+/* ---------- 1.14 Équipement ---------- */
+.eq.pick { color: var(--ember); border-style: dashed; border-color: var(--ember); font-weight: 700; }
+.it-name.it-open { display: grid; min-width: 0; color: inherit; font: inherit; }
+.it-name.it-open b { overflow-wrap: anywhere; }
+.item.magic .it-name b { color: var(--arc); }
+.magicb { color: var(--arc); font-weight: 700; }
+.eq-panel { border-color: rgba(214, 140, 69, .35); }
+.eq-sum { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+.pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line2); background: var(--bg2); font-weight: 700; font-size: .85rem; font-variant-numeric: tabular-nums; }
+.pill svg { width: 14px; height: 14px; }
+.pill.bad { color: var(--bad, #e06c5a); border-color: currentColor; }
+.eq-ca { margin: 8px 0 0; }
+.eq-cats { margin: 8px 0 10px; }
+.eq-row { grid-template-columns: auto minmax(0, 1fr) auto; }
+.eq-row .eq-tag { grid-row: 1 / span 2; align-self: center; font-size: .66rem; text-transform: uppercase; letter-spacing: .05em; padding: 3px 6px; border-radius: 6px; border: 1px solid var(--line2); color: var(--mute); min-width: 62px; text-align: center; }
+.eq-row.c-w .eq-tag { color: var(--dmgink); border-color: currentColor; }
+.eq-row.c-a .eq-tag { color: var(--ember2); border-color: currentColor; }
+.eq-row.c-m .eq-tag { color: var(--arc); border-color: currentColor; }
+.eq-row b, .eq-row .mute { grid-column: 2; }
+.eq-row .mi-plus { grid-column: 3; }
+.eq-free { justify-self: start; margin-top: 4px; }
+.it-stats > div { grid-template-columns: 110px 1fr; }
+.it-note { padding: 8px 12px; border-left: 3px solid var(--arc); background: var(--bg2); border-radius: 0 8px 8px 0; white-space: pre-wrap; }
+.it-edit { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
+.it-edit summary { cursor: pointer; font-weight: 700; color: var(--ember2); padding: 4px 0; }
+.it-edit .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.it-del { margin-top: 10px; }
+.hint-box { padding: 8px 12px; border-radius: 10px; border: 1px dashed var(--ember); color: var(--ember2); font-size: .92rem; }
+.atk-name.lnk { text-align: left; background: none; border: 0; padding: 0; color: inherit; font: inherit; cursor: pointer; }
+.atk-name.lnk b { text-decoration: underline dotted var(--line2); text-underline-offset: 3px; }
+.atk.magic .atk-name b { color: var(--arc); }
+.atk:has(.xd) { grid-template-columns: repeat(4, auto) minmax(0, 1fr); }
+.atk:has(.xd) .atk-name { grid-column: 1 / -1; }
+.rb.xd { color: var(--arc); border-color: rgba(168, 154, 232, .45); }
+@media (max-width: 520px) { .it-edit .two { grid-template-columns: 1fr; } .it-stats > div { grid-template-columns: 1fr; gap: 2px; } }
+
 </style>
 </head>
 <body>
@@ -1096,6 +1132,39 @@ const GEAR = {
   carquois: "Quiver", calli: "Calligrapher’s Supplies", livreprieres: "Book (prayers)", livrehist: "Book (history)",
   livreocc: "Book (occult lore)", parchemin: "Parchment (sheets)", pied: "Crowbar", bourse: "Pouch",
   vetvoyage: "Traveler’s Clothes", jeu: "Gaming Set (cards or dice)", soins: "Healer’s Kit", outilartisan: "Artisan’s Tools or instrument",
+};
+
+/* matériel d’aventurier (catalogue de recherche de l’inventaire) */
+const GEAR_MORE = {
+  sacados: "Backpack", couchage: "Bedroll", couverture: "Blanket", tente: "Tent", rations: "Rations (1 day)", gourde: "Waterskin",
+  corde: "Rope (50 ft)", grappin: "Grappling Hook", torche: "Torch", lanterne: "Hooded Lantern", lanternesourde: "Bullseye Lantern", bougie: "Candle",
+  huile: "Oil (flask)", amadou: "Tinderbox", chaine: "Chain (10 ft)", cadenas: "Lock", menottes: "Manacles", pitons: "Pitons (10)",
+  pelle: "Shovel", perche: "Pole (10 ft)", echelle: "Ladder (10 ft)", miroir: "Mirror", longuevue: "Spyglass", loupe: "Magnifying Glass", sablier: "Hourglass",
+  craie: "Chalk", encre: "Ink (vial)", plume: "Ink Pen", livre: "Book", carte: "Map", fiole: "Vial", flasque: "Flask", coffre: "Chest",
+  seau: "Bucket", panier: "Basket", sacgrande: "Sack", sifflet: "Signal Whistle", cloche: "Bell", billes: "Ball Bearings (bag)", chaussetrappes: "Caltrops (bag)",
+  piege: "Hunting Trap", filet: "Net", acide: "Acid (vial)", feugregeois: "Alchemist's Fire (flask)", eaubenite: "Holy Water (flask)",
+  antitoxine: "Antitoxin (vial)", poison: "Basic Poison (vial)", carreaux: "Bolts (20)", billesfronde: "Sling Bullets (20)", aiguilles: "Needles (50)",
+  vetfins: "Fine Clothes", costume: "Costume", cape: "Cloak", baguette: "Wand (arcane focus)", batonarc: "Staff (arcane focus)",
+  amulette: "Amulet (holy symbol)", embleme: "Emblem (holy symbol)", reliquaire: "Reliquary (holy symbol)", branche: "Yew Wand (druidic focus)",
+  deguisement: "Disguise Kit", contrefacon: "Forgery Kit", empoisonneur: "Poisoner's Kit", forgeron: "Smith's Tools",
+  cartographe: "Cartographer's Tools", navigation: "Navigator's Tools", luth: "Lute", flute: "Flute", tambour: "Drum",
+};
+/* effets en jeu, en quelques mots (pour le détail de l’objet) */
+const GEAR_D = {
+  poison: "Bonus Action: coat one weapon or up to three pieces of ammunition. For 1 minute, a target hit takes an extra 1d4 Poison damage.",
+  acide: "Attack action: throw the vial up to 20 feet. The target makes a Dexterity save (DC 8 + Dex mod + proficiency) or takes 2d6 Acid damage.",
+  feugregeois: "Attack action: throw the flask up to 20 feet. The target makes a Dexterity save (DC 8 + Dex mod + proficiency) or takes 1d4 Fire damage and starts burning.",
+  eaubenite: "Attack action: throw the flask up to 20 feet. A Fiend or Undead makes a Dexterity save (DC 8 + Dex mod + proficiency) or takes 2d8 Radiant damage.",
+  antitoxine: "Bonus Action: you have Advantage on saves against the Poisoned condition for 1 hour.",
+  huile: "Attack action: throw the flask up to 20 feet, or pour it on the ground (5 feet). If lit, it deals 5 Fire damage.",
+  chaussetrappes: "Action: cover a 5-foot square. A creature entering it makes a DC 15 Dexterity save or takes 1 Piercing damage and has Speed 0 until the start of its next turn.",
+  billes: "Action: cover a 10-foot square. A creature entering it makes a DC 10 Dexterity save or falls Prone.",
+  torche: "Bright Light in a 20-foot radius and Dim Light for 20 more feet, for 1 hour. Can be used as a weapon: 1 Fire damage.",
+  lanterne: "Bright Light in a 30-foot radius and Dim Light for 30 more feet, for 6 hours per flask of oil.",
+  menottes: "Bind a Small or Medium creature. Escaping: DC 20 Dexterity (Sleight of Hand); breaking them: DC 25 Strength (Athletics).",
+  filet: "Attack action: a creature within 15 feet makes a Dexterity save (DC 8 + Dex mod + proficiency) or is Restrained.",
+  piege: "Action: set it. A creature that steps on it makes a DC 13 Dexterity save or takes 1d4 Piercing damage and has Speed 0 until it frees itself.",
+  grappin: "Attack action: hook it up to 50 feet away (with a rope) by succeeding on a DC 13 Dexterity (Acrobatics) check.",
 };
 
 /* ---------- Espèces ---------- */
@@ -2517,13 +2586,15 @@ function compute(b, p) {
   const saves = ABK.map((k) => ({ k, v: m[k] + (saveProf.has(k) ? pb : 0) + aura, pr: saveProf.has(k) }));
 
   // Armure & CA
-  const eqArmor = inv.find((i) => i.eq && i.ref && i.ref.startsWith("a:") && ARMORS[i.ref.slice(2)] && ARMORS[i.ref.slice(2)].t !== "bouclier");
-  const eqShield = inv.find((i) => i.eq && i.ref === "a:bouclier");
-  const armor = eqArmor && ARMORS[eqArmor.ref.slice(2)];
+  const G = inv.map((i) => ({ i, g: gearOf(i) }));
+  const eqA = G.find((x) => x.i.eq && x.g.a && x.g.a.t !== "bouclier");
+  const eqS = G.find((x) => x.i.eq && x.g.a && x.g.a.t === "bouclier");
+  const eqArmor = eqA && eqA.i, eqShield = eqS && eqS.i;
+  const armor = eqA && eqA.g.a;
   const aprof = armorProfs(b);
   let ac, acNote;
   if (armor) {
-    ac = armor.ac + Math.min(m.dex, armor.dex); acNote = armor.n;
+    ac = armor.ac + Math.min(m.dex, armor.dex) + eqA.g.bonus; acNote = itemName(eqArmor);
     if ((b.opts.style === "defense" && (b.cls === "guerrier" || b.cls === "paladin" || b.cls === "rodeur")) || (b.cls === "guerrier" && L >= 7 && std && b.opts.style2 === "defense")) ac += 1;
   } else {
     const opts = [{ v: 10 + m.dex, n: "Unarmored" }];
@@ -2533,7 +2604,9 @@ function compute(b, p) {
     const best = opts.sort((x, y) => y.v - x.v)[0];
     ac = best.v; acNote = best.n;
   }
-  if (eqShield) { ac += 2; acNote += " + " + ARMORS.bouclier.n.toLowerCase(); }
+  if (eqShield) { ac += 2 + eqS.g.bonus; acNote += " + " + itemName(eqShield).toLowerCase(); }
+  // objets portés qui protègent (anneau, cape…) : comptent s’ils sont harmonisés quand il le faut
+  G.forEach((x) => { if (x.g.acb && (!x.i.at || x.i.att)) { ac += x.g.acb; acNote += " + " + itemName(x.i); if (x.g.svb) saves.forEach((sv) => (sv.v += x.g.svb)); } });
   const armorWarn = (armor && !aprof.includes(armor.t)) || (eqShield && !aprof.includes("bouclier"));
   const stealthDis = armor && armor.st;
 
@@ -2553,20 +2626,22 @@ function compute(b, p) {
   const maDie = martialDie(L);
   const archery = b.opts.style === "archerie" || (b.cls === "guerrier" && L >= 7 && std && b.opts.style2 === "archerie");
   const crit = b.cls === "guerrier" && std ? (L >= 15 ? 18 : L >= 3 ? 19 : 20) : 20;
-  inv.filter((i) => i.eq && i.ref && i.ref.startsWith("w:")).forEach((i) => {
-    const w = WEAPONS[i.ref.slice(2)];
-    if (!w) return;
+  G.filter((x) => x.i.eq && x.g.w).forEach(({ i, g }) => {
+    const w = g.w, wk = g.base.slice(2);
     const isMonkW = b.cls === "moine" && w.k === "cac" && (w.c === "simple" || w.p.includes("L"));
     let a = w.k === "dist" ? "dex" : "for";
     if (w.p.includes("F") || isMonkW) a = m.dex > m.for ? "dex" : "for";
     const proficient = weaponProf(b, w);
-    let hit = m[a] + (proficient ? pb : 0) + (archery && w.k === "dist" ? 2 : 0);
+    const hit = m[a] + (proficient ? pb : 0) + (archery && w.k === "dist" ? 2 : 0) + g.bonus;
     let die = w.d;
     if (isMonkW && dieAvg(maDie) > dieAvg(die)) die = maDie;
-    const mastery = c && c.mastery && b.opts.mastery.includes(i.ref.slice(2)) ? w.m : null;
+    const mastery = c && c.mastery && b.opts.mastery.includes(wk) ? w.m : null;
     const props = w.p.map((x) => WPROP[x]).join(", ");
+    const dm = m[a] + g.bonus, dms = dm ? sg(dm).replace("−", "-") : "";
+    const nm = itemName(i);
     attacks.push({
-      n: w.n, hit, dmg: die + (m[a] ? sg(m[a]).replace("−", "-") : ""), alt: w.v ? w.v + (m[a] ? sg(m[a]).replace("−", "-") : "") : null,
+      n: nm, base: gNorm(nm) !== gNorm(w.n) ? w.n : "", bonus: g.bonus, xd: g.xd, note: g.note, uid: i.uid,
+      hit, dmg: die + dms, alt: w.v ? w.v + dms : null,
       ty: DMG[w.t], range: w.r || (w.p.includes("AL") ? "10 feet" : "5 feet"), props, mastery, prof: proficient, crit,
       rage: b.cls === "barbare" && a === "for",
     });
@@ -2630,12 +2705,64 @@ function itemFrom(entry) {
   const [ref, q] = entry;
   if (ref.startsWith("w:")) return { uid: uid(), ref, n: WEAPONS[ref.slice(2)].n, q: q || 1, eq: false };
   if (ref.startsWith("a:")) return { uid: uid(), ref, n: ARMORS[ref.slice(2)].n, q: 1, eq: false };
-  return { uid: uid(), ref: "g:" + ref, n: GEAR[ref] || ref, q: q || 1, eq: false };
+  return { uid: uid(), ref: "g:" + ref, n: GEAR[ref] || GEAR_MORE[ref] || ref, q: q || 1, eq: false };
+}
+/* ---------- Équipement : base d’arme ou d’armure, bonus magique ---------- */
+const gNorm = (x) => String(x || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[’']/g, "'").replace(/\s+/g, " ").trim();
+const gStrip = (x) => gNorm(x).replace(/^armure (de |d')/, "").replace(/^armor of /, "").replace(/ armor$/, "").trim();
+/* « Arme (dague) », « Armure (cotte de mailles ou chemise de mailles) » → une base seulement si elle est unique */
+function baseFromHeader(h) {
+  const mt = /\(([^)]*)\)/.exec(h || "");
+  if (!mt) return null;
+  const isArmor = /^(armure|armor)/.test(gNorm(h));
+  const table = isArmor ? ARMORS : WEAPONS, pre = isArmor ? "a:" : "w:";
+  const found = new Set();
+  gNorm(mt[1]).split(/,| ou | or /).map((o) => gStrip(o)).filter(Boolean).forEach((o) => {
+    Object.entries(table).forEach(([k, x]) => { if (gStrip(x.n) === o) found.add(pre + k); });
+  });
+  return found.size === 1 ? [...found][0] : null;
+}
+/* objet saisi à la main : « Dague empoisonnée » → dague */
+function baseGuess(name) {
+  const t = gNorm(name);
+  const cands = [...Object.entries(WEAPONS).map(([k, w]) => ["w:" + k, gNorm(w.n)]), ...Object.entries(ARMORS).map(([k, a]) => ["a:" + k, gNorm(a.n)])].sort((x, y) => y[1].length - x[1].length);
+  const f = cands.find(([, n]) => t === n || t.startsWith(n + " ") || t.endsWith(" " + n));
+  return f ? f[0] : null;
+}
+function bonusFrom(name, desc, armor) {
+  let mt = /\+(\d)\b/.exec(name || "");
+  if (mt) return +mt[1];
+  mt = armor ? /\+(\d)\s*(?:bonus\s*)?(?:à la (?:CA|classe d[’']armure)|to (?:your )?(?:Armor Class|AC))/i.exec(desc || "") : /\+(\d)\s*(?:bonus\s*)?(?:aux jets d[’']attaque|to attack rolls)/i.exec(desc || "");
+  return mt ? +mt[1] : 0;
+}
+/* ce que l’objet apporte une fois équipé */
+function gearOf(i) {
+  let h = "", d = "", n = i.nn || i.n;
+  if (i.ref && i.ref.startsWith("mi:")) {
+    const x = typeof MAGIC_ITEMS !== "undefined" && MAGIC_ITEMS[i.ref.slice(3)];
+    if (x) { h = x.h; d = x.d || ""; n = x.n; }
+    else { h = i.h || ""; if (typeof srdLoad === "function") srdLoad(); } // en attendant le SRD : ce qui a été gardé à l’ajout
+  }
+  else if (i.ref && i.ref.startsWith("hb:")) { const x = typeof HBITEMS !== "undefined" && HBITEMS[i.ref.slice(3)]; h = x ? x.kind : i.h || ""; d = x ? x.d : i.d || ""; n = x ? x.n : n; }
+  let base;
+  if (i.ref && /^[wa]:/.test(i.ref)) base = i.ref;
+  else if (i.base !== undefined) base = i.base || null;
+  else base = h ? baseFromHeader(h) : !i.ref ? baseGuess(n) : null;
+  const w = base && base.startsWith("w:") ? WEAPONS[base.slice(2)] || null : null;
+  const a = base && base.startsWith("a:") ? ARMORS[base.slice(2)] || null : null;
+  const magic = !!(i.ref && /^(mi|hb):/.test(i.ref));
+  const armorish = !!a || (!w && /^(armure|armor)/.test(gNorm(h)));
+  const bonus = i.bonus != null && i.bonus !== "" ? +i.bonus || 0 : magic && (w || a || /^(arme|armure|weapon|armor)/.test(gNorm(h))) ? (d ? bonusFrom(n, d, armorish) : bonusFrom(n, "", armorish) || +i.mb || 0) : 0;
+  const acb = w || a ? 0 : i.acb != null && i.acb !== "" ? +i.acb || 0 : magic ? bonusFrom("", d, true) : 0;
+  // cape, anneau de protection : le même bonus s’applique aux jets de sauvegarde
+  const svb = acb && magic && i.acb == null && /sauvegarde|saving throws/i.test(d) ? acb : 0;
+  return { base: w || a ? base : null, w, a, bonus, acb, svb, xd: i.xd || "", note: i.note || "", magic, h };
 }
 function itemName(i) {
+  if (i.nn) return i.nn;
   if (i.ref && i.ref.startsWith("w:") && WEAPONS[i.ref.slice(2)]) return WEAPONS[i.ref.slice(2)].n;
   if (i.ref && i.ref.startsWith("a:") && ARMORS[i.ref.slice(2)]) return ARMORS[i.ref.slice(2)].n;
-  if (i.ref && i.ref.startsWith("g:") && GEAR[i.ref.slice(2)]) return GEAR[i.ref.slice(2)];
+  if (i.ref && i.ref.startsWith("g:") && (GEAR[i.ref.slice(2)] || GEAR_MORE[i.ref.slice(2)])) return GEAR[i.ref.slice(2)] || GEAR_MORE[i.ref.slice(2)];
   if (i.ref && i.ref.startsWith("mi:") && typeof MAGIC_ITEMS !== "undefined" && MAGIC_ITEMS[i.ref.slice(3)]) return MAGIC_ITEMS[i.ref.slice(3)].n;
   return i.n;
 }
@@ -3325,11 +3452,16 @@ function resRow(ch, r) {
 /* Attaques, tours de magie offensifs et bonus de classe (onglet Actions et mode combat) */
 function actionParts(ch, s) {
   const b = ch.b;
-  const atk = s.attacks.map((a) => `<div class="atk">
-    <div class="atk-name"><b>${esc(a.n)}</b><span class="mute small">${a.range}${a.props ? " · " + a.props : ""}${a.mastery ? ` · <span class="mast" title="${esc(MASTERY[a.mastery])}">${MASTERY[a.mastery].split(" — ")[0]}</span>` : ""}${a.prof ? "" : " · <span class='bad'>not proficient</span>"}</span></div>
+  const xdBtn = (a) => {
+    if (!a.xd) return "";
+    const xm = /^\+?\s*(\d*d\d+(?:\s*[+-]\s*\d+)?)\s*(.*)$/i.exec(a.xd.trim());
+    return xm ? `<button class="rb dmg alt xd" data-a="rDmg" data-l="${esc(a.n)} — ${esc(xm[2] || "extra damage")}" data-e="${esc(xm[1].replace(/\s/g, ""))}">+${esc(xm[1])}<small>${esc(xm[2] || "extra")}</small></button>` : `<span class="chipline">${esc(a.xd)}</span>`;
+  };
+  const atk = s.attacks.map((a) => `<div class="atk ${a.bonus || a.xd ? "magic" : ""}">
+    <${a.uid ? `button class="atk-name lnk" data-a="itemEdit" data-u="${a.uid}"` : 'div class="atk-name"'}><b>${esc(a.n)}${a.bonus ? ` <span class="magicb">+${a.bonus}</span>` : ""}</b><span class="mute small">${a.base ? esc(a.base) + " · " : ""}${a.range}${a.props ? " · " + a.props : ""}${a.mastery ? ` · <span class="mast" title="${esc(MASTERY[a.mastery])}">${MASTERY[a.mastery].split(" — ")[0]}</span>` : ""}${a.prof ? "" : " · <span class='bad'>not proficient</span>"}${a.note ? " · " + esc(a.note.length > 70 ? a.note.slice(0, 68) + "…" : a.note) : ""}</span></${a.uid ? "button" : "div"}>
     <button class="rb hit" data-a="r20" data-l="${esc(a.n)} — attaque" data-m="${a.hit}" data-crit="${a.crit}">${sg(a.hit)}</button>
     <button class="rb dmg" data-a="rDmg" data-l="${esc(a.n)} — dégâts ${a.ty}" data-e="${a.dmg}${a.rage ? "" : ""}">${esc(a.dmg)}<small>${a.ty}</small></button>
-    ${a.alt ? `<button class="rb dmg alt" data-a="rDmg" data-l="${esc(a.n)} à deux mains" data-e="${a.alt}">${esc(a.alt)}<small>2 hands</small></button>` : ""}
+    ${a.alt ? `<button class="rb dmg alt" data-a="rDmg" data-l="${esc(a.n)} à deux mains" data-e="${a.alt}">${esc(a.alt)}<small>2 hands</small></button>` : ""}${xdBtn(a)}
   </div>`).join("");
   const cantrips = s.spells.filter((x) => x.l === 0 && (x.atk || x.sv || x.dmg));
   const cantHtml = cantrips.map((x) => {
@@ -3438,34 +3570,110 @@ function tabSpells(ch, s) {
   </section>`;
 }
 
-function tabInventory(ch) {
+/* ---------- Inventaire et équipement ---------- */
+function invSub(i, g, mi) {
+  const nm = itemName(i), w = g.w, a = g.a, bits = [];
+  const baseN = (x) => (gNorm(x.n) !== gNorm(nm) ? x.n + " · " : "");
+  if (w) bits.push(`${baseN(w)}${w.d} ${DMG[w.t]}${g.bonus ? ` · <b class="magicb">+${g.bonus}</b>` : ""}${g.xd ? " · +" + esc(g.xd) : ""}${w.p.length ? " · " + w.p.map((x) => WPROP[x]).join(", ") : ""}`);
+  else if (a) bits.push(baseN(a) + (a.t === "bouclier" ? `+${2 + g.bonus} AC` : `AC ${a.ac + g.bonus}${a.dex === 99 ? " + Dex" : a.dex ? " + Dex (max 2)" : ""}`));
+  else if (mi) bits.push(esc([mi.h, mi.r ? RAR_L[mi.r] || mi.r : ""].filter(Boolean).join(" · ")));
+  if (g.acb) bits.push(`+${g.acb} AC`);
+  if (mi && mi.at) bits.push(i.att ? "attuned" : "attunement");
+  if (g.note) bits.push(esc(g.note.length > 60 ? g.note.slice(0, 58) + "…" : g.note));
+  return bits.join(" · ");
+}
+function invRow(i) {
+  const g = gearOf(i), mi = typeof miInfo === "function" ? miInfo(i) : null;
+  const needsBase = !g.base && /^(arme|armure|weapon|armor)/.test(gNorm(mi ? mi.h : ""));
+  const sub = invSub(i, g, mi);
+  const left = g.base
+    ? `<button class="eq ${i.eq ? "on" : ""}" data-a="equip" data-u="${i.uid}" aria-pressed="${!!i.eq}" title="${i.eq ? "Equipped" : "Equip"}" aria-label="${i.eq ? "Remove" : "Equip"} ${esc(itemName(i))}">${i.eq ? ICON.check : ""}</button>`
+    : needsBase ? `<button class="eq pick" data-a="itemEdit" data-u="${i.uid}" title="Choose the weapon or armor">?</button>`
+    : mi && mi.at ? `<button class="eq att ${i.att ? "on" : ""}" data-a="attune" data-u="${i.uid}" aria-pressed="${!!i.att}" title="${i.att ? "Attuned" : "Attune to the item"}">${i.att ? "✦" : ""}</button>`
+    : '<span class="eq none"></span>';
+  return `<div class="item ${mi || g.magic ? "magic" : ""} ${g.w ? "is-w" : g.a ? "is-a" : ""}">
+    ${left}
+    <button class="it-name it-open" data-a="itemEdit" data-u="${i.uid}"><b>${esc(itemName(i))}${mi && mi.hb ? hbTag({ hb: 1 }) : ""}</b>${sub ? `<span class="mute small">${sub}</span>` : ""}</button>
+    <div class="qty"><button class="mini" data-a="qty" data-u="${i.uid}" data-d="-1" aria-label="Less">−</button><b>${i.q}</b><button class="mini" data-a="qty" data-u="${i.uid}" data-d="1" aria-label="More">+</button></div>
+  </div>`;
+}
+/* catalogue unique : armes, armures, matériel, objets magiques et créations */
+const EQ_CATS = [["", "All"], ["w", "Weapons"], ["a", "Armor"], ["g", "Gear"], ["m", "Magic items"]];
+function eqAll() {
+  const out = [];
+  Object.entries(WEAPONS).forEach(([k, w]) => out.push({ c: "w", ref: "w:" + k, n: w.n, sub: `${w.d} ${DMG[w.t]} · ${w.c === "simple" ? "simple weapon" : "martial weapon"}` }));
+  Object.entries(ARMORS).forEach(([k, a]) => out.push({ c: "a", ref: "a:" + k, n: a.n, sub: a.t === "bouclier" ? "+2 AC" : `AC ${a.ac}${a.dex === 99 ? " + Dex" : a.dex ? " + Dex (max 2)" : ""}` }));
+  const seen = new Set();
+  [GEAR, GEAR_MORE].forEach((t) => Object.entries(t).forEach(([k, n]) => { if (seen.has(n)) return; seen.add(n); out.push({ c: "g", ref: "g:" + k, n, sub: GEAR_D[k] ? "in-game effect" : "" }); }));
+  if (typeof miAll === "function") miAll().forEach((x) => out.push({ c: "m", ref: x.ref, n: x.n, en: x.en, hb: x.hb, sub: [x.h, x.r ? RAR_L[x.r] || x.r : "", x.at ? "attunement" : ""].filter(Boolean).join(" · ") }));
+  return out;
+}
+const EQ_TAG = { tw: "Weapon", ta: "Armor", tg: "Gear", tm: "Magic" };
+function eqRows() {
+  const q = normQ(S.eqQ), cat = S.eqCat || "";
+  if (!q && !cat) return `<p class="mute small">Type a name (rope, dagger, potion…) or pick a category.</p>`;
+  const list = eqAll().filter((x) => (!cat || x.c === cat) && (!q || normQ(x.n).includes(q) || (x.en && normQ(x.en).includes(q)))).sort((a, b) => a.n.localeCompare(b.n, "fr"));
+  const wait = (cat === "m" || (!cat && q)) && typeof srdOk === "function" && !srdOk() ? srdWait("magic items") : "";
+  const rows = list.slice(0, 50).map((x) => `<button class="mi-row eq-row c-${x.c}" data-a="eqAdd" data-ref="${esc(x.ref)}"><span class="eq-tag">${EQ_TAG["t" + x.c]}</span><b>${esc(x.n)}${x.hb ? hbTag({ hb: 1 }) : ""}</b><span class="mute small">${esc(x.sub)}</span><span class="mi-plus">${ICON.plus}</span></button>`).join("");
+  const more = list.length > 50 ? `<p class="mute small">${list.length - 50} more results: narrow your search.</p>` : "";
+  const free = q ? `<button class="btn small ghost eq-free" data-a="eqFree">${ICON.plus}Add « ${esc(S.eqQ.trim())} » as is</button>` : "";
+  return (rows || (wait ? "" : `<p class="mute small">Nothing like that in the catalog.</p>`)) + more + wait + free;
+}
+function tabInventory(ch, s) {
   const p = ch.p;
-  if (typeof srdLoad === "function" && p.inv.some((i) => i.ref && i.ref.startsWith("mi:"))) srdLoad();
-  const rows = p.inv.map((i) => {
-    const w = i.ref && i.ref.startsWith("w:") && WEAPONS[i.ref.slice(2)];
-    const a = i.ref && i.ref.startsWith("a:") && ARMORS[i.ref.slice(2)];
-    const mi = typeof miInfo === "function" ? miInfo(i) : null;
-    const sub = w ? `${w.d} ${DMG[w.t]}${w.p.length ? " · " + w.p.map((x) => WPROP[x]).join(", ") : ""}` : a ? (a.t === "bouclier" ? "+2 AC" : `AC ${a.ac}${a.dex === 99 ? " + Dex" : a.dex ? " + Dex (max 2)" : ""}`) : mi ? esc([mi.h, mi.r ? RAR_L[mi.r] || mi.r : "", mi.at ? "attunement" : ""].filter(Boolean).join(" · ")) : "";
-    const open = mi && S.openItem === i.uid;
-    return `<div class="item ${mi ? "magic" : ""}">
-      ${w || a ? `<button class="eq ${i.eq ? "on" : ""}" data-a="equip" data-u="${i.uid}" aria-pressed="${i.eq}" title="${i.eq ? "Equipped" : "Equip"}">${i.eq ? ICON.check : ""}</button>` : mi && mi.at ? `<button class="eq att ${i.att ? "on" : ""}" data-a="attune" data-u="${i.uid}" aria-pressed="${!!i.att}" title="${i.att ? "Attuned" : "Attune to the item"}">${i.att ? "✦" : ""}</button>` : '<span class="eq none"></span>'}
-      ${mi ? `<button class="it-name it-open" data-a="itemOpen" data-u="${i.uid}" aria-expanded="${open}"><b>${esc(itemName(i))}${mi.hb ? hbTag({ hb: 1 }) : ""}</b><span class="mute small">${sub}</span></button>` : `<div class="it-name"><b>${esc(itemName(i))}</b>${sub ? `<span class="mute small">${sub}</span>` : ""}</div>`}
-      <div class="qty"><button class="mini" data-a="qty" data-u="${i.uid}" data-d="-1" aria-label="Less">−</button><b>${i.q}</b><button class="mini" data-a="qty" data-u="${i.uid}" data-d="1" aria-label="More">+</button></div>
-      ${open ? `<div class="it-desc">${mi.d == null ? (typeof srdWait === "function" ? srdWait("of the description") : "") : mi.d ? sbText(mi.d, itemName(i)) : "<span class=\"mute\">No description.</span>"}</div>` : ""}
-    </div>`;
-  }).join("");
-  const addables = [...Object.entries(WEAPONS).map(([k, w]) => ["w:" + k, w.n + " (weapon)"]), ...Object.entries(ARMORS).map(([k, a]) => ["a:" + k, a.n + " (armor)"])].sort((x, y) => x[1].localeCompare(y[1], "fr"));
+  s = s || compute(ch.b, p);
+  if (typeof srdLoad === "function") srdLoad();
+  const eqd = p.inv.filter((i) => (i.eq && gearOf(i).base) || i.att);
+  const bag = p.inv.filter((i) => !eqd.includes(i));
+  const att = p.inv.filter((i) => i.att).length;
   return `<div class="cols">
-  <section class="panel"><h3 class="ph">Pack</h3>${rows || "<p class=\"mute\">Inventory is empty.</p>"}
-    <div class="add-item"><label class="field"><span>Add an item</span><input id="newItem" placeholder="E.g. Hempen rope (50 ft)"></label><button class="btn small" data-a="addItem">Add</button></div>
-    <div class="add-item"><label class="field"><span>Add a weapon or armor</span><select id="newRef">${addables.map(([k, n]) => `<option value="${k}">${n}</option>`).join("")}</select></label><button class="btn small" data-a="addRef">Add</button></div>
+  <section class="panel eq-panel"><div class="adv-head"><h3 class="ph">Equipped</h3><span class="eq-sum"><span class="pill">${ICON.shield || ""}AC ${s.ac}</span>${att ? `<span class="pill ${att > 3 ? "bad" : ""}">✦ ${att}/3</span>` : ""}</span></div>
+    ${eqd.map(invRow).join("") || `<p class="mute small">Nothing equipped. Tap the square to the left of a weapon or armor to equip it: it then counts toward your AC or attacks.</p>`}
+    <p class="mute small eq-ca">${esc(s.acNote || "")}</p>
   </section>
-  ${typeof invMagicPanel === "function" ? invMagicPanel(ch) : ""}
+  <section class="panel"><h3 class="ph">Pack</h3>${bag.map(invRow).join("") || "<p class=\"mute small\">Pack is empty.</p>"}
+    <p class="mute small">Tap an item to see its details, customize it (base weapon, magic bonus, extra damage) or remove it.</p></section>
+  <section class="panel eq-add"><h3 class="ph">Add equipment</h3>
+    <label class="field"><span>Search</span><input id="eqQ" value="${esc(S.eqQ || "")}" placeholder="Weapon, armor, gear, magic item…" autocomplete="off"></label>
+    <div class="chips eq-cats">${EQ_CATS.map(([k, n]) => chip(n, (S.eqCat || "") === k, "eqCat", `data-v="${k}"`)).join("")}</div>
+    <div class="mi-list" id="eqList">${eqRows()}</div>
+  </section>
   <section class="panel"><h3 class="ph">Pouch</h3>
     <div class="gold-row"><b class="gold big">${p.gold} gp</b></div>
     <div class="add-item"><label class="field"><span>Amount (gp)</span><input id="goldAmt" type="number" inputmode="numeric" placeholder="10"></label><button class="btn small" data-a="gold" data-d="1">Gain</button><button class="btn small ghost" data-a="gold" data-d="-1">Spend</button></div>
-    <p class="mute small">Equip armor or a shield to update your AC, and a weapon to show it in your attacks.</p>
   </section></div>`;
+}
+/* Détail d’un objet + réglages (arme de base, bonus, dégâts en plus, notes) */
+function itemModal(ch, m) {
+  const i = ch.p.inv.find((x) => x.uid === m.u);
+  if (!i) return `<p class="mute">Item not found.</p>`;
+  const g = gearOf(i), mi = typeof miInfo === "function" ? miInfo(i) : null, nm = itemName(i);
+  const fixed = i.ref && /^[wa]:/.test(i.ref);
+  const gk = i.ref && i.ref.startsWith("g:") ? i.ref.slice(2) : null;
+  const needsBase = !g.base && /^(arme|armure|weapon|armor)/.test(gNorm(mi ? mi.h : ""));
+  const desc = mi ? (mi.d == null ? (typeof srdWait === "function" ? srdWait("of the description") : "") : mi.d ? sbText(mi.d, nm) : "") : gk && GEAR_D[gk] ? `<p>${GEAR_D[gk]}</p>` : "";
+  const s = compute(ch.b, ch.p), atk = s.attacks.find((x) => x.uid === i.uid);
+  const w = g.w, a = g.a;
+  const stats = w ? `<dl class="facts it-stats"><div><dt>Weapon</dt><dd>${w.n} · ${w.c === "simple" ? "simple weapon" : "martial weapon"} · ${w.k === "dist" ? "ranged" : "melee"}</dd></div><div><dt>Damage</dt><dd>${w.d} ${DMG[w.t]}${w.v ? ` (${w.v} two-handed)` : ""}${g.bonus ? ` · <b class="magicb">+${g.bonus}</b>` : ""}${g.xd ? " · +" + esc(g.xd) : ""}</dd></div>${w.p.length ? `<div><dt>Properties</dt><dd>${w.p.map((x) => WPROP[x]).join(", ")}${w.r ? " · " + w.r : ""}</dd></div>` : ""}${atk ? `<div><dt>With you</dt><dd>${sg(atk.hit)} to hit · ${esc(atk.dmg)} ${atk.ty}</dd></div>` : `<div><dt>With you</dt><dd class="mute">Equip it to add it to your attacks.</dd></div>`}</dl>`
+    : a ? `<dl class="facts it-stats"><div><dt>Armor</dt><dd>${a.n}</dd></div><div><dt>AC</dt><dd>${a.t === "bouclier" ? `+${2 + g.bonus}` : `${a.ac + g.bonus}${a.dex === 99 ? " + Dex" : a.dex ? " + Dex (max 2)" : ""}`}</dd></div>${a.str ? `<div><dt>Strength</dt><dd>${a.str} minimum</dd></div>` : ""}${a.st ? `<div><dt>Stealth</dt><dd>disadvantage</dd></div>` : ""}</dl>` : "";
+  const opts = (t, pre) => Object.entries(t).sort((x, y) => x[1].n.localeCompare(y[1].n, "fr")).map(([k, x]) => `<option value="${pre + k}" ${g.base === pre + k ? "selected" : ""}>${x.n}</option>`).join("");
+  const num = (id, v) => `<select id="${id}">${[0, 1, 2, 3].map((n) => `<option value="${n}" ${+v === n ? "selected" : ""}>${n ? "+" + n : "aucun"}</option>`).join("")}</select>`;
+  return `<h3>${esc(nm)}${mi && mi.hb ? hbTag({ hb: 1 }) : ""}</h3>
+    ${mi ? `<p class="mute small">${esc([mi.h, mi.r ? RAR_L[mi.r] || mi.r : "", mi.at ? "requires attunement" : ""].filter(Boolean).join(" · "))}</p>` : ""}
+    ${needsBase ? `<p class="hint-box">Choose this item's exact weapon or armor below to be able to equip it.</p>` : ""}
+    ${stats}${g.note ? `<p class="it-note">${esc(g.note)}</p>` : ""}
+    ${desc ? `<div class="it-desc">${desc}</div>` : ""}
+    <div class="row-btns">${g.base ? `<button class="btn ${i.eq ? "ghost" : "primary"}" data-a="equip" data-u="${i.uid}">${i.eq ? "Stow in pack" : "Equip"}</button>` : ""}${mi && mi.at ? `<button class="btn ${i.att ? "ghost" : ""}" data-a="attune" data-u="${i.uid}">${i.att ? "End attunement" : "Attune"}</button>` : ""}</div>
+    <details class="it-edit" ${needsBase ? "open" : ""}><summary>Customize</summary>
+      <label class="field"><span>Name</span><input id="itN" value="${esc(i.nn || "")}" placeholder="${esc(nm)}"></label>
+      ${fixed ? "" : `<label class="field"><span>Base weapon or armor</span><select id="itBase"><option value="">None (plain item)</option><optgroup label="Armes">${opts(WEAPONS, "w:")}</optgroup><optgroup label="Armures">${opts(ARMORS, "a:")}</optgroup></select></label>`}
+      <div class="two"><label class="field"><span>Magic bonus (attack and damage, or AC)</span>${num("itBonus", g.bonus)}</label>
+      ${g.base ? "" : `<label class="field"><span>AC bonus (ring, cloak…)</span>${num("itAcb", g.acb)}</label>`}</div>
+      ${a ? "" : `<label class="field"><span>Extra damage when the weapon hits</span><input id="itXd" value="${esc(i.xd || "")}" placeholder="E.g. 2d10 poison"></label>`}
+      <label class="field"><span>Notes</span><textarea id="itNote" rows="3" placeholder="E.g. Bonus Action: coat the blade in poison, once per day">${esc(i.note || "")}</textarea></label>
+      <div class="row-btns"><button class="btn primary" data-a="itemSave" data-u="${i.uid}">Save</button></div>
+    </details>
+    <div class="row-btns it-del"><button class="btn small ghost danger" data-a="itemDel" data-u="${i.uid}">${ICON.trash} Remove from inventory</button></div>`;
 }
 
 /* Bloc « Dons » : les dons du personnage, d’où ils viennent, et comment les changer */
@@ -3531,6 +3739,8 @@ function viewModal() {
     if (entry && entry.free) { const r = s.resources.find((x) => x.k === entry.free); if (r) { const left = r.max - (ch.p.res[r.k] || 0); opts.push(`<button class="btn ghost" data-a="castDo" data-v="${m.v}" data-lv="free" data-k="${r.k}" ${left > 0 ? "" : "disabled"}>Free <small>(${left}/${r.max} per rest)</small></button>`); } }
     if (sp.ri) opts.push(`<button class="btn ghost" data-a="castDo" data-v="${m.v}" data-lv="ritual">As a Ritual (+10 minutes, no slot)</button>`);
     inner = `<h3>${T_CAST} ${esc(sp.n)}</h3>${spellDetail(sp)}<div class="cast-opts">${opts.join("") || "<p class=\"mute\">No slot available for this spell.</p>"}</div>`;
+  } else if (m.k === "item") {
+    inner = itemModal(ch, m);
   } else if (m.k === "del") {
     inner = `<h3>Delete ${esc(ch.b.name)} ?</h3><p>The character will be permanently erased. Export it first if you want to keep it.</p><div class="row-btns"><button class="btn dmgb" data-a="delDo">Delete permanently</button><button class="btn ghost" data-a="closeModal">Cancel</button></div>`;
   } else if (m.k === "export") {
@@ -3811,14 +4021,42 @@ async function act(a, d, el) {
     case "endConc": ch.p.conc = null; saveSoon(ch); break;
     case "equip": {
       const it = ch.p.inv.find((i) => i.uid === d.u);
-      if (!it || !it.ref) return;
-      const isBody = it.ref.startsWith("a:") && it.ref !== "a:bouclier";
-      if (!it.eq && isBody) ch.p.inv.forEach((i) => { if (i.ref && i.ref.startsWith("a:") && i.ref !== "a:bouclier") i.eq = false; });
-      it.eq = !it.eq; saveSoon(ch); break;
+      const g = it && gearOf(it);
+      if (!g || !g.base) return;
+      const kind = (x) => (x.a ? (x.a.t === "bouclier" ? "shield" : "body") : "w");
+      const k = kind(g);
+      if (!it.eq && k !== "w") ch.p.inv.forEach((i) => { if (i !== it && i.eq) { const gi = gearOf(i); if (gi.a && kind(gi) === k) i.eq = false; } });
+      it.eq = !it.eq; saveSoon(ch);
+      toast(itemName(it) + (it.eq ? " equipped" : " stowed in the pack")); break;
     }
     case "qty": { const it = ch.p.inv.find((i) => i.uid === d.u); it.q += +d.d; if (it.q <= 0) ch.p.inv = ch.p.inv.filter((i) => i.uid !== d.u); saveSoon(ch); break; }
-    case "addItem": { const v = $("#newItem").value.trim(); if (!v) { toast("Enter the item’s name."); return; } ch.p.inv.push({ uid: uid(), ref: null, n: v, q: 1, eq: false }); saveSoon(ch); break; }
-    case "addRef": { const v = $("#newRef").value; const it = itemFrom([v, 1]); ch.p.inv.push(it); saveSoon(ch); toast(itemName(it) + " added"); break; }
+    case "eqCat": S.eqCat = d.v; break;
+    case "eqAdd": {
+      if (/^(mi|hb):/.test(d.ref)) { await srdAct("miAdd", d); break; }
+      const key = d.ref.startsWith("g:") ? d.ref.slice(2) : d.ref;
+      const it = itemFrom([key, 1]);
+      const same = it.ref.startsWith("g:") && ch.p.inv.find((i) => i.ref === it.ref && !i.nn);
+      if (same) same.q += 1; else ch.p.inv.push(it);
+      S.eqQ = ""; saveSoon(ch); toast(itemName(it) + " added"); break;
+    }
+    case "eqFree": { const v = String(S.eqQ || "").trim(); if (!v) return; ch.p.inv.push({ uid: uid(), ref: null, n: v.slice(0, 80), q: 1, eq: false }); S.eqQ = ""; saveSoon(ch); toast(v + " added"); break; }
+    case "itemEdit": S.modal = { k: "item", u: d.u }; break;
+    case "itemDel": ch.p.inv = ch.p.inv.filter((i) => i.uid !== d.u); S.modal = null; saveSoon(ch); toast("Item removed"); break;
+    case "itemSave": {
+      const it = ch.p.inv.find((i) => i.uid === d.u); if (!it) return;
+      const val = (id) => { const e = $("#" + id); return e ? e.value : null; };
+      const nn = (val("itN") || "").trim().slice(0, 80);
+      if (nn && nn !== itemName({ ...it, nn: "" })) it.nn = nn; else delete it.nn;
+      // une valeur laissée telle qu’affichée reste automatique ; seule une valeur changée est gardée
+      const shown = gearOf(it), auto = (patch) => gearOf({ ...it, ...patch });
+      if (val("itBase") != null) { const v = val("itBase"); if (v === (auto({ base: undefined }).base || "")) delete it.base; else it.base = v; }
+      if (val("itBonus") != null) { const v = +val("itBonus"); if (v !== shown.bonus) { if (v === auto({ bonus: undefined }).bonus) delete it.bonus; else it.bonus = v; } }
+      if (val("itAcb") != null) { const v = +val("itAcb"); if (v !== shown.acb) { if (v === auto({ acb: undefined }).acb) delete it.acb; else it.acb = v; } }
+      if (val("itXd") != null) { const v = val("itXd").trim().slice(0, 40); if (v) it.xd = v; else delete it.xd; }
+      const note = (val("itNote") || "").trim().slice(0, 500); if (note) it.note = note; else delete it.note;
+      if (!gearOf(it).base) it.eq = false;
+      saveSoon(ch); toast("Item saved"); break;
+    }
     case "gold": { const n = Math.abs(parseInt($("#goldAmt").value, 10) || 0); if (!n) { toast("Enter an amount."); return; } ch.p.gold = Math.max(0, ch.p.gold + n * +d.d); saveSoon(ch); break; }
     case "delAsk": S.modal = { k: "del" }; break;
     case "delDo": if (ch.adv && typeof FB !== "undefined" && FB.ok) { try { await FB.members(ch.adv).doc(FB.uid + "_" + ch.id).delete(); } catch (e) { } } await Store.del(ch.id); S.chars = S.chars.filter((c) => c.id !== ch.id); S.modal = null; S.view = "home"; toast("Character deleted"); break;
@@ -4545,7 +4783,7 @@ function accountStart() { if (Account.user()) syncAccount(); }
 
 /* Forge des Héros — page Compte et réglages : thème, langue, support, version */
 
-const APP_VERSION = "1.13.0";
+const APP_VERSION = "1.14.0";
 
 /* ---------- Thème ---------- */
 const Theme = {
@@ -5497,11 +5735,17 @@ function srdLoad() {
   SRD.p = new Promise((res) => {
     const s = document.createElement("script");
     s.src = "srd.js";
-    s.onload = () => { SRD.st = "ok"; res(); liveRender(); };
+    s.onload = () => { SRD.st = "ok"; res(); liveRender(); srdLists(); };
     s.onerror = () => { SRD.st = "err"; SRD.p = null; s.remove(); res(); liveRender(); };
     document.head.appendChild(s);
   });
   return SRD.p;
+}
+/* listes de recherche déjà ouvertes (un champ en cours de saisie bloque le rendu complet) */
+function srdLists() {
+  const e = $("#eqList"); if (e && typeof eqRows === "function") e.innerHTML = eqRows();
+  const m = $("#miList"); if (m) m.innerHTML = miRows();
+  const n = $("#monList"); if (n) n.innerHTML = monRows();
 }
 function srdWait(what) {
   srdLoad();
@@ -5631,12 +5875,12 @@ async function srdAct(a, d, el) {
     case "miAdd": {
       const ch = curChar(); if (!ch) return true;
       let it = null;
-      if (d.ref.startsWith("mi:")) { const x = MAGIC_ITEMS[d.ref.slice(3)]; if (x) it = { uid: uid(), ref: d.ref, n: x.n, q: 1, eq: false, r: x.r, at: x.at ? 1 : 0 }; }
+      if (d.ref.startsWith("mi:")) { const x = MAGIC_ITEMS[d.ref.slice(3)]; if (x) { it = { uid: uid(), ref: d.ref, n: x.n, q: 1, eq: false, r: x.r, at: x.at ? 1 : 0, h: x.h }; const g = gearOf(it); if (g.bonus) it.mb = g.bonus; } }
       if (d.ref.startsWith("hb:")) { const x = HBITEMS[d.ref.slice(3)]; if (x) it = { uid: uid(), ref: d.ref, n: x.n, q: 1, eq: false, r: x.rarity, at: x.attune ? 1 : 0, h: x.kind, d: x.d }; }
       if (!it) return true;
       const same = ch.p.inv.find((i) => i.ref === it.ref);
       if (same) same.q += 1; else ch.p.inv.push(it);
-      S.miQ = ""; saveSoon(ch); toast(it.n + " added");
+      S.miQ = ""; S.eqQ = ""; saveSoon(ch); toast(it.n + " added");
       return true;
     }
     case "itemOpen": S.openItem = S.openItem === d.u ? null : d.u; return true;
@@ -5654,6 +5898,7 @@ document.addEventListener("input", (e) => {
   const t = e.target;
   if (t.id === "monQ") { S.monQ = t.value; const l = $("#monList"); if (l && srdOk()) l.innerHTML = monRows(); }
   if (t.id === "monAddN") S.monAddN = t.value;
+  if (t.id === "eqQ") { S.eqQ = t.value; const l = $("#eqList"); if (l) l.innerHTML = eqRows(); }
   if (t.id === "miQ") { S.miQ = t.value; const l = $("#miList"); if (l && srdOk()) l.innerHTML = miRows(); }
 });
 document.addEventListener("change", (e) => {

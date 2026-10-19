@@ -336,13 +336,15 @@ function compute(b, p) {
   const saves = ABK.map((k) => ({ k, v: m[k] + (saveProf.has(k) ? pb : 0) + aura, pr: saveProf.has(k) }));
 
   // Armure & CA
-  const eqArmor = inv.find((i) => i.eq && i.ref && i.ref.startsWith("a:") && ARMORS[i.ref.slice(2)] && ARMORS[i.ref.slice(2)].t !== "bouclier");
-  const eqShield = inv.find((i) => i.eq && i.ref === "a:bouclier");
-  const armor = eqArmor && ARMORS[eqArmor.ref.slice(2)];
+  const G = inv.map((i) => ({ i, g: gearOf(i) }));
+  const eqA = G.find((x) => x.i.eq && x.g.a && x.g.a.t !== "bouclier");
+  const eqS = G.find((x) => x.i.eq && x.g.a && x.g.a.t === "bouclier");
+  const eqArmor = eqA && eqA.i, eqShield = eqS && eqS.i;
+  const armor = eqA && eqA.g.a;
   const aprof = armorProfs(b);
   let ac, acNote;
   if (armor) {
-    ac = armor.ac + Math.min(m.dex, armor.dex); acNote = armor.n;
+    ac = armor.ac + Math.min(m.dex, armor.dex) + eqA.g.bonus; acNote = itemName(eqArmor);
     if ((b.opts.style === "defense" && (b.cls === "guerrier" || b.cls === "paladin" || b.cls === "rodeur")) || (b.cls === "guerrier" && L >= 7 && std && b.opts.style2 === "defense")) ac += 1;
   } else {
     const opts = [{ v: 10 + m.dex, n: "Sans armure" }];
@@ -352,7 +354,9 @@ function compute(b, p) {
     const best = opts.sort((x, y) => y.v - x.v)[0];
     ac = best.v; acNote = best.n;
   }
-  if (eqShield) { ac += 2; acNote += " + " + ARMORS.bouclier.n.toLowerCase(); }
+  if (eqShield) { ac += 2 + eqS.g.bonus; acNote += " + " + itemName(eqShield).toLowerCase(); }
+  // objets portés qui protègent (anneau, cape…) : comptent s’ils sont harmonisés quand il le faut
+  G.forEach((x) => { if (x.g.acb && (!x.i.at || x.i.att)) { ac += x.g.acb; acNote += " + " + itemName(x.i); if (x.g.svb) saves.forEach((sv) => (sv.v += x.g.svb)); } });
   const armorWarn = (armor && !aprof.includes(armor.t)) || (eqShield && !aprof.includes("bouclier"));
   const stealthDis = armor && armor.st;
 
@@ -372,20 +376,22 @@ function compute(b, p) {
   const maDie = martialDie(L);
   const archery = b.opts.style === "archerie" || (b.cls === "guerrier" && L >= 7 && std && b.opts.style2 === "archerie");
   const crit = b.cls === "guerrier" && std ? (L >= 15 ? 18 : L >= 3 ? 19 : 20) : 20;
-  inv.filter((i) => i.eq && i.ref && i.ref.startsWith("w:")).forEach((i) => {
-    const w = WEAPONS[i.ref.slice(2)];
-    if (!w) return;
+  G.filter((x) => x.i.eq && x.g.w).forEach(({ i, g }) => {
+    const w = g.w, wk = g.base.slice(2);
     const isMonkW = b.cls === "moine" && w.k === "cac" && (w.c === "simple" || w.p.includes("L"));
     let a = w.k === "dist" ? "dex" : "for";
     if (w.p.includes("F") || isMonkW) a = m.dex > m.for ? "dex" : "for";
     const proficient = weaponProf(b, w);
-    let hit = m[a] + (proficient ? pb : 0) + (archery && w.k === "dist" ? 2 : 0);
+    const hit = m[a] + (proficient ? pb : 0) + (archery && w.k === "dist" ? 2 : 0) + g.bonus;
     let die = w.d;
     if (isMonkW && dieAvg(maDie) > dieAvg(die)) die = maDie;
-    const mastery = c && c.mastery && b.opts.mastery.includes(i.ref.slice(2)) ? w.m : null;
+    const mastery = c && c.mastery && b.opts.mastery.includes(wk) ? w.m : null;
     const props = w.p.map((x) => WPROP[x]).join(", ");
+    const dm = m[a] + g.bonus, dms = dm ? sg(dm).replace("−", "-") : "";
+    const nm = itemName(i);
     attacks.push({
-      n: w.n, hit, dmg: die + (m[a] ? sg(m[a]).replace("−", "-") : ""), alt: w.v ? w.v + (m[a] ? sg(m[a]).replace("−", "-") : "") : null,
+      n: nm, base: gNorm(nm) !== gNorm(w.n) ? w.n : "", bonus: g.bonus, xd: g.xd, note: g.note, uid: i.uid,
+      hit, dmg: die + dms, alt: w.v ? w.v + dms : null,
       ty: DMG[w.t], range: w.r || (w.p.includes("AL") ? "3 m" : "1,50 m"), props, mastery, prof: proficient, crit,
       rage: b.cls === "barbare" && a === "for",
     });
@@ -449,12 +455,64 @@ function itemFrom(entry) {
   const [ref, q] = entry;
   if (ref.startsWith("w:")) return { uid: uid(), ref, n: WEAPONS[ref.slice(2)].n, q: q || 1, eq: false };
   if (ref.startsWith("a:")) return { uid: uid(), ref, n: ARMORS[ref.slice(2)].n, q: 1, eq: false };
-  return { uid: uid(), ref: "g:" + ref, n: GEAR[ref] || ref, q: q || 1, eq: false };
+  return { uid: uid(), ref: "g:" + ref, n: GEAR[ref] || GEAR_MORE[ref] || ref, q: q || 1, eq: false };
+}
+/* ---------- Équipement : base d’arme ou d’armure, bonus magique ---------- */
+const gNorm = (x) => String(x || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[’']/g, "'").replace(/\s+/g, " ").trim();
+const gStrip = (x) => gNorm(x).replace(/^armure (de |d')/, "").replace(/^armor of /, "").replace(/ armor$/, "").trim();
+/* « Arme (dague) », « Armure (cotte de mailles ou chemise de mailles) » → une base seulement si elle est unique */
+function baseFromHeader(h) {
+  const mt = /\(([^)]*)\)/.exec(h || "");
+  if (!mt) return null;
+  const isArmor = /^(armure|armor)/.test(gNorm(h));
+  const table = isArmor ? ARMORS : WEAPONS, pre = isArmor ? "a:" : "w:";
+  const found = new Set();
+  gNorm(mt[1]).split(/,| ou | or /).map((o) => gStrip(o)).filter(Boolean).forEach((o) => {
+    Object.entries(table).forEach(([k, x]) => { if (gStrip(x.n) === o) found.add(pre + k); });
+  });
+  return found.size === 1 ? [...found][0] : null;
+}
+/* objet saisi à la main : « Dague empoisonnée » → dague */
+function baseGuess(name) {
+  const t = gNorm(name);
+  const cands = [...Object.entries(WEAPONS).map(([k, w]) => ["w:" + k, gNorm(w.n)]), ...Object.entries(ARMORS).map(([k, a]) => ["a:" + k, gNorm(a.n)])].sort((x, y) => y[1].length - x[1].length);
+  const f = cands.find(([, n]) => t === n || t.startsWith(n + " ") || t.endsWith(" " + n));
+  return f ? f[0] : null;
+}
+function bonusFrom(name, desc, armor) {
+  let mt = /\+(\d)\b/.exec(name || "");
+  if (mt) return +mt[1];
+  mt = armor ? /\+(\d)\s*(?:bonus\s*)?(?:à la (?:CA|classe d[’']armure)|to (?:your )?(?:Armor Class|AC))/i.exec(desc || "") : /\+(\d)\s*(?:bonus\s*)?(?:aux jets d[’']attaque|to attack rolls)/i.exec(desc || "");
+  return mt ? +mt[1] : 0;
+}
+/* ce que l’objet apporte une fois équipé */
+function gearOf(i) {
+  let h = "", d = "", n = i.nn || i.n;
+  if (i.ref && i.ref.startsWith("mi:")) {
+    const x = typeof MAGIC_ITEMS !== "undefined" && MAGIC_ITEMS[i.ref.slice(3)];
+    if (x) { h = x.h; d = x.d || ""; n = x.n; }
+    else { h = i.h || ""; if (typeof srdLoad === "function") srdLoad(); } // en attendant le SRD : ce qui a été gardé à l’ajout
+  }
+  else if (i.ref && i.ref.startsWith("hb:")) { const x = typeof HBITEMS !== "undefined" && HBITEMS[i.ref.slice(3)]; h = x ? x.kind : i.h || ""; d = x ? x.d : i.d || ""; n = x ? x.n : n; }
+  let base;
+  if (i.ref && /^[wa]:/.test(i.ref)) base = i.ref;
+  else if (i.base !== undefined) base = i.base || null;
+  else base = h ? baseFromHeader(h) : !i.ref ? baseGuess(n) : null;
+  const w = base && base.startsWith("w:") ? WEAPONS[base.slice(2)] || null : null;
+  const a = base && base.startsWith("a:") ? ARMORS[base.slice(2)] || null : null;
+  const magic = !!(i.ref && /^(mi|hb):/.test(i.ref));
+  const armorish = !!a || (!w && /^(armure|armor)/.test(gNorm(h)));
+  const bonus = i.bonus != null && i.bonus !== "" ? +i.bonus || 0 : magic && (w || a || /^(arme|armure|weapon|armor)/.test(gNorm(h))) ? (d ? bonusFrom(n, d, armorish) : bonusFrom(n, "", armorish) || +i.mb || 0) : 0;
+  const acb = w || a ? 0 : i.acb != null && i.acb !== "" ? +i.acb || 0 : magic ? bonusFrom("", d, true) : 0;
+  // cape, anneau de protection : le même bonus s’applique aux jets de sauvegarde
+  const svb = acb && magic && i.acb == null && /sauvegarde|saving throws/i.test(d) ? acb : 0;
+  return { base: w || a ? base : null, w, a, bonus, acb, svb, xd: i.xd || "", note: i.note || "", magic, h };
 }
 function itemName(i) {
+  if (i.nn) return i.nn;
   if (i.ref && i.ref.startsWith("w:") && WEAPONS[i.ref.slice(2)]) return WEAPONS[i.ref.slice(2)].n;
   if (i.ref && i.ref.startsWith("a:") && ARMORS[i.ref.slice(2)]) return ARMORS[i.ref.slice(2)].n;
-  if (i.ref && i.ref.startsWith("g:") && GEAR[i.ref.slice(2)]) return GEAR[i.ref.slice(2)];
+  if (i.ref && i.ref.startsWith("g:") && (GEAR[i.ref.slice(2)] || GEAR_MORE[i.ref.slice(2)])) return GEAR[i.ref.slice(2)] || GEAR_MORE[i.ref.slice(2)];
   if (i.ref && i.ref.startsWith("mi:") && typeof MAGIC_ITEMS !== "undefined" && MAGIC_ITEMS[i.ref.slice(3)]) return MAGIC_ITEMS[i.ref.slice(3)].n;
   return i.n;
 }
