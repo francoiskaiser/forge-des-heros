@@ -2,6 +2,10 @@
 
 Chaque version correspond à un commit Git dont le message commence par son numéro. Pour revenir en arrière, voir la section en bas.
 
+## 1.11.0 — 19 octobre 2026
+- Catalogue complété : **8 styles de combat** et **5 faveurs épiques** du Manuel des joueurs (à compléter), proposés dans les choix de style et de faveur ; ajout de la Faveur de l'esprit nocturne (SRD).
+- Export Excel amélioré : onglet **Mode d'emploi** détaillé, 4 lignes vides au niveau 3 et 2 aux autres niveaux pour chaque sous-classe, pièces d'or des historiques laissées vides à compléter.
+
 ## 1.10.0 — 19 octobre 2026
 - **Incantation de sous-classe** : l'Arnaqueur arcanique et le Chevalier occulte lancent des sorts (progression de tiers-lanceur : emplacements, tours de magie, sorts préparés, liste du magicien). Option disponible pour toute sous-classe créée.
 - Les **sorts toujours préparés** d'une sous-classe apparaissent dans l'onglet Sorts (une ligne sans niveau compte pour le niveau 3).

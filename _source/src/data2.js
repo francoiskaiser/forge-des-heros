@@ -39,6 +39,7 @@ const EPIC_BOONS = {
   offensive: { n: "Faveur de l’offensive irrésistible", d: "Vos dégâts contondants, perforants et tranchants ignorent la résistance. Sur un 20 naturel, dégâts supplémentaires égaux à la caractéristique augmentée." },
   rappel: { n: "Faveur du rappel de sort", d: "Quand vous lancez un sort avec un emplacement de niveau 1 à 4, lancez 1d4 : si le résultat est égal au niveau de l’emplacement, celui-ci n’est pas dépensé." },
   vision: { n: "Faveur de vision véritable", d: "Vous gagnez la vision véritable sur 18 m." },
+  nocturne: { n: "Faveur de l’esprit nocturne", d: "Dans une lumière faible ou les ténèbres : vous pouvez devenir invisible par une action bonus (jusqu’à votre prochaine action, action bonus ou réaction), et vous avez la résistance à tous les dégâts sauf psychiques et radiants." },
 };
 
 /* Choix ajoutés à haut niveau */

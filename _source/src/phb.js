@@ -53,11 +53,17 @@ const PHB_BGS = [
   ["voyageur", "Voyageur", ["dex", "sag", "cha"], ["pspi", "disc"], "Outils de voleur", "hb_phb_chanceux"],
 ];
 
+/* Styles de combat et faveurs épiques (hors SRD) */
+const PHB_STYLES = [["aveugle", "Combat en aveugle"], ["duel", "Duel"], ["interception", "Interception"], ["protection", "Protection"], ["lancer", "Arme de lancer"], ["mainsnues", "Combat à mains nues"], ["beni", "Combattant béni"], ["druidique", "Combattant druidique"]];
+const PHB_BOONS = [["energies", "Faveur de résistance aux énergies"], ["vigueur", "Faveur de vigueur"], ["recuperation", "Faveur de récupération"], ["competence", "Faveur de compétence"], ["vitesse", "Faveur de vitesse"]];
+
 const PHB_RAW = {};
 (function phbBoot() {
   const add = (d) => { d.sk = true; d.src = "phb"; PHB_RAW["hb_" + d.id] = d; };
   Object.entries(PHB_SUBS).forEach(([cls, list]) => list.forEach(([k, n]) => add({ id: "phb_" + cls + "_" + k, type: "sub", n, cls, d: "", feats: SUB_LEVELS[cls].map((l) => ({ l, n: "", d: "" })), spellsTxt: "" })));
   PHB_FEATS.forEach(([k, n, cat]) => add({ id: "phb_" + k, type: "feat", n, cat: cat || "general", pre: cat ? "" : "Niveau 4", ab: [], d: "" }));
+  PHB_STYLES.forEach(([k, n]) => add({ id: "phb_style_" + k, type: "feat", n, cat: "style", pre: "Aptitude Style de combat", ab: [], d: "" }));
+  PHB_BOONS.forEach(([k, n]) => add({ id: "phb_faveur_" + k, type: "feat", n, cat: "faveur", pre: "Niveau 19", ab: [], d: "" }));
   PHB_BGS.forEach(([k, n, ab, skills, tool, feat, featList]) => add({ id: "phb_" + k, type: "bg", n, ab, skills, tool, feat, featList: featList || "clr", d: "", gear: "", gold: 0 }));
   // sous-classes qui donnent l’incantation (règle de jeu, pas de texte)
   PHB_RAW.hb_phb_guerrier_chevalierocculte.cast = { ab: "int", list: "magicien" };

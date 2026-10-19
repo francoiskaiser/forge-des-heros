@@ -1449,6 +1449,7 @@ const EPIC_BOONS = {
   offensive: { n: "Boon of Irresistible Offense", d: "Your Bludgeoning, Piercing, and Slashing damage ignores Resistance. On a natural 20, extra damage equal to the increased ability score." },
   rappel: { n: "Boon of Spell Recall", d: "When you cast a spell with a level 1–4 slot, roll 1d4: if the roll equals the slot's level, the slot isn't expended." },
   vision: { n: "Boon of Truesight", d: "You gain Truesight out to 60 feet." },
+  nocturne: { n: "Boon of the Night Spirit", d: "In Dim Light or Darkness: you can turn Invisible as a Bonus Action (until you take an action, Bonus Action or Reaction), and you have Resistance to all damage except Psychic and Radiant." },
 };
 
 /* Choix ajoutés à haut niveau */
@@ -2768,7 +2769,7 @@ function stepAbilities(b) {
     ${a.mode === "11" ? `<div class="bonus-pick"><span>+1</span><div class="chips">${ABK.filter((x) => x !== a.a).map((x) => chip(ABIL[x].s, a.b === x, "setAsiB", `data-v="${x}" ${dl}`)).join("")}</div></div>` : ""}`}
   </section>`;
   }).join("") + (b.level >= 19 ? `<section class="panel"><h4>Epic Boon (level 19)</h4><p class="mute small">An Epic Boon feat and +1 to one ability score, up to 30.</p>
-    <div class="opt-grid">${Object.entries(EPIC_BOONS).map(([k, x]) => `<button class="opt ${b.opts.boon.id === k ? "on" : ""}" data-a="boon" data-v="${k}"><b>${x.n}</b><span>${x.d}</span></button>`).join("")}</div>
+    <div class="opt-grid">${Object.entries(EPIC_BOONS).map(([k, x]) => `<button class="opt ${b.opts.boon.id === k ? "on" : ""}" data-a="boon" data-v="${k}"><b>${x.hb ? esc(x.n) : x.n}${hbTag(x)}</b><span>${x.hb ? esc(x.d) : x.d}</span></button>`).join("")}</div>${hbTodoNote([b.opts.boon.id])}
     <div class="bonus-pick"><span>+1</span><div class="chips">${ABK.map((x) => chip(ABIL[x].s, b.opts.boon.a === x, "boonAb", `data-v="${x}"`)).join("")}</div></div></section>` : "") + (b.level >= 20 && (b.cls === "barbare" || b.cls === "moine") ? `<p class="mute small">Level 20: ${b.cls === "barbare" ? "Strength and Constitution" : "Dexterity and Wisdom"} +4 (max 25), already included.</p>` : "");
   return `<section class="block"><div class="chips">${methods}</div>
     <p class="mute small">${b.method === "standard" ? "Assign 15, 14, 13, 12, 10, and 8. Choosing a value swaps it with the ability that had it." : b.method === "points" ? `27 points to spend, scores from 8 to 15. <b class="${spent > 27 ? "bad" : ""}">${27 - spent} points left.</b>` : "Roll 4d6 six times and keep the three highest dice each time."}</p>
@@ -2836,7 +2837,7 @@ function stepOptions(b) {
     <button class="opt ${b.opts.order === "magicien" ? "on" : ""}" data-a="order" data-v="magicien"><b>Wizard</b><span>One extra cantrip and + WIS modifier to Arcana and Nature checks.</span></button>
     <button class="opt ${b.opts.order === "gardien" ? "on" : ""}" data-a="order" data-v="gardien"><b>Warden</b><span>Proficiency with Martial weapons and Medium armor.</span></button></div></section>`);
   if (b.cls === "guerrier" || (["paladin", "rodeur"].includes(b.cls) && b.level >= 2))
-    out.push(`<section class="panel"><h4>Fighting Style</h4><div class="opt-grid">${Object.entries(FIGHTING_STYLES).map(([k, f]) => `<button class="opt ${b.opts.style === k ? "on" : ""}" data-a="style" data-v="${k}"><b>${f.n}</b><span>${f.d}</span></button>`).join("")}</div></section>`);
+    out.push(`<section class="panel"><h4>Fighting Style</h4><div class="opt-grid">${Object.entries(FIGHTING_STYLES).map(([k, f]) => `<button class="opt ${b.opts.style === k ? "on" : ""}" data-a="style" data-v="${k}"><b>${f.hb ? esc(f.n) : f.n}${hbTag(f)}</b><span>${f.hb ? esc(f.d) : f.d}</span></button>`).join("")}</div>${hbTodoNote([b.opts.style])}</section>`);
   if (c.mastery) {
     const ws = Object.entries(WEAPONS).filter(([k, w]) => weaponProf(b, w) && (b.cls !== "barbare" || w.k === "cac"));
     out.push(`<section class="panel"><h4>Weapon Mastery — ${b.opts.mastery.length}/${c.mastery}</h4><p class="mute small">You can use the mastery property of these weapons. Hover a weapon to see its effect.</p>
@@ -2849,7 +2850,7 @@ function stepOptions(b) {
   }
   if (b.cls === "ensorceleur" && b.level >= 2) { const mc = metaCount(b); out.push(`<section class="panel"><h4>Metamagic — ${b.opts.meta.length}/${mc}</h4><div class="opt-grid">${Object.entries(METAMAGIC).map(([k, v]) => `<button class="opt ${b.opts.meta.includes(k) ? "on" : ""}" data-a="meta" data-v="${k}" ${!b.opts.meta.includes(k) && b.opts.meta.length >= mc ? 'aria-disabled="true"' : ""}><b>${v.n}</b><span>${v.d}</span></button>`).join("")}</div></section>`); }
   if (b.cls === "ensorceleur" && b.level >= 6 && std) out.push(`<section class="panel"><h4>Elemental Affinity: damage type</h4><p class="mute small">The one from your draconic ancestry.</p><div class="chips">${[K("acide"), K("froid"), K("feu"), K("foudre"), K("poison")].map((t) => chip(DMG[t][0].toUpperCase() + DMG[t].slice(1), b.opts.dragon === t, "dragon", `data-v="${t}"`)).join("")}</div></section>`);
-  if (b.cls === "guerrier" && b.level >= 7 && std) out.push(`<section class="panel"><h4>Second Fighting Style (Champion)</h4><div class="opt-grid">${Object.entries(FIGHTING_STYLES).filter(([k]) => k !== b.opts.style).map(([k, f]) => `<button class="opt ${b.opts.style2 === k ? "on" : ""}" data-a="style2" data-v="${k}"><b>${f.n}</b><span>${f.d}</span></button>`).join("")}</div></section>`);
+  if (b.cls === "guerrier" && b.level >= 7 && std) out.push(`<section class="panel"><h4>Second Fighting Style (Champion)</h4><div class="opt-grid">${Object.entries(FIGHTING_STYLES).filter(([k]) => k !== b.opts.style).map(([k, f]) => `<button class="opt ${b.opts.style2 === k ? "on" : ""}" data-a="style2" data-v="${k}"><b>${f.hb ? esc(f.n) : f.n}${hbTag(f)}</b><span>${f.hb ? esc(f.d) : f.d}</span></button>`).join("")}</div></section>`);
   if (STRIKE_OPTS[b.cls] && b.level >= STRIKE_OPTS[b.cls].lvl) { const so = STRIKE_OPTS[b.cls]; out.push(`<section class="panel"><h4>${so.label} (level ${so.lvl})</h4><div class="opt-grid">${Object.entries(so.opts).map(([k, o]) => `<button class="opt ${b.opts.strike === k ? "on" : ""}" data-a="strike" data-v="${k}"><b>${o.n}</b><span>${o.d}</span></button>`).join("")}</div></section>`); }
   if (b.cls === "rodeur" && b.level >= 3 && std) out.push(`<section class="panel"><h4>Hunter’s Prey</h4><div class="opt-grid">
     <button class="opt ${b.opts.prey === "colosse" ? "on" : ""}" data-a="prey" data-v="colosse"><b>Colossus Slayer</b><span>Once per turn, +1d8 damage against a wounded target.</span></button>
@@ -4140,7 +4141,7 @@ function accountStart() { if (Account.user()) syncAccount(); }
 
 /* Forge des Héros — page Compte et réglages : thème, langue, support, version */
 
-const APP_VERSION = "1.10.0";
+const APP_VERSION = "1.11.0";
 
 /* ---------- Thème ---------- */
 const Theme = {
@@ -4298,6 +4299,10 @@ const HBSUB = {};        // sous-classes maison, clé "hb_<id>"
 const HBITEMS = {};      // objets maison
 const HB_RAW = {};       // définitions brutes, clé "hb_<id>"
 const HB_TYPES = [["sub", "Subclass"], ["bg", "Background"], ["feat", "Feat"], ["spell", "Spell"], ["item", "Item"]];
+const HB_CATS = ["origine", "general", "style", "faveur"];
+const HB_CAT_L = { origine: "Origin feat", general: "General feat (level 4 and up)", style: "Fighting Style", faveur: "Epic Boon (level 19)" };
+/* Table où va un don selon sa catégorie */
+const hbFeatTable = (d) => (d.cat === "style" ? FIGHTING_STYLES : d.cat === "faveur" ? EPIC_BOONS : FEATS);
 const HB_TODO_D = "Text to fill in from your book: tap “Fill in”.";
 const HB_TYPE_L = Object.fromEntries(HB_TYPES);
 const HB_RARITY = [K("commun"), K("peu commun"), K("rare"), K("très rare"), K("légendaire"), K("artefact")];
@@ -4345,7 +4350,7 @@ function hbShape(d) {
   switch (d.type) {
     case "sub": return { ...base, cls: d.cls, d: d.d || "", feats: d.sk ? (d.feats || []).map((f) => ({ l: f.l, n: "Subclass feature", d: HB_TODO_D })) : (d.feats || []).filter((f) => f && f.n).map((f) => ({ l: clampLv(f.l, 3, 20), n: f.n, d: f.d || "" })), spells: d.spells || {}, cast: hbCastOf(d) };
     case "bg": return { ...base, ab: (d.ab || []).slice(0, 3), skills: (d.skills || []).slice(0, 2), tool: d.tool || "—", feat: d.feat || "vigilant", featList: d.feat === "initie" ? d.featList || "clr" : undefined, desc: d.d || "", gear: parseGear(d.gear), gold: Math.max(0, parseInt(d.gold, 10) || 0) };
-    case "feat": return { ...base, d: d.d || (d.sk ? HB_TODO_D : ""), cat: d.cat === "general" ? "general" : "origine", ab: d.ab || [], pre: d.pre || "" };
+    case "feat": return { ...base, d: d.d || (d.sk ? HB_TODO_D : ""), cat: HB_CATS.includes(d.cat) ? d.cat : "origine", ab: d.ab || [], pre: d.pre || "" };
     case "spell": {
       const o = { ...base, l: clampLv(d.l, 0, 9), e: SC[d.e] ? d.e : "evo", t: d.t || "Action", p: d.p || "—", c: d.c || "V, S", du: d.du || "Instantaneous", co: !!d.co, ri: !!d.ri, cl: (d.cl || []).filter((k) => CLASSES[k]), d: d.d || "" };
       if (d.dmg) { o.dmg = d.dmg; o.ty = DMG[d.ty] ? d.ty : "force"; }
@@ -4369,12 +4374,13 @@ function hbRegister(d, force) {
   const shaped = hbShape(d);
   if (!shaped) return;
   HB_RAW[k] = d;
-  const tgt = { sub: HBSUB, bg: BACKGROUNDS, feat: FEATS, spell: SPELLS, item: HBITEMS }[d.type];
+  const tgt = { sub: HBSUB, bg: BACKGROUNDS, feat: hbFeatTable(d), spell: SPELLS, item: HBITEMS }[d.type];
+  [FEATS, FIGHTING_STYLES, EPIC_BOONS].forEach((t) => { if (t !== tgt && t[k] && t[k].hb) delete t[k]; });
   if (tgt) tgt[k] = shaped;
 }
 function hbUnregister(k) {
   delete HB_RAW[k];
-  [HBSUB, BACKGROUNDS, FEATS, SPELLS, HBITEMS].forEach((t) => { if (t[k] && t[k].hb) delete t[k]; });
+  [HBSUB, BACKGROUNDS, FEATS, FIGHTING_STYLES, EPIC_BOONS, SPELLS, HBITEMS].forEach((t) => { if (t[k] && t[k].hb) delete t[k]; });
   if (typeof PHB_RAW !== "undefined" && PHB_RAW[k]) hbRegister(PHB_RAW[k], true); // l’entrée du catalogue redevient « à compléter »
 }
 
@@ -4382,7 +4388,7 @@ function hbUnregister(k) {
 function hbUsed(b) {
   const ids = new Set();
   const add = (k) => { if (typeof k === "string" && k.startsWith("hb_")) ids.add(k); };
-  add(b.bg); add(b.humanFeat); add(b.subHb);
+  add(b.bg); add(b.humanFeat); add(b.subHb); add(b.opts.style); add(b.opts.style2); add(b.opts.boon && b.opts.boon.id);
   if (b.bg && BACKGROUNDS[b.bg]) add(BACKGROUNDS[b.bg].feat);
   Object.values(b.opts.asis || {}).forEach((a) => a && add(a.feat));
   [...(b.cant || []), ...(b.prep || []), ...(b.opts.lore2 || []), ...Object.values(b.opts.arcanum || {})].forEach(add);
@@ -4466,7 +4472,7 @@ function hbMeta(d) {
   switch (d.type) {
     case "sub": return (CLASSES[o.cls] ? CLASSES[o.cls].n : "") + " · " + (d.sk ? "niveaux " + o.feats.map((x) => x.l).join(", ") : o.feats.length + " aptitude" + (o.feats.length > 1 ? "s" : ""));
     case "bg": return o.ab.map((a) => ABIL[a].s).join(", ") + " · " + o.skills.map((k) => SKILLS[k] ? SKILLS[k].n : k).join(", ") + (FEATS[o.feat] ? " · " + FEATS[o.feat].n : "");
-    case "feat": return o.cat === "general" ? "General feat (level 4 and up)" : "Origin feat";
+    case "feat": return HB_CAT_L[o.cat] || HB_CAT_L.origine;
     case "spell": return (o.l ? "Level " + o.l : "Cantrip") + " · " + SC[o.e] + (o.cl.length ? " · " + o.cl.map((k) => CLASSES[k].n).join(", ") : "");
     case "item": return (o.kind ? o.kind + " · " : "") + (HB_RARITY_L[o.rarity] || o.rarity) + (o.attune ? " · attunement" : "");
   }
@@ -4554,8 +4560,8 @@ function viewHBForm() {
       ${hbInput("gear", "Equipment", "Separate with commas: Carpenter's Tools, Traveler's Clothes, 2 Torches", { area: true, rows: 3 })}
       ${hbInput("gold", "Gold pieces", "15", { num: true })}`;
   } else if (t === "feat") {
-    body = `${one("cat", [["origine", "Origin feat"], ["general", "General feat (level 4+)"]], "Category")}
-      <p class="mute small">${f.cat === "general" ? "Offered instead of an Ability Score Improvement, from level 4." : "Offered to homebrew backgrounds and the human origin feat."}</p>
+    body = `${one("cat", HB_CATS.map((k) => [k, HB_CAT_L[k]]), "Category")}
+      <p class="mute small">${f.cat === "general" ? "Offered instead of an Ability Score Improvement, from level 4." : f.cat === "style" ? "Offered in the fighting style choice (fighter, paladin, ranger)." : f.cat === "faveur" ? "Offered in the epic boon choice, at level 19." : "Offered to backgrounds and the human origin feat."}</p>
       ${hbInput("pre", "Prerequisite (optional)", "E.g. Strength 13 or higher")}
       ${multi("fab", ABK.map((k) => [k, ABIL[k].n]), 0, "+1 to one ability chosen from (optional)")}`;
   } else if (t === "spell") {
@@ -4769,11 +4775,17 @@ const PHB_BGS = [
   ["voyageur", "Wayfarer", ["dex", "sag", "cha"], ["pspi", "disc"], "Thieves’ Tools", "hb_phb_chanceux"],
 ];
 
+/* Styles de combat et faveurs épiques (hors SRD) */
+const PHB_STYLES = [["aveugle", "Blind Fighting"], ["duel", "Dueling"], ["interception", "Interception"], ["protection", "Protection"], ["lancer", "Thrown Weapon Fighting"], ["mainsnues", "Unarmed Fighting"], ["beni", "Blessed Warrior"], ["druidique", "Druidic Warrior"]];
+const PHB_BOONS = [["energies", "Boon of Energy Resistance"], ["vigueur", "Boon of Fortitude"], ["recuperation", "Boon of Recovery"], ["competence", "Boon of Skill"], ["speed", "Boon of Speed"]];
+
 const PHB_RAW = {};
 (function phbBoot() {
   const add = (d) => { d.sk = true; d.src = "phb"; PHB_RAW["hb_" + d.id] = d; };
   Object.entries(PHB_SUBS).forEach(([cls, list]) => list.forEach(([k, n]) => add({ id: "phb_" + cls + "_" + k, type: "sub", n, cls, d: "", feats: SUB_LEVELS[cls].map((l) => ({ l, n: "", d: "" })), spellsTxt: "" })));
   PHB_FEATS.forEach(([k, n, cat]) => add({ id: "phb_" + k, type: "feat", n, cat: cat || "general", pre: cat ? "" : "Level 4", ab: [], d: "" }));
+  PHB_STYLES.forEach(([k, n]) => add({ id: "phb_style_" + k, type: "feat", n, cat: "style", pre: "Fighting Style feature", ab: [], d: "" }));
+  PHB_BOONS.forEach(([k, n]) => add({ id: "phb_faveur_" + k, type: "feat", n, cat: "faveur", pre: "Level 19", ab: [], d: "" }));
   PHB_BGS.forEach(([k, n, ab, skills, tool, feat, featList]) => add({ id: "phb_" + k, type: "bg", n, ab, skills, tool, feat, featList: featList || "clr", d: "", gear: "", gold: 0 }));
   // sous-classes qui donnent l’incantation (règle de jeu, pas de texte)
   PHB_RAW.hb_phb_guerrier_chevalierocculte.cast = { ab: "int", list: "magicien" };
@@ -4834,16 +4846,18 @@ const list = (v) => String(v || "").split(/[,;\s]+/).map((x) => x.trim().toLower
 
 function hbRows(defs) {
   const rows = { sub: [], bg: [], feat: [], spell: [], item: [] };
-  const sorted = defs.slice().sort((a, b) => (a.cls || "").localeCompare(b.cls || "") || String(a.n).localeCompare(String(b.n), "fr"));
+  const catOrder = (d) => (d.type === "feat" ? HB_CATS.indexOf(d.cat || "origine") : 0);
+  const sorted = defs.slice().sort((a, b) => (a.cls || "").localeCompare(b.cls || "") || catOrder(a) - catOrder(b) || String(a.n).localeCompare(String(b.n), "fr"));
   sorted.forEach((d) => {
     switch (d.type) {
       case "sub": {
         const cast = hbCastOf(d);
         rows.sub.push([d.id, d.cls, d.n, "", "", d.d || "", d.spellsTxt || "", cast ? cast.ab + ":" + cast.list : ""]);
-        (d.feats || []).forEach((f) => rows.sub.push([d.id, d.cls, d.n, f.l, f.n || "", f.d || "", "", ""]));
+        if (d.sk) (d.feats || []).forEach((f) => { for (let i = 0; i < (f.l === 3 ? 4 : 2); i++) rows.sub.push([d.id, d.cls, d.n, f.l, "", "", "", ""]); }); // plusieurs aptitudes possibles par niveau
+        else (d.feats || []).forEach((f) => rows.sub.push([d.id, d.cls, d.n, f.l, f.n || "", f.d || "", "", ""]));
         break;
       }
-      case "bg": rows.bg.push([d.id, d.n, (d.ab || []).join(", "), (d.skills || []).join(", "), d.tool || "", d.feat || "", d.d || "", d.gear || "", d.gold || 0]); break;
+      case "bg": rows.bg.push([d.id, d.n, (d.ab || []).join(", "), (d.skills || []).join(", "), d.tool || "", d.feat || "", d.d || "", d.gear || "", d.sk ? "" : d.gold || 0]); break;
       case "feat": rows.feat.push([d.id, d.n, d.cat || "origine", d.pre || "", (d.ab || []).join(", "), d.d || ""]); break;
       case "spell": rows.spell.push([d.id, d.n, d.l, d.e, (d.cl || []).join(", "), d.t || "", d.p || "", d.c || "", d.du || "", d.co ? "oui" : "", d.ri ? "oui" : "", d.atk || "", d.dmg || "", d.ty || "", d.heal || "", d.up || "", d.d || ""]); break;
       case "item": rows.item.push([d.id, d.n, d.kind || "", d.rarity || "", d.attune ? "oui" : "", d.d || ""]); break;
@@ -4855,22 +4869,48 @@ function hbRows(defs) {
 function hbReadme() {
   const codes = (o, f) => Object.entries(o).map(([k, v]) => k + " = " + (f ? f(v) : v)).join(" · ");
   return [
-    ["Forge des Héros — books & creations"],
-    ["Fill in the Text, Feature or Description columns, then import this file in the app (Books & creations › Import)."],
-    ["Empty rows are ignored: you can import a half-filled file and finish it later."],
-    ["Don't change the id column of an existing row. For a new creation, leave id empty."],
-    ["Subclasses: the row without a level holds the description, always-prepared spells (e.g. “3: Bless, Cure Wounds”) and spellcasting (e.g. int:magicien)."],
-    ["Subclasses: several features at the same level? Copy the row and change the feature name."],
+    ["Forge des Héros — books & creations: how to fill in"],
     [""],
-    ["Class codes", codes(CLASSES, (c) => c.n)],
-    ["Ability codes", codes(ABIL, (a) => a.n)],
-    ["Skill codes", codes(SKILLS, (s) => s.n)],
-    ["School codes", codes(SC)],
-    ["Origin feat codes", Object.entries(FEATS).filter(([, f]) => f.cat !== "general").map(([k, f]) => k + " = " + f.n).join(" · ")],
+    ["What this file is for", "The app already knows every Player's Handbook subclass, background, feat, fighting style and epic boon (names, levels, abilities, skills…). Only their text is missing, which the app can't provide. Use this file to copy it from your book, then import it into the adventure in one go: the whole group then sees it in the builder and on sheets."],
+    [""],
+    ["STEPS"],
+    ["1. Open a tab", "Start with the tab your group needs (often Subclasses). No need to fill in everything: only completed entries are imported."],
+    ["2. Fill in the empty cells", "Only fill in the columns listed in the table below. Type or paste the text from your book. For a line break inside a cell: Alt + Enter (Windows) or Option + Enter (Mac)."],
+    ["3. Save", "Save as Excel (.xlsx), without renaming the tabs."],
+    ["4. Import into the app", "Open the adventure (a sheet's Adventure tab, or the GM screen) › Books & creations › Import a file › choose this file. The app shows how many entries were imported and how many are still empty."],
+    ["5. Repeat as needed", "You can complete the file and re-import it as often as you like: a re-imported entry replaces the old one. To start from the latest version, use Export to Excel in the app."],
+    [""],
+    ["WHAT TO FILL IN, TAB BY TAB", "", "Don't change"],
+    ["Subclasses — row without a level", "Text: the subclass overview (a few lines). Always-prepared spells: only if the book gives a spell table for the subclass, one line per character level, as “3: Bless, Cure Wounds”, with spell names as they appear in the app.", "id, Class, Subclass, Spellcasting (already set when the subclass grants spells)"],
+    ["Subclasses — rows with a level", "Feature: the feature's name. Text: what it does. There are 4 empty rows at level 3 and 2 at other levels: use one per feature and leave the rest empty. If you need more, copy a row of the same level.", "id, Classe, Sous-classe, Niveau"],
+    ["Backgrounds", "Description: a few lines. Equipment: option A equipment, comma-separated, quantity first (e.g. “Carpenter's Tools, 2 Torches, Traveler's Clothes”). gp: option A gold. Option B (50 GP) is handled by the app.", "id, Name, Abilities, Skills, Tool, Feat (already filled in)"],
+    ["Feats (origin, general, fighting styles, epic boons)", "Text: what the feat does (required for it to be imported). Prerequisite: check or complete. +1 from: if the feat increases an ability, the codes separated by commas (e.g. “for, dex”); otherwise leave empty.", "id, Name, Category"],
+    ["Spells and Items", "For your own creations only: one row per entry, empty id column. Codes are listed below.", "—"],
+    [""],
+    ["IMPORTANT RULES"],
+    ["Leave alone", "The id column, tab names and the header row. Without an id, the app creates a new entry instead of completing the book's."],
+    ["Empty rows", "A subclass with no feature name, a background with no description or equipment, or a feat with no text is ignored: it stays “to fill in” in the app."],
+    ["Length", "Up to 3,000 characters per feature and 6,000 per description. Text is imported without formatting (bold, tables), but line breaks are kept."],
+    ["Sharing the work", "Everyone can fill in a part (for example their own subclass) and import it. Only an entry's author and the GM can replace it afterwards."],
+    ["Privacy", "Your books' text stays in your adventure: only people with its code can see it."],
+    [""],
+    ["EXAMPLE (fictional subclass, not to import)"],
+    ["id", "Class · Subclass · Level", "Feature", "Text"],
+    ["phb_exemple", "barbare · Path of the Storm · (empty)", "", "Barbarians who draw their rage from the storm."],
+    ["phb_exemple", "barbare · Path of the Storm · 3", "Storm Heart", "While raging, you have Resistance to Lightning damage."],
+    ["phb_exemple", "barbare · Path of the Storm · 3", "Rumble", "Once per turn, when you hit while raging, the target takes 1d6 Thunder damage."],
+    ["phb_exemple", "barbare · Path of the Storm · 3", "", "(row left empty: ignored)"],
+    [""],
+    ["CODES"],
+    ["Classes", codes(CLASSES, (c) => c.n)],
+    ["Abilities", codes(ABIL, (a) => a.n)],
+    ["Skills", codes(SKILLS, (x) => x.n)],
+    ["Schools of magic", codes(SC)],
+    ["Origin feats", Object.entries(FEATS).filter(([, f]) => f.cat !== "general").map(([k, f]) => k + " = " + f.n).join(" · ")],
+    ["Feat categories", "origine · general · style · faveur"],
     ["Spell roll", "cac = melee attack · dist = ranged attack · for, dex, con, int, sag, cha = saving throw"],
-    ["Damage codes", codes(DMG)],
-    [""],
-    ["The app doesn't provide book text: it stays private, in your adventure."],
+    ["Damage types", codes(DMG)],
+    ["Subclass spellcasting", "ability:list, for example int:magicien (leave empty if the subclass grants no spells)"],
   ];
 }
 
@@ -4878,8 +4918,8 @@ async function hbExportXlsx(code) {
   await xlsxLoad();
   const wb = XLSX.utils.book_new();
   const readme = XLSX.utils.aoa_to_sheet(hbReadme());
-  readme["!cols"] = [{ wch: 28 }, { wch: 120 }];
-  XLSX.utils.book_append_sheet(wb, readme, "Read me");
+  readme["!cols"] = [{ wch: 34 }, { wch: 110 }, { wch: 46 }, { wch: 60 }];
+  XLSX.utils.book_append_sheet(wb, readme, "How to fill in");
   const rows = hbRows(hbExportDefs(code));
   const widths = { sub: [26, 12, 26, 7, 28, 80, 30, 14], bg: [18, 18, 16, 16, 26, 22, 60, 50, 6], feat: [24, 26, 10, 18, 12, 80], spell: [18, 22, 6, 6, 22, 14, 10, 12, 12, 8, 8, 6, 8, 10, 8, 18, 80], item: [18, 26, 20, 12, 8, 80] };
   HBX_SHEETS.forEach(([k, name, head]) => {
@@ -4939,7 +4979,7 @@ function hbFromSheets(sheets, report) {
     const id = cell(r, 0), n = cell(r, 1); if (!id && !n) return;
     const sk = id && skOf(id), d = cell(r, 5);
     if (!d) { report.skip++; return; }
-    docs.push({ id: id || slugId(n), type: "feat", n: (n || sk.n).slice(0, 120), d: d.slice(0, 6000), cat: /^g/i.test(cell(r, 2)) ? "general" : "origine", pre: cell(r, 3).slice(0, 200), ab: list(cell(r, 4)).filter((a) => ABIL[a]) });
+    docs.push({ id: id || slugId(n), type: "feat", n: (n || sk.n).slice(0, 120), d: d.slice(0, 6000), cat: /^g/i.test(cell(r, 2)) ? "general" : /^s/i.test(cell(r, 2)) ? "style" : /^f/i.test(cell(r, 2)) ? "faveur" : "origine", pre: cell(r, 3).slice(0, 200), ab: list(cell(r, 4)).filter((a) => ABIL[a]) });
   });
   (sheets.spell || []).forEach((r, i) => {
     const n = cell(r, 1); if (!n) return;
@@ -4969,8 +5009,8 @@ async function hbImportFile(file, code) {
       const wb = XLSX.read(await file.arrayBuffer(), { type: "array" });
       const sheets = {};
       wb.SheetNames.forEach((name, i) => {
-        const k = HBX_NAMES[normName(name)] || (HBX_SHEETS[i - 1] && HBX_SHEETS[i - 1][0]);
-        if (!k || name === wb.SheetNames[0] && !HBX_NAMES[normName(name)]) return;
+        const k = HBX_NAMES[normName(name)];
+        if (!k) return;
         sheets[k] = XLSX.utils.sheet_to_json(wb.Sheets[name], { header: 1, defval: "", raw: false }).slice(1);
       });
       if (!Object.keys(sheets).length) throw new Error("format");

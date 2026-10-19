@@ -6,6 +6,10 @@ const HBSUB = {};        // sous-classes maison, clé "hb_<id>"
 const HBITEMS = {};      // objets maison
 const HB_RAW = {};       // définitions brutes, clé "hb_<id>"
 const HB_TYPES = [["sub", "Sous-classe"], ["bg", "Historique"], ["feat", "Don"], ["spell", "Sort"], ["item", "Objet"]];
+const HB_CATS = ["origine", "general", "style", "faveur"];
+const HB_CAT_L = { origine: "Don d’origine", general: "Don général (niveau 4 et plus)", style: "Style de combat", faveur: "Faveur épique (niveau 19)" };
+/* Table où va un don selon sa catégorie */
+const hbFeatTable = (d) => (d.cat === "style" ? FIGHTING_STYLES : d.cat === "faveur" ? EPIC_BOONS : FEATS);
 const HB_TODO_D = "Texte à compléter depuis votre livre : touchez « Compléter ».";
 const HB_TYPE_L = Object.fromEntries(HB_TYPES);
 const HB_RARITY = [K("commun"), K("peu commun"), K("rare"), K("très rare"), K("légendaire"), K("artefact")];
@@ -53,7 +57,7 @@ function hbShape(d) {
   switch (d.type) {
     case "sub": return { ...base, cls: d.cls, d: d.d || "", feats: d.sk ? (d.feats || []).map((f) => ({ l: f.l, n: "Aptitude de sous-classe", d: HB_TODO_D })) : (d.feats || []).filter((f) => f && f.n).map((f) => ({ l: clampLv(f.l, 3, 20), n: f.n, d: f.d || "" })), spells: d.spells || {}, cast: hbCastOf(d) };
     case "bg": return { ...base, ab: (d.ab || []).slice(0, 3), skills: (d.skills || []).slice(0, 2), tool: d.tool || "—", feat: d.feat || "vigilant", featList: d.feat === "initie" ? d.featList || "clr" : undefined, desc: d.d || "", gear: parseGear(d.gear), gold: Math.max(0, parseInt(d.gold, 10) || 0) };
-    case "feat": return { ...base, d: d.d || (d.sk ? HB_TODO_D : ""), cat: d.cat === "general" ? "general" : "origine", ab: d.ab || [], pre: d.pre || "" };
+    case "feat": return { ...base, d: d.d || (d.sk ? HB_TODO_D : ""), cat: HB_CATS.includes(d.cat) ? d.cat : "origine", ab: d.ab || [], pre: d.pre || "" };
     case "spell": {
       const o = { ...base, l: clampLv(d.l, 0, 9), e: SC[d.e] ? d.e : "evo", t: d.t || "1 action", p: d.p || "—", c: d.c || "V, S", du: d.du || "Instantanée", co: !!d.co, ri: !!d.ri, cl: (d.cl || []).filter((k) => CLASSES[k]), d: d.d || "" };
       if (d.dmg) { o.dmg = d.dmg; o.ty = DMG[d.ty] ? d.ty : "force"; }
@@ -77,12 +81,13 @@ function hbRegister(d, force) {
   const shaped = hbShape(d);
   if (!shaped) return;
   HB_RAW[k] = d;
-  const tgt = { sub: HBSUB, bg: BACKGROUNDS, feat: FEATS, spell: SPELLS, item: HBITEMS }[d.type];
+  const tgt = { sub: HBSUB, bg: BACKGROUNDS, feat: hbFeatTable(d), spell: SPELLS, item: HBITEMS }[d.type];
+  [FEATS, FIGHTING_STYLES, EPIC_BOONS].forEach((t) => { if (t !== tgt && t[k] && t[k].hb) delete t[k]; });
   if (tgt) tgt[k] = shaped;
 }
 function hbUnregister(k) {
   delete HB_RAW[k];
-  [HBSUB, BACKGROUNDS, FEATS, SPELLS, HBITEMS].forEach((t) => { if (t[k] && t[k].hb) delete t[k]; });
+  [HBSUB, BACKGROUNDS, FEATS, FIGHTING_STYLES, EPIC_BOONS, SPELLS, HBITEMS].forEach((t) => { if (t[k] && t[k].hb) delete t[k]; });
   if (typeof PHB_RAW !== "undefined" && PHB_RAW[k]) hbRegister(PHB_RAW[k], true); // l’entrée du catalogue redevient « à compléter »
 }
 
@@ -90,7 +95,7 @@ function hbUnregister(k) {
 function hbUsed(b) {
   const ids = new Set();
   const add = (k) => { if (typeof k === "string" && k.startsWith("hb_")) ids.add(k); };
-  add(b.bg); add(b.humanFeat); add(b.subHb);
+  add(b.bg); add(b.humanFeat); add(b.subHb); add(b.opts.style); add(b.opts.style2); add(b.opts.boon && b.opts.boon.id);
   if (b.bg && BACKGROUNDS[b.bg]) add(BACKGROUNDS[b.bg].feat);
   Object.values(b.opts.asis || {}).forEach((a) => a && add(a.feat));
   [...(b.cant || []), ...(b.prep || []), ...(b.opts.lore2 || []), ...Object.values(b.opts.arcanum || {})].forEach(add);
@@ -174,7 +179,7 @@ function hbMeta(d) {
   switch (d.type) {
     case "sub": return (CLASSES[o.cls] ? CLASSES[o.cls].n : "") + " · " + (d.sk ? "niveaux " + o.feats.map((x) => x.l).join(", ") : o.feats.length + " aptitude" + (o.feats.length > 1 ? "s" : ""));
     case "bg": return o.ab.map((a) => ABIL[a].s).join(", ") + " · " + o.skills.map((k) => SKILLS[k] ? SKILLS[k].n : k).join(", ") + (FEATS[o.feat] ? " · " + FEATS[o.feat].n : "");
-    case "feat": return o.cat === "general" ? "Don général (niveau 4 et plus)" : "Don d’origine";
+    case "feat": return HB_CAT_L[o.cat] || HB_CAT_L.origine;
     case "spell": return (o.l ? "Niveau " + o.l : "Tour de magie") + " · " + SC[o.e] + (o.cl.length ? " · " + o.cl.map((k) => CLASSES[k].n).join(", ") : "");
     case "item": return (o.kind ? o.kind + " · " : "") + (HB_RARITY_L[o.rarity] || o.rarity) + (o.attune ? " · harmonisation" : "");
   }
@@ -262,8 +267,8 @@ function viewHBForm() {
       ${hbInput("gear", "Équipement", "Séparez par des virgules : Outils de menuisier, Vêtements de voyage, 2 Torches", { area: true, rows: 3 })}
       ${hbInput("gold", "Pièces d’or", "15", { num: true })}`;
   } else if (t === "feat") {
-    body = `${one("cat", [["origine", "Don d’origine"], ["general", "Don général (niveau 4+)"]], "Catégorie")}
-      <p class="mute small">${f.cat === "general" ? "Proposé à la place d’une amélioration de caractéristique, à partir du niveau 4." : "Proposé aux historiques maison et au don d’origine des humains."}</p>
+    body = `${one("cat", HB_CATS.map((k) => [k, HB_CAT_L[k]]), "Catégorie")}
+      <p class="mute small">${f.cat === "general" ? "Proposé à la place d’une amélioration de caractéristique, à partir du niveau 4." : f.cat === "style" ? "Proposé dans le choix du style de combat (guerrier, paladin, rôdeur)." : f.cat === "faveur" ? "Proposé dans le choix de la faveur épique, au niveau 19." : "Proposé aux historiques et au don d’origine des humains."}</p>
       ${hbInput("pre", "Prérequis (facultatif)", "Ex. Force 13 ou plus")}
       ${multi("fab", ABK.map((k) => [k, ABIL[k].n]), 0, "+1 à une caractéristique au choix parmi (facultatif)")}`;
   } else if (t === "spell") {

@@ -51,16 +51,18 @@ const list = (v) => String(v || "").split(/[,;\s]+/).map((x) => x.trim().toLower
 
 function hbRows(defs) {
   const rows = { sub: [], bg: [], feat: [], spell: [], item: [] };
-  const sorted = defs.slice().sort((a, b) => (a.cls || "").localeCompare(b.cls || "") || String(a.n).localeCompare(String(b.n), "fr"));
+  const catOrder = (d) => (d.type === "feat" ? HB_CATS.indexOf(d.cat || "origine") : 0);
+  const sorted = defs.slice().sort((a, b) => (a.cls || "").localeCompare(b.cls || "") || catOrder(a) - catOrder(b) || String(a.n).localeCompare(String(b.n), "fr"));
   sorted.forEach((d) => {
     switch (d.type) {
       case "sub": {
         const cast = hbCastOf(d);
         rows.sub.push([d.id, d.cls, d.n, "", "", d.d || "", d.spellsTxt || "", cast ? cast.ab + ":" + cast.list : ""]);
-        (d.feats || []).forEach((f) => rows.sub.push([d.id, d.cls, d.n, f.l, f.n || "", f.d || "", "", ""]));
+        if (d.sk) (d.feats || []).forEach((f) => { for (let i = 0; i < (f.l === 3 ? 4 : 2); i++) rows.sub.push([d.id, d.cls, d.n, f.l, "", "", "", ""]); }); // plusieurs aptitudes possibles par niveau
+        else (d.feats || []).forEach((f) => rows.sub.push([d.id, d.cls, d.n, f.l, f.n || "", f.d || "", "", ""]));
         break;
       }
-      case "bg": rows.bg.push([d.id, d.n, (d.ab || []).join(", "), (d.skills || []).join(", "), d.tool || "", d.feat || "", d.d || "", d.gear || "", d.gold || 0]); break;
+      case "bg": rows.bg.push([d.id, d.n, (d.ab || []).join(", "), (d.skills || []).join(", "), d.tool || "", d.feat || "", d.d || "", d.gear || "", d.sk ? "" : d.gold || 0]); break;
       case "feat": rows.feat.push([d.id, d.n, d.cat || "origine", d.pre || "", (d.ab || []).join(", "), d.d || ""]); break;
       case "spell": rows.spell.push([d.id, d.n, d.l, d.e, (d.cl || []).join(", "), d.t || "", d.p || "", d.c || "", d.du || "", d.co ? "oui" : "", d.ri ? "oui" : "", d.atk || "", d.dmg || "", d.ty || "", d.heal || "", d.up || "", d.d || ""]); break;
       case "item": rows.item.push([d.id, d.n, d.kind || "", d.rarity || "", d.attune ? "oui" : "", d.d || ""]); break;
@@ -72,22 +74,48 @@ function hbRows(defs) {
 function hbReadme() {
   const codes = (o, f) => Object.entries(o).map(([k, v]) => k + " = " + (f ? f(v) : v)).join(" · ");
   return [
-    ["Forge des Héros — livres et créations"],
-    ["Remplissez les colonnes Texte, Aptitude ou Description, puis importez ce fichier dans l’app (Livres et créations › Importer)."],
-    ["Les lignes laissées vides sont ignorées : vous pouvez importer un fichier à moitié rempli et le compléter plus tard."],
-    ["Ne modifiez pas la colonne id d’une ligne existante. Pour une nouvelle création, laissez id vide."],
-    ["Sous-classes : la ligne sans niveau porte la description, les sorts toujours préparés (ex. « 3 : Bénédiction, Soins ») et l’incantation (ex. int:magicien)."],
-    ["Sous-classes : plusieurs aptitudes au même niveau ? Copiez la ligne et changez le nom de l’aptitude."],
+    ["Forge des Héros — livres et créations : mode d’emploi"],
     [""],
-    ["Codes des classes", codes(CLASSES, (c) => c.n)],
-    ["Codes des caractéristiques", codes(ABIL, (a) => a.n)],
-    ["Codes des compétences", codes(SKILLS, (s) => s.n)],
-    ["Codes des écoles", codes(SC)],
-    ["Codes des dons d’origine", Object.entries(FEATS).filter(([, f]) => f.cat !== "general").map(([k, f]) => k + " = " + f.n).join(" · ")],
+    ["À quoi sert ce fichier", "L’app connaît déjà toutes les sous-classes, historiques, dons, styles de combat et faveurs épiques du Manuel des joueurs (noms, niveaux, caractéristiques, compétences…). Il ne manque que leur texte, que l’app ne peut pas fournir. Ce fichier sert à le recopier depuis votre livre, puis à l’importer en une fois dans l’aventure : tout le groupe le voit ensuite dans le créateur et sur les fiches."],
+    [""],
+    ["ÉTAPES"],
+    ["1. Ouvrir un onglet", "Commencez par l’onglet dont votre groupe a besoin (souvent Sous-classes). Inutile de tout remplir : seules les entrées complétées sont importées."],
+    ["2. Remplir les cases vides", "Ne remplissez que les colonnes indiquées dans le tableau ci-dessous. Recopiez ou collez le texte de votre livre. Pour aller à la ligne dans une case : Alt + Entrée (Windows) ou Option + Entrée (Mac)."],
+    ["3. Enregistrer", "Enregistrez au format Excel (.xlsx), sans renommer les onglets."],
+    ["4. Importer dans l’app", "Ouvrez l’aventure (onglet Aventure d’une fiche, ou écran du MJ) › Livres et créations › Importer un fichier › choisissez ce fichier. L’app affiche le nombre d’entrées importées et celles encore vides."],
+    ["5. Recommencer si besoin", "Vous pouvez compléter le fichier et le réimporter autant de fois que vous voulez : une entrée réimportée remplace l’ancienne. Pour repartir de la dernière version, utilisez Exporter en Excel dans l’app."],
+    [""],
+    ["QUOI REMPLIR, ONGLET PAR ONGLET", "", "Ne pas modifier"],
+    ["Sous-classes — ligne sans niveau", "Texte : la présentation de la sous-classe (quelques lignes). Sorts toujours préparés : seulement si le livre donne une table de sorts pour la sous-classe, une ligne par niveau de personnage, au format « 3 : Bénédiction, Soins », avec les noms des sorts tels qu’ils apparaissent dans l’app.", "id, Classe, Sous-classe, Incantation (déjà réglée quand la sous-classe donne des sorts)"],
+    ["Sous-classes — lignes avec un niveau", "Aptitude : le nom de l’aptitude. Texte : son effet. Il y a 4 lignes vides au niveau 3 et 2 aux autres niveaux : utilisez-en une par aptitude et laissez les autres vides. S’il en faut plus, copiez une ligne du même niveau.", "id, Classe, Sous-classe, Niveau"],
+    ["Historiques", "Description : quelques lignes. Équipement : l’équipement de l’option A, séparé par des virgules, quantité devant (ex. « Outils de charpentier, 2 Torches, Vêtements de voyage »). po : les pièces d’or de l’option A. L’option B (50 po) est gérée par l’app.", "id, Nom, Caractéristiques, Compétences, Outil, Don (déjà remplis)"],
+    ["Dons (dons d’origine, généraux, styles de combat, faveurs épiques)", "Texte : l’effet du don (obligatoire pour qu’il soit importé). Prérequis : à vérifier ou compléter. +1 parmi : si le don augmente une caractéristique, les codes séparés par des virgules (ex. « for, dex ») ; sinon laissez vide.", "id, Nom, Catégorie"],
+    ["Sorts et Objets", "Pour vos propres créations seulement : une ligne par entrée, colonne id vide. Codes à utiliser plus bas.", "—"],
+    [""],
+    ["RÈGLES IMPORTANTES"],
+    ["Ne pas toucher", "La colonne id, les noms des onglets et la ligne d’en-tête. Sans id, l’app crée une nouvelle entrée au lieu de compléter celle du livre."],
+    ["Lignes vides", "Une sous-classe sans aucun nom d’aptitude, un historique sans description ni équipement, ou un don sans texte sont ignorés : ils restent « à compléter » dans l’app."],
+    ["Longueur", "3 000 caractères au maximum par aptitude, 6 000 par description. Le texte est importé sans mise en forme (gras, tableaux), mais les retours à la ligne sont gardés."],
+    ["Se répartir le travail", "Chacun peut remplir une partie (par exemple sa propre sous-classe) et l’importer. Seuls l’auteur d’une entrée et le MJ peuvent la remplacer ensuite."],
+    ["Confidentialité", "Le texte de vos livres reste dans votre aventure : seules les personnes qui ont son code peuvent le voir."],
+    [""],
+    ["EXEMPLE (sous-classe fictive, à ne pas importer)"],
+    ["id", "Classe · Sous-classe · Niveau", "Aptitude", "Texte"],
+    ["phb_exemple", "barbare · Voie de l’Orage · (vide)", "", "Des barbares qui puisent leur rage dans la tempête."],
+    ["phb_exemple", "barbare · Voie de l’Orage · 3", "Cœur de tempête", "En rage, vous gagnez la résistance aux dégâts de foudre."],
+    ["phb_exemple", "barbare · Voie de l’Orage · 3", "Grondement", "Une fois par tour, quand vous touchez en rage, la cible subit 1d6 dégâts de tonnerre."],
+    ["phb_exemple", "barbare · Voie de l’Orage · 3", "", "(ligne laissée vide : ignorée)"],
+    [""],
+    ["CODES"],
+    ["Classes", codes(CLASSES, (c) => c.n)],
+    ["Caractéristiques", codes(ABIL, (a) => a.n)],
+    ["Compétences", codes(SKILLS, (x) => x.n)],
+    ["Écoles de magie", codes(SC)],
+    ["Dons d’origine", Object.entries(FEATS).filter(([, f]) => f.cat !== "general").map(([k, f]) => k + " = " + f.n).join(" · ")],
+    ["Catégories de dons", "origine · general · style · faveur"],
     ["Jet d’un sort", "cac = attaque au corps à corps · dist = attaque à distance · for, dex, con, int, sag, cha = jet de sauvegarde"],
-    ["Codes des dégâts", codes(DMG)],
-    [""],
-    ["Le texte des livres n’est pas fourni par l’app : il reste privé, dans votre aventure."],
+    ["Types de dégâts", codes(DMG)],
+    ["Incantation de sous-classe", "caractéristique:liste, par exemple int:magicien (laisser vide si la sous-classe ne donne pas de sorts)"],
   ];
 }
 
@@ -95,8 +123,8 @@ async function hbExportXlsx(code) {
   await xlsxLoad();
   const wb = XLSX.utils.book_new();
   const readme = XLSX.utils.aoa_to_sheet(hbReadme());
-  readme["!cols"] = [{ wch: 28 }, { wch: 120 }];
-  XLSX.utils.book_append_sheet(wb, readme, "À lire");
+  readme["!cols"] = [{ wch: 34 }, { wch: 110 }, { wch: 46 }, { wch: 60 }];
+  XLSX.utils.book_append_sheet(wb, readme, "Mode d’emploi");
   const rows = hbRows(hbExportDefs(code));
   const widths = { sub: [26, 12, 26, 7, 28, 80, 30, 14], bg: [18, 18, 16, 16, 26, 22, 60, 50, 6], feat: [24, 26, 10, 18, 12, 80], spell: [18, 22, 6, 6, 22, 14, 10, 12, 12, 8, 8, 6, 8, 10, 8, 18, 80], item: [18, 26, 20, 12, 8, 80] };
   HBX_SHEETS.forEach(([k, name, head]) => {
@@ -156,7 +184,7 @@ function hbFromSheets(sheets, report) {
     const id = cell(r, 0), n = cell(r, 1); if (!id && !n) return;
     const sk = id && skOf(id), d = cell(r, 5);
     if (!d) { report.skip++; return; }
-    docs.push({ id: id || slugId(n), type: "feat", n: (n || sk.n).slice(0, 120), d: d.slice(0, 6000), cat: /^g/i.test(cell(r, 2)) ? "general" : "origine", pre: cell(r, 3).slice(0, 200), ab: list(cell(r, 4)).filter((a) => ABIL[a]) });
+    docs.push({ id: id || slugId(n), type: "feat", n: (n || sk.n).slice(0, 120), d: d.slice(0, 6000), cat: /^g/i.test(cell(r, 2)) ? "general" : /^s/i.test(cell(r, 2)) ? "style" : /^f/i.test(cell(r, 2)) ? "faveur" : "origine", pre: cell(r, 3).slice(0, 200), ab: list(cell(r, 4)).filter((a) => ABIL[a]) });
   });
   (sheets.spell || []).forEach((r, i) => {
     const n = cell(r, 1); if (!n) return;
@@ -186,8 +214,8 @@ async function hbImportFile(file, code) {
       const wb = XLSX.read(await file.arrayBuffer(), { type: "array" });
       const sheets = {};
       wb.SheetNames.forEach((name, i) => {
-        const k = HBX_NAMES[normName(name)] || (HBX_SHEETS[i - 1] && HBX_SHEETS[i - 1][0]);
-        if (!k || name === wb.SheetNames[0] && !HBX_NAMES[normName(name)]) return;
+        const k = HBX_NAMES[normName(name)];
+        if (!k) return;
         sheets[k] = XLSX.utils.sheet_to_json(wb.Sheets[name], { header: 1, defval: "", raw: false }).slice(1);
       });
       if (!Object.keys(sheets).length) throw new Error("format");
