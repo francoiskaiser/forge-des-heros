@@ -2,6 +2,9 @@
 
 Chaque version correspond à un commit Git dont le message commence par son numéro. Pour revenir en arrière, voir la section en bas.
 
+## 1.11.1 — 19 octobre 2026
+- Import Excel plus tolérant : les sorts toujours préparés et l'incantation d'une sous-classe sont lus sur n'importe quelle ligne de la sous-classe, et une sous-classe peut utiliser un sort créé dans l'onglet Sorts du même fichier.
+
 ## 1.11.0 — 19 octobre 2026
 - Catalogue complété : **8 styles de combat** et **5 faveurs épiques** du Manuel des joueurs (à compléter), proposés dans les choix de style et de faveur ; ajout de la Faveur de l'esprit nocturne (SRD).
 - Export Excel amélioré : onglet **Mode d'emploi** détaillé, 4 lignes vides au niveau 3 et 2 aux autres niveaux pour chaque sous-classe, pièces d'or des historiques laissées vides à compléter.

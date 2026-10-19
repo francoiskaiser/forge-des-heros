@@ -147,6 +147,17 @@ function hbFromSheets(sheets, report) {
   const docs = [];
   const cell = (r, i) => String(r[i] == null ? "" : r[i]).trim();
   const skOf = (id) => PHB_RAW["hb_" + id];
+  // Sorts d’abord : une sous-classe du même fichier peut s’y référer
+  const spellDocs = [];
+  (sheets.spell || []).forEach((r, i) => {
+    const n = cell(r, 1); if (!n) return;
+    const cl = list(cell(r, 4)).filter((k) => CLASSES[k]);
+    if (!cl.length) { report.bad.push("Sort « " + n + " » (ligne " + (i + 2) + ") : indiquez au moins une classe."); return; }
+    const atk = cell(r, 11).toLowerCase();
+    const doc = { id: cell(r, 0) || slugId(n), type: "spell", n: n.slice(0, 120), l: clampLv(cell(r, 2), 0, 9), e: SC[cell(r, 3)] ? cell(r, 3) : "evo", cl, t: cell(r, 5) || "1 action", p: cell(r, 6) || "—", c: cell(r, 7) || "V, S", du: cell(r, 8) || "Instantanée", co: yes(cell(r, 9)), ri: yes(cell(r, 10)), atk: atk === "cac" || atk === "dist" || ABIL[atk] ? atk : "", dmg: cell(r, 12).replace(/\s/g, ""), ty: DMG[cell(r, 13)] ? cell(r, 13) : "force", heal: cell(r, 14).replace(/\s/g, ""), up: cell(r, 15).slice(0, 200), d: cell(r, 16).slice(0, 6000) };
+    spellDocs.push(doc);
+    if (!SPELLS["hb_" + doc.id]) hbRegister(doc, true);
+  });
   // Sous-classes : regroupées par id (ou par nom)
   const subs = new Map();
   (sheets.sub || []).forEach((r, i) => {
@@ -156,7 +167,10 @@ function hbFromSheets(sheets, report) {
     if (!subs.has(key)) subs.set(key, { id, cls: cell(r, 1).toLowerCase(), n: name, d: "", spellsTxt: "", cast: undefined, feats: [], line: i + 2 });
     const s = subs.get(key);
     const lv = parseInt(cell(r, 3), 10);
-    if (!lv) { s.d = cell(r, 5) || s.d; s.spellsTxt = cell(r, 6) || s.spellsTxt; const c = cell(r, 7); if (c) { const [ab, li] = c.toLowerCase().split(/[:\/ ]+/); s.cast = ABIL[ab] && CLASSES[li] ? { ab, list: li } : null; } else if (s.cast === undefined) s.cast = undefined; }
+    // sorts et incantation acceptés sur n’importe quelle ligne de la sous-classe
+    const sp = cell(r, 6); if (sp && !s.spellsTxt.includes(sp)) s.spellsTxt = s.spellsTxt ? s.spellsTxt + "\n" + sp : sp;
+    const c = cell(r, 7); if (c) { const [ab, li] = c.toLowerCase().split(/[:\/ ]+/); s.cast = ABIL[ab] && CLASSES[li] ? { ab, list: li } : null; }
+    if (!lv) s.d = cell(r, 5) || s.d;
     else s.feats.push({ l: clampLv(lv, 3, 20), n: cell(r, 4), d: cell(r, 5) });
   });
   subs.forEach((s) => {
@@ -186,13 +200,7 @@ function hbFromSheets(sheets, report) {
     if (!d) { report.skip++; return; }
     docs.push({ id: id || slugId(n), type: "feat", n: (n || sk.n).slice(0, 120), d: d.slice(0, 6000), cat: /^g/i.test(cell(r, 2)) ? "general" : /^s/i.test(cell(r, 2)) ? "style" : /^f/i.test(cell(r, 2)) ? "faveur" : "origine", pre: cell(r, 3).slice(0, 200), ab: list(cell(r, 4)).filter((a) => ABIL[a]) });
   });
-  (sheets.spell || []).forEach((r, i) => {
-    const n = cell(r, 1); if (!n) return;
-    const cl = list(cell(r, 4)).filter((k) => CLASSES[k]);
-    if (!cl.length) { report.bad.push("Sort « " + n + " » (ligne " + (i + 2) + ") : indiquez au moins une classe."); return; }
-    const atk = cell(r, 11).toLowerCase();
-    docs.push({ id: cell(r, 0) || slugId(n), type: "spell", n: n.slice(0, 120), l: clampLv(cell(r, 2), 0, 9), e: SC[cell(r, 3)] ? cell(r, 3) : "evo", cl, t: cell(r, 5) || "1 action", p: cell(r, 6) || "—", c: cell(r, 7) || "V, S", du: cell(r, 8) || "Instantanée", co: yes(cell(r, 9)), ri: yes(cell(r, 10)), atk: atk === "cac" || atk === "dist" || ABIL[atk] ? atk : "", dmg: cell(r, 12).replace(/\s/g, ""), ty: DMG[cell(r, 13)] ? cell(r, 13) : "force", heal: cell(r, 14).replace(/\s/g, ""), up: cell(r, 15).slice(0, 200), d: cell(r, 16).slice(0, 6000) });
-  });
+  docs.push(...spellDocs);
   (sheets.item || []).forEach((r) => {
     const n = cell(r, 1); if (!n) return;
     docs.push({ id: cell(r, 0) || slugId(n), type: "item", n: n.slice(0, 120), kind: cell(r, 2).slice(0, 120), rarity: HB_RARITY.includes(cell(r, 3).toLowerCase()) ? cell(r, 3).toLowerCase() : K("peu commun"), attune: yes(cell(r, 4)), d: cell(r, 5).slice(0, 6000) });
