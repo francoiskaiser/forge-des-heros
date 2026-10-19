@@ -24,7 +24,26 @@ const ICON = {
   boot: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h5v8l6 3v4H5v-4l3-1z M5 18v2h14v-2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>',
   trash: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>',
 };
-const classSigil = (k) => ({ barbare: "Ba", barde: "Bd", clerc: "Cl", druide: "Dr", guerrier: "Gu", moine: "Mo", paladin: "Pa", rodeur: "Rô", roublard: "Ro", ensorceleur: "En", occultiste: "Oc", magicien: "Ma" })[k] || "?";
+/* Emblèmes et couleurs des classes */
+const CLASS_EMBLEM = {
+  barbare: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20 15.5 9.5"/><path d="M13 5c3.5-.8 6.5 2.2 5.8 5.8L15.5 11 12.8 8.3z"/></g></svg>',
+  barde: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></g></svg>',
+  clerc: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.5"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></g></svg>',
+  druide: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19C5 10 11 5 19 5c0 8-5 14-14 14z"/><path d="M5 19l8-8"/></g></svg>',
+  guerrier: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5l10 10M19 5 9 15M5 5h3M5 5v3M19 5h-3M19 5v3M7 14l3 3M17 14l-3 3M6 18l2-2M18 18l-2-2"/></g></svg>',
+  moine: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a4.25 4.25 0 0 1 0 8.5 4.25 4.25 0 0 0 0 8.5"/><circle cx="12" cy="7.8" r=".9"/><circle cx="12" cy="16.2" r=".9"/></g></svg>',
+  paladin: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6z"/><path d="M12 8v8M9 11h6"/></g></svg>',
+  rodeur: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4c7 1.5 12.5 7 14 14"/><path d="M6 4l14 14M4 20l12-12M13 8h3v3"/></g></svg>',
+  roublard: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 3.5 20.5 3.5 20.5 9.5 11 19 5 13z"/><path d="M7 15l2 2M4.5 19.5l2-2"/></g></svg>',
+  ensorceleur: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 3.5 6 6 6 10a6 6 0 0 1-12 0c0-2.7 1.6-4.2 2.8-6 .9 1.7 1.8 2.6 3 2.8-.4-2.6-.6-4.5.2-6.8z"/></g></svg>',
+  occultiste: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r=".8"/></g></svg>',
+  magicien: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 5.5h6.5a2 2 0 0 1 2 2V19a2 2 0 0 0-2-2H3.5zM20.5 5.5H14a2 2 0 0 0-2 2V19a2 2 0 0 1 2-2h6.5z"/></g></svg>',
+};
+const CLASS_COLOR = { barbare: "#c4482f", barde: "#b65fb8", clerc: "#d9a83a", druide: "#5e9b4c", guerrier: "#a8693c", moine: "#3f9c97", paladin: "#d4b04a", rodeur: "#4d8c5a", roublard: "#7f7a99", ensorceleur: "#d4573b", occultiste: "#8a5cc2", magicien: "#4a7fc4" };
+const classColor = (k) => CLASS_COLOR[k] || "var(--ember)";
+const classSigil = (k) => CLASS_EMBLEM[k] || "?";
+/* Portrait du personnage, ou emblème de sa classe */
+const avatar = (b, cls = "") => `<span class="avatar ${cls}" style="--cc:${classColor(b.cls)}">${b.portrait ? `<img src="${esc(b.portrait)}" alt="">` : classSigil(b.cls)}</span>`;
 
 /* ---------------- Stockage ---------------- */
 const Store = {
@@ -103,6 +122,8 @@ function render() {
   else if (S.view === "gm") app.innerHTML = viewGM();
   else if (S.view === "account") app.innerHTML = viewSettings();
   else if (S.view === "hb") app.innerHTML = viewHB();
+  else if (S.view === "combat") app.innerHTML = typeof viewCombat === "function" ? viewCombat() : "";
+  else if (S.view === "gmfight") app.innerHTML = typeof viewGMFight === "function" ? viewGMFight() : "";
   $("#overlay").innerHTML = (S.modal ? viewModal() : "") + (S.tray ? viewTray() : "");
   $("#rollbar").innerHTML = viewRollbar();
   document.body.dataset.view = S.view;
@@ -124,11 +145,13 @@ function viewHome() {
   const cards = list.map((ch) => {
     const b = ch.b, c = CLASSES[b.cls], sp = SPECIES[b.species];
     const s = compute(b, ch.p);
-    return `<button class="hero-card" data-a="open" data-id="${ch.id}">
-      <span class="sigil">${classSigil(b.cls)}</span>
+    const pct = Math.max(0, Math.min(100, (ch.p.hp / s.hpMax) * 100));
+    return `<button class="hero-card" data-a="open" data-id="${ch.id}" style="--cc:${classColor(b.cls)}">
+      ${avatar(b, "lg")}
       <span class="hc-body"><span class="hc-name">${esc(b.name || "Sans nom")}</span>
       <span class="hc-line">${sp ? sp.n : ""} · ${c ? c.n : ""} ${b.level}${s.sub ? " · " + esc(s.sub) : ""}</span>
-      <span class="hc-stats"><span>${ICON.heart}${ch.p.hp}/${s.hpMax}</span><span>${ICON.shield}${s.ac}</span>${ch.adv ? `<span class="hc-adv">${esc(ch.advName || ch.adv)}</span>` : ""}</span></span>
+      <span class="hc-stats"><span>${ICON.heart}${ch.p.hp}/${s.hpMax}</span><span>${ICON.shield}${s.ac}</span>${ch.adv ? `<span class="hc-adv">${esc(ch.advName || ch.adv)}</span>` : ""}</span>
+      <span class="hc-bar"><i style="width:${pct}%"></i></span></span>
     </button>`;
   }).join("");
   return `<header class="home-head">
@@ -308,7 +331,7 @@ function stepAbilities(b) {
     <div class="bonus-pick"><span>+1</span><div class="chips">${ABK.map((x) => chip(ABIL[x].s, b.opts.boon.a === x, "boonAb", `data-v="${x}"`)).join("")}</div></div></section>` : "") + (b.level >= 20 && (b.cls === "barbare" || b.cls === "moine") ? `<p class="mute small">Niveau 20 : ${b.cls === "barbare" ? "Force et Constitution" : "Dextérité et Sagesse"} +4 (max 25), déjà inclus.</p>` : "");
   return `<section class="block"><div class="chips">${methods}</div>
     <p class="mute small">${b.method === "standard" ? "Répartissez 15, 14, 13, 12, 10 et 8. Choisir une valeur l’échange avec la caractéristique qui l’avait." : b.method === "points" ? `27 points à dépenser, scores de 8 à 15. <b class="${spent > 27 ? "bad" : ""}">${27 - spent} points restants.</b>` : "Lancez 4d6 six fois et gardez les trois meilleurs dés à chaque fois."}</p>
-    <div class="row-btns">${b.method === "roll" ? `<button class="btn" data-a="rollStats">${ICON.d20} ${b.rolled ? "Relancer" : "Lancer"} les dés</button>` : ""}${b.cls && b.method !== "points" ? `<button class="btn ghost" data-a="recommend">Répartition conseillée pour ${CLASSES[b.cls].n}</button>` : ""}</div>
+    <div class="row-btns">${b.method === "roll" ? `<button class="btn" data-a="rollStats">${ICON.d20} ${b.rolled ? "Relancer les dés" : "Lancer les dés"}</button>` : ""}${b.cls && b.method !== "points" ? `<button class="btn ghost" data-a="recommend">Répartition conseillée pour ${CLASSES[b.cls].n}</button>` : ""}</div>
   </section>
   <section class="panel abil-table"><div class="ab-row head"><span>Caractéristique</span><span>Base</span><span>Hist.</span>${b.level >= 4 ? "<span>Niveaux</span>" : ""}<span>Total</span><span>Mod.</span></div>${rows}</section>
   ${bonusUi}${asiUi}`;
@@ -461,7 +484,9 @@ function stepEquip(b) {
 function stepDetails(b) {
   const d = b.details;
   const field = (k, label, ph, area) => `<label class="field"><span>${label}</span>${area ? `<textarea id="d-${k}" data-f="details.${k}" rows="3" placeholder="${ph}">${esc(d[k])}</textarea>` : `<input id="d-${k}" data-f="details.${k}" value="${esc(d[k])}" placeholder="${ph}">`}</label>`;
-  return `<section class="panel"><label class="field big"><span>Nom du personnage</span><input id="d-name" data-f="name" value="${esc(b.name)}" placeholder="Ex. Aldric Brisefer" autocomplete="off"></label>
+  return `<section class="panel portrait-pick" style="--cc:${classColor(b.cls)}">${avatar(b, "xl")}<div><h4>Portrait</h4><p class="mute small">Une photo, un dessin ou une image de votre personnage. Elle apparaît sur la fiche et dans l’aventure.</p>
+    <div class="row-btns"><label class="btn small hb-file">${b.portrait ? "Changer l’image" : "Choisir une image"}<input type="file" id="portraitFile" accept="image/*"></label>${b.portrait ? `<button class="btn small ghost" data-a="portraitDel">Retirer</button>` : ""}</div></div></section>
+  <section class="panel"><label class="field big"><span>Nom du personnage</span><input id="d-name" data-f="name" value="${esc(b.name)}" placeholder="Ex. Aldric Brisefer" autocomplete="off"></label>
     <div class="field"><span>Alignement</span><div class="align-grid">${ALIGN.map((a) => chip(ALIGN_L[a], b.align === a, "align", `data-v="${a}"`)).join("")}</div></div>
     <div class="two-col">${field("age", "Âge", "Ex. 27 ans")}${field("taille", "Taille et poids", "Ex. 1,80 m, 75 kg")}</div>
     ${["clerc", "paladin"].includes(b.cls) ? `<div class="deity-hint">${b.cls === "clerc" ? "Un clerc tire ses pouvoirs d’une divinité ou d’une force sacrée : choisissez-la avec votre MJ." : "Un paladin est lié par un serment, souvent prêté devant une divinité : précisez-la si c’est le cas."}</div>` : ""}
@@ -496,6 +521,11 @@ function viewSheet() {
   </header>
   <main class="sheet sheet-layout">
     <aside class="sheet-hero">
+    <section class="char-banner" style="--cc:${classColor(b.cls)}">
+      <button class="banner-av" data-a="editAt" data-v="details" aria-label="Changer le portrait">${avatar(b, "xl")}</button>
+      <div class="cbn-id"><span class="eyebrow">${sp.n}${BACKGROUNDS[b.bg] ? " · " + esc(BACKGROUNDS[b.bg].n) : ""}</span><h2>${esc(b.name)}</h2><span class="cbn-cls">${c.n} ${b.level}${s.sub ? " · " + esc(s.sub) : ""}</span></div>
+      <button class="btn fight-btn" data-a="combatOpen">${ICON.sword}<span>Combat</span></button>
+    </section>
     <section class="vitals">
       <div class="hp-card ${down ? "down" : ""}">
         <div class="hp-top"><span class="lbl">Points de vie</span>${p.temp ? `<span class="temp">+${p.temp} temp.</span>` : ""}</div>
@@ -530,7 +560,7 @@ function deathSaves(p) {
   const dots = (n, k) => [0, 1, 2].map((i) => `<button class="ds ${i < n ? "on" : ""} ${k}" data-a="ds" data-k="${k}" data-i="${i}" aria-label="${k === "s" ? "Réussite" : "Échec"} ${i + 1}"></button>`).join("");
   return `<section class="panel death"><div><span class="lbl">Jets contre la mort</span><p class="mute small">À 0 PV : lancez un d20 au début de votre tour. 10 ou plus = réussite.</p></div>
     <div class="ds-row"><span>Réussites</span>${dots(p.ds.s, "s")}</div><div class="ds-row"><span>Échecs</span>${dots(p.ds.f, "f")}</div>
-    <button class="btn small" data-a="deathRoll">${ICON.d20} Lancer</button></section>`;
+    <button class="btn small" data-a="deathRoll">${ICON.d20} ${T_ROLL}</button></section>`;
 }
 
 function resRow(ch, r) {
@@ -542,7 +572,8 @@ function resRow(ch, r) {
     <div class="pips">${Array.from({ length: r.max }, (_, i) => `<button class="pip ${i < left ? "on" : ""}" data-a="resPip" data-k="${r.k}" data-i="${i}" aria-label="${r.n} ${i + 1}"></button>`).join("")}</div></div>`;
 }
 
-function tabActions(ch, s) {
+/* Attaques, tours de magie offensifs et bonus de classe (onglet Actions et mode combat) */
+function actionParts(ch, s) {
   const b = ch.b;
   const atk = s.attacks.map((a) => `<div class="atk">
     <div class="atk-name"><b>${esc(a.n)}</b><span class="mute small">${a.range}${a.props ? " · " + a.props : ""}${a.mastery ? ` · <span class="mast" title="${esc(MASTERY[a.mastery])}">${MASTERY[a.mastery].split(" — ")[0]}</span>` : ""}${a.prof ? "" : " · <span class='bad'>non maîtrisée</span>"}</span></div>
@@ -575,6 +606,12 @@ function tabActions(ch, s) {
   if (b.cls === "rodeur" || s.spells.some((x) => x.id === "marquechasseur")) { const hm = b.cls === "rodeur" && b.level >= 20 ? "1d10" : "1d6"; extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Marque du chasseur" data-e="${hm}">Marque du chasseur +${hm}</button>`); }
   if (b.cls === "rodeur" && srdSub(b) && b.opts.prey === "colosse" && b.level >= 3) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Tueur de colosses" data-e="1d8">Tueur de colosses +1d8</button>`);
   if (b.cls === "barbare" && b.level >= 3 && srdSub(b)) extras.push(`<button class="rb dmg wide" data-a="rDmg" data-l="Frénésie" data-e="${s.rageDmg}d6">Frénésie ${s.rageDmg}d6</button>`);
+  return { atk, cantHtml, extras };
+}
+
+function tabActions(ch, s) {
+  const b = ch.b;
+  const { atk, cantHtml, extras } = actionParts(ch, s);
   return `<div class="cols">
     <section class="panel"><h3 class="ph">Attaques</h3><p class="mute small">Attaques par action : ${s.apa}${s.crit < 20 ? " · critique sur " + s.crit + "-20" : ""}${b.cls === "moine" ? " · arts martiaux " + s.maDie.slice(1) : ""}</p>
       ${atk}${cantHtml}${extras.length ? `<div class="extras">${extras.join("")}</div>` : ""}</section>
@@ -608,14 +645,21 @@ function tabSkills(ch, s) {
   </section></div>`;
 }
 
-function tabSpells(ch, s) {
-  const b = ch.b, p = ch.p, cast = s.casting;
+/* Emplacements de sorts (pastilles) */
+function slotPips(ch, s) {
+  const p = ch.p, cast = s.casting;
   let slots = "";
   if (cast && cast.slots.type === "std") slots = cast.slots.slots.map((n, i) => {
     const lv = i + 1, used = p.slots[lv] || 0;
     return `<div class="slot-lv"><span class="lbl">Niv. ${lv}</span><div class="pips">${Array.from({ length: n }, (_, j) => `<button class="pip arc ${j < n - used ? "on" : ""}" data-a="slotPip" data-lv="${lv}" data-i="${j}" data-max="${n}" aria-label="Emplacement ${lv}"></button>`).join("")}</div></div>`;
   }).join("");
   if (cast && cast.slots.type === "pact") slots = `<div class="slot-lv"><span class="lbl">Pacte niv. ${cast.slots.lvl}</span><div class="pips">${Array.from({ length: cast.slots.n }, (_, j) => `<button class="pip arc ${j < cast.slots.n - (p.pact || 0) ? "on" : ""}" data-a="pactPip" data-i="${j}" data-max="${cast.slots.n}" aria-label="Emplacement de pacte"></button>`).join("")}</div><span class="mute small">repos court</span></div>`;
+  return slots;
+}
+
+function tabSpells(ch, s) {
+  const b = ch.b, p = ch.p, cast = s.casting;
+  const slots = slotPips(ch, s);
   const byLv = {};
   s.spells.forEach((x) => (byLv[x.l] = byLv[x.l] || []).push(x));
   const groups = Object.keys(byLv).sort((a, b2) => a - b2).map((l) => `<p class="lvl-sep">${l == 0 ? "Tours de magie" : "Niveau " + l}</p>` + byLv[l].map((x) => {
@@ -632,7 +676,7 @@ function tabSpells(ch, s) {
         ${x.sv ? `<span class="rb dc">DD ${x.dc}<small>${ABIL[x.sv].s}</small></span>` : ""}
         ${dmg ? `<button class="rb dmg" data-a="rDmg" data-l="${esc(x.n)}" data-e="${dmg}">${dmg}</button>` : ""}
         ${heal ? `<button class="rb heal" data-a="rHeal" data-l="${esc(x.n)}" data-e="${heal}">${heal}</button>` : ""}
-        ${x.l > 0 ? `<button class="rb cast" data-a="castOpen" data-v="${x.id}">Lancer</button>` : ""}
+        ${x.l > 0 ? `<button class="rb cast" data-a="castOpen" data-v="${x.id}">${T_CAST}</button>` : ""}
       </div>
       ${open ? `<div class="sr-body">${spellDetail(x)}<p class="mute small">Source : ${esc(x.src)} · ${ABIL[x.ab].n} · DD ${x.dc} · attaque ${sg(x.atk)}${x.dmgWhy && x.dmgWhy.length ? " · bonus de dégâts : " + x.dmgWhy.join(", ") : ""}</p></div>` : ""}
     </div>`;
@@ -736,7 +780,7 @@ function viewModal() {
     if (cast && cast.slots.type === "pact" && cast.slots.lvl >= sp.l) { const left = cast.slots.n - (ch.p.pact || 0); opts.push(`<button class="btn" data-a="castDo" data-v="${m.v}" data-lv="pact" ${left > 0 ? "" : "disabled"}>Emplacement de pacte niv. ${cast.slots.lvl} <small>(${left}/${cast.slots.n})</small></button>`); }
     if (entry && entry.free) { const r = s.resources.find((x) => x.k === entry.free); if (r) { const left = r.max - (ch.p.res[r.k] || 0); opts.push(`<button class="btn ghost" data-a="castDo" data-v="${m.v}" data-lv="free" data-k="${r.k}" ${left > 0 ? "" : "disabled"}>Gratuit <small>(${left}/${r.max} par repos)</small></button>`); } }
     if (sp.ri) opts.push(`<button class="btn ghost" data-a="castDo" data-v="${m.v}" data-lv="ritual">En rituel (+10 minutes, sans emplacement)</button>`);
-    inner = `<h3>Lancer ${esc(sp.n)}</h3>${spellDetail(sp)}<div class="cast-opts">${opts.join("") || '<p class="mute">Aucun emplacement disponible pour ce sort.</p>'}</div>`;
+    inner = `<h3>${T_CAST} ${esc(sp.n)}</h3>${spellDetail(sp)}<div class="cast-opts">${opts.join("") || '<p class="mute">Aucun emplacement disponible pour ce sort.</p>'}</div>`;
   } else if (m.k === "del") {
     inner = `<h3>Supprimer ${esc(ch.b.name)} ?</h3><p>Le personnage sera effacé définitivement. Exportez-le d’abord si vous voulez le garder.</p><div class="row-btns"><button class="btn dmgb" data-a="delDo">Supprimer définitivement</button><button class="btn ghost" data-a="closeModal">Annuler</button></div>`;
   } else if (m.k === "export") {
@@ -762,7 +806,7 @@ function viewTray() {
     <div class="tray-head"><h3>Plateau de dés</h3><button class="icon-btn" data-a="closeTray" aria-label="Fermer">${ICON.close}</button></div>
     <div class="tray-count"><span class="lbl">Nombre</span><div class="stepper"><button class="mini" data-a="trayN" data-d="-1">−</button><b>${S.trayCount}</b><button class="mini" data-a="trayN" data-d="1">+</button></div></div>
     <div class="dice-grid">${dice.map((f) => `<button class="die" data-a="trayDie" data-f="${f}"><span>d${f}</span></button>`).join("")}</div>
-    <div class="add-item"><label class="field"><span>Formule libre</span><input id="trayExpr" value="${esc(S.trayExpr)}" placeholder="Ex. 2d6+3" autocomplete="off"></label><button class="btn" data-a="trayExpr">Lancer</button></div>
+    <div class="add-item"><label class="field"><span>Formule libre</span><input id="trayExpr" value="${esc(S.trayExpr)}" placeholder="Ex. 2d6+3" autocomplete="off"></label><button class="btn" data-a="trayExpr">${T_ROLL}</button></div>
     <h4>Historique</h4>
     <div class="log">${S.log.length ? S.log.map(logRow).join("") : '<p class="mute small">Aucun jet pour l’instant.</p>'}</div>
   </div>`;
@@ -776,12 +820,38 @@ function pushRoll(r) {
   S.log = S.log.slice(0, 40);
   showRollToast(r);
 }
+/* Résultat d’un jet : le dé roule un instant (chiffres qui défilent), puis s’arrête sur le total */
+const DIE_SHAPES = {
+  d20: '<svg viewBox="0 0 100 100" aria-hidden="true"><path class="df" d="M50 4 92 27v46L50 96 8 73V27z"/><path class="dl" d="M50 4 92 27v46L50 96 8 73V27zM50 4 30 38h40zM30 38 8 27M70 38l22-11M30 38 50 72 70 38M50 72v24M30 38 8 73M70 38l22 35M50 72 8 73M50 72l42 1"/></svg>',
+  dx: '<svg viewBox="0 0 100 100" aria-hidden="true"><rect class="df" x="12" y="12" width="76" height="76" rx="18"/><rect class="dl" x="12" y="12" width="76" height="76" rx="18"/></svg>',
+};
 function showRollToast(r) {
   const el = $("#rolltoast");
-  el.innerHTML = `<div class="rt ${r.cls || ""}"><span class="rt-label">${esc(r.label)}</span><span class="rt-total">${r.total}</span><span class="rt-detail">${esc(r.detail)}</span>${r.note ? `<span class="rt-note">${esc(r.note)}</span>` : ""}</div>`;
+  const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const d20 = /^d20/.test(r.detail || "");
+  const faces = d20 ? 20 : Math.max(4, +(((r.detail || "").match(/d(\d+)/) || [])[1] || 6));
+  el.innerHTML = `<div class="rt ${r.cls || ""} ${reduce ? "landed" : "rolling"}"><span class="rt-label">${esc(r.label)}</span><span class="rt-die ${d20 ? "d20" : "dx"}">${DIE_SHAPES[d20 ? "d20" : "dx"]}<b class="rt-total">${reduce ? r.total : 1 + Math.floor(Math.random() * faces)}</b></span><span class="rt-detail">${esc(r.detail)}</span>${r.note ? `<span class="rt-note">${esc(r.note)}</span>` : ""}</div>`;
   el.classList.remove("show"); void el.offsetWidth; el.classList.add("show");
+  clearInterval(showRollToast.iv);
+  document.body.classList.toggle("dice-rolling", !reduce);
+  const land = () => {
+    document.body.classList.remove("dice-rolling");
+    const box = el.querySelector(".rt"), tot = el.querySelector(".rt-total");
+    if (!box || !tot) return;
+    tot.textContent = r.total; box.classList.remove("rolling"); box.classList.add("landed");
+    try { if (navigator.vibrate) navigator.vibrate(r.cls === "crit" ? [30, 50, 30, 50, 60] : r.cls === "fumble" ? [80, 40, 80] : 12); } catch (e) { }
+  };
+  if (reduce) land();
+  else {
+    let n = 0;
+    showRollToast.iv = setInterval(() => {
+      const tot = el.querySelector(".rt-total");
+      if (!tot || ++n >= 10) { clearInterval(showRollToast.iv); land(); return; }
+      tot.textContent = 1 + Math.floor(Math.random() * (d20 ? 20 : Math.max(faces, Math.abs(r.total) || faces)));
+    }, 55);
+  }
   clearTimeout(showRollToast.t);
-  showRollToast.t = setTimeout(() => el.classList.remove("show"), 4200);
+  showRollToast.t = setTimeout(() => el.classList.remove("show"), 4600);
 }
 function doD20(label, m, critOn = 20) {
   const r = rollD20(m, S.rollMode);
@@ -850,6 +920,7 @@ async function act(a, d, el) {
     case "open": S.cur = d.id; S.view = "sheet"; S.tab = "actions"; S.openSpell = null; window.scrollTo(0, 0); break;
     case "edit": S.draft = migrate(clone(ch.b)); S.editId = ch.id; S.step = 0; S.view = "create"; window.scrollTo(0, 0); break;
     case "step": S.step = +d.i; S.openSpell = null; window.scrollTo(0, 0); break;
+    case "portraitDel": b.portrait = null; break;
     case "tab": S.tab = d.v; S.openSpell = null; S.scrollTab = true; break;
     case "editAt": { S.draft = migrate(clone(ch.b)); S.editId = ch.id; const i = stepsFor(S.draft).findIndex((x) => x.k === d.v); S.step = Math.max(0, i); S.view = "create"; window.scrollTo(0, 0); break; }
     /* créateur */
@@ -1141,3 +1212,19 @@ function exampleCharacter() {
   p.inv.forEach((i) => { if (i.ref === "a:chemise") i.eq = false; });
   return { id: b.id, b, p };
 }
+
+/* Portrait : redimensionné en carré de 320 px pour rester léger */
+document.addEventListener("change", (e) => {
+  if (e.target.id !== "portraitFile" || !e.target.files || !e.target.files[0] || !S.draft) return;
+  const f = e.target.files[0];
+  const img = new Image();
+  img.onload = () => {
+    const n = 320, cv = document.createElement("canvas"); cv.width = n; cv.height = n;
+    const side = Math.min(img.width, img.height), sx = (img.width - side) / 2, sy = (img.height - side) / 4;
+    const g = cv.getContext("2d"); g.drawImage(img, sx, Math.max(0, sy), side, side, 0, 0, n, n);
+    S.draft.portrait = cv.toDataURL("image/jpeg", 0.82);
+    URL.revokeObjectURL(img.src); render();
+  };
+  img.onerror = () => toast("Image illisible.");
+  img.src = URL.createObjectURL(f);
+});

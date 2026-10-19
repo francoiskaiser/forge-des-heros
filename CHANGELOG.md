@@ -2,6 +2,13 @@
 
 Chaque version correspond à un commit Git dont le message commence par son numéro. Pour revenir en arrière, voir la section en bas.
 
+## 1.13.0 — 19 octobre 2026
+- **Mode combat du joueur** (bouton Combat sur la fiche) : tout ce que le personnage peut faire, classé par Action, Action bonus et Réaction (attaques, sorts, aptitudes, actions de base) ; suivi du tour (action, action bonus, mouvement, réaction) ; PV, ressources, emplacements et états à portée de main ; ordre d'initiative de l'aventure en direct avec « À vous de jouer ! ».
+- **Mode combat du MJ** (onglet Initiative › Mode combat plein écran) : ordre des tours, fiche du combattant en cours, dégâts et soins, états, actions du monstre avec jets cliquables.
+- **Personnages illustrés** : portrait (photo ou dessin) dans l'étape Identité, emblème et couleur propres à chaque classe, bannière en tête de fiche, barre de PV sur l'accueil.
+- **Dés animés** : le dé roule avant d'afficher le résultat, éclat sur un critique, secousse sur un échec critique, vibration sur téléphone (désactivé si le mouvement réduit est demandé).
+- Version anglaise : « Lancer » correctement traduit selon le sens (Cast, Roll, Thrown).
+
 ## 1.12.0 — 19 octobre 2026
 - **Téléphone** : barre d'onglets en bas de la fiche, avec icônes, à portée de pouce ; caractéristiques sur une seule rangée ; l'onglet commence dès le premier écran ; lignes de sorts plus aérées.
 - **Tablette en paysage et ordinateur** : fiche en deux colonnes, PV et caractéristiques toujours visibles à gauche.

@@ -197,7 +197,7 @@ function gmInit(doc) {
   }).join("");
   return `<div class="cols">
     <section class="panel"><div class="adv-head"><h3 class="ph">Ordre de combat</h3>${ord.list.length ? `<span class="mute">Round <b>${ord.round}</b></span>` : ""}</div>
-      ${ord.list.length ? `<ol class="init-list">${rows}</ol><div class="row-btns"><button class="btn primary" data-a="initNext">Tour suivant →</button><button class="btn ghost" data-a="initPrev">← Précédent</button><button class="btn ghost danger" data-a="initClear">Terminer le combat</button></div>` : '<p class="mute">Aucun combat en cours. Lancez l’initiative du groupe et ajoutez des monstres.</p>'}
+      ${ord.list.length ? `<button class="btn fight-btn wide" data-a="fightOpen">${ICON.sword} Mode combat plein écran</button><ol class="init-list">${rows}</ol><div class="row-btns"><button class="btn primary" data-a="initNext">Tour suivant →</button><button class="btn ghost" data-a="initPrev">← Précédent</button><button class="btn ghost danger" data-a="initClear">Terminer le combat</button></div>` : '<p class="mute">Aucun combat en cours. Lancez l’initiative du groupe et ajoutez des monstres.</p>'}
     </section>
     <section class="panel"><h3 class="ph">Préparer le combat</h3>
       <button class="btn" data-a="initParty">${ICON.d20} Lancer l’initiative du groupe</button>
@@ -235,6 +235,7 @@ function sortedIds(it) { return it.list.slice().sort((a, b) => b.v - a.v || (b.d
 async function advAct(a, d, el) {
   if (typeof hbAct === "function" && (await hbAct(a, d, el))) return true;
   if (typeof srdAct === "function" && (await srdAct(a, d, el))) return true;
+  if (typeof combatAct === "function" && (await combatAct(a, d, el))) return true;
   if (typeof hbioAct === "function" && (await hbioAct(a, d, el))) return true;
   if (typeof accAct === "function" && (await accAct(a, d, el))) return true;
   const ch = curChar();

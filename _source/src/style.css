@@ -698,8 +698,8 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
 .lvl-up { gap: 4px; }
 .lvl-up svg { width: 15px; height: 15px; }
 /* la barre de dés ne sert que sur la fiche, l’écran du MJ et l’accueil */
-body:not([data-view="sheet"]):not([data-view="gm"]):not([data-view="home"]) #rollbar { display: none; }
-body:not([data-view="sheet"]):not([data-view="gm"]):not([data-view="home"]) { padding-bottom: env(safe-area-inset-bottom, 0px); }
+body:not([data-view="sheet"]):not([data-view="gm"]):not([data-view="home"]):not([data-view="combat"]):not([data-view="gmfight"]) #rollbar { display: none; }
+body:not([data-view="sheet"]):not([data-view="gm"]):not([data-view="home"]):not([data-view="combat"]):not([data-view="gmfight"]) { padding-bottom: env(safe-area-inset-bottom, 0px); }
 
 /* Tablette en paysage et ordinateur : caractéristiques fixées à gauche, onglets à droite */
 @media (min-width: 1024px) {
@@ -788,3 +788,169 @@ body:not([data-view="sheet"]):not([data-view="gm"]):not([data-view="home"]) { pa
   .pick-grid.two .pick-card:not(.on) .pc-tag { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 }
 #toast { top: calc(66px + env(safe-area-inset-top, 0px)); }
+
+/* ---------- 1.13 : dés animés ---------- */
+.rt { position: relative; }
+.rt-die { position: relative; width: 104px; height: 104px; display: grid; place-items: center; margin: 2px 0; }
+.rt-die svg { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--ember); }
+.rt-die .df { fill: var(--emberbg); stroke: none; }
+.rt-die .dl { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linejoin: round; opacity: .85; }
+.rt-die .rt-total { position: relative; z-index: 1; font-size: 2.5rem; animation: none; text-shadow: 0 2px 10px var(--shadow); }
+.rt.rolling .rt-die svg { animation: tumble .55s linear infinite; }
+.rt.rolling .rt-total { opacity: .55; filter: blur(.4px); }
+.rt.rolling .rt-detail, .rt.rolling .rt-note { opacity: 0; }
+.rt.landed .rt-die { animation: land .42s cubic-bezier(.2, 1.6, .4, 1); }
+.rt.landed .rt-detail, .rt.landed .rt-note { transition: opacity .25s; opacity: 1; }
+.rt.crit .rt-die svg { color: var(--verd); }
+.rt.crit .rt-die .df { fill: var(--verdbg); }
+.rt.crit.landed .rt-die::after { content: ""; position: absolute; inset: -14px; border-radius: 50%; border: 3px solid var(--verd); animation: burst .7s ease-out forwards; }
+.rt.fumble .rt-die svg { color: var(--blood); }
+.rt.fumble .rt-die .df { fill: var(--bloodbg); }
+.rt.fumble.landed .rt-die { animation: shake .45s ease-in-out; }
+.rt.dmgr .rt-die svg { color: var(--dmgink); }
+.rt.healr .rt-die svg { color: var(--verd); }
+@keyframes tumble { 0% { transform: rotate(0) scale(1); } 25% { transform: rotate(95deg) scale(.88); } 50% { transform: rotate(185deg) scale(1.05); } 75% { transform: rotate(270deg) scale(.9); } 100% { transform: rotate(360deg) scale(1); } }
+@keyframes land { 0% { transform: scale(.7) rotate(-12deg); } 60% { transform: scale(1.15) rotate(3deg); } 100% { transform: scale(1) rotate(0); } }
+@keyframes burst { 0% { transform: scale(.6); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-8px) rotate(-6deg); } 40% { transform: translateX(7px) rotate(5deg); } 60% { transform: translateX(-5px) rotate(-3deg); } 80% { transform: translateX(3px); } }
+
+/* ---------- 1.13 : portraits, emblèmes, bannière ---------- */
+.sigil svg { width: 62%; height: 62%; }
+.avatar { --cc: var(--ember); flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; overflow: hidden; color: var(--cc); background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--cc) 30%, var(--panel2)), var(--panel)); border: 2px solid color-mix(in srgb, var(--cc) 70%, transparent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cc) 14%, transparent); }
+.avatar svg { width: 58%; height: 58%; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.avatar.lg { width: 56px; height: 56px; }
+.avatar.xl { width: 84px; height: 84px; }
+.hero-card .avatar { margin-right: 2px; }
+.hc-bar { display: block; height: 4px; border-radius: 4px; background: var(--line); overflow: hidden; margin-top: 6px; max-width: 220px; }
+.hc-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--blood), var(--ember)); }
+.hero-card { border-left: 3px solid var(--cc, var(--line)); }
+.char-banner { --cc: var(--ember); position: relative; display: flex; align-items: center; gap: 14px; padding: 14px; margin-bottom: 12px; border-radius: 16px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--cc) 45%, var(--line));
+  background: radial-gradient(ellipse 70% 120% at 0% 0%, color-mix(in srgb, var(--cc) 30%, transparent), transparent 70%), linear-gradient(135deg, color-mix(in srgb, var(--cc) 12%, var(--panel)), var(--panel)); }
+.char-banner::after { content: ""; position: absolute; right: -30px; bottom: -40px; width: 160px; height: 160px; border-radius: 50%; border: 18px solid color-mix(in srgb, var(--cc) 10%, transparent); pointer-events: none; }
+.banner-av { flex: none; border-radius: 50%; }
+.cbn-id { min-width: 0; flex: 1; display: grid; gap: 1px; }
+.cbn-id h2 { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 1.45rem; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; }
+.cbn-id .eyebrow { color: color-mix(in srgb, var(--cc) 75%, var(--ink)); }
+.cbn-cls { color: var(--mute); font-size: .88rem; }
+.fight-btn { gap: 6px; background: color-mix(in srgb, var(--cc, var(--blood)) 22%, var(--panel2)); border: 1px solid color-mix(in srgb, var(--cc, var(--blood)) 60%, transparent); color: var(--ink); font-weight: 700; z-index: 1; }
+.fight-btn svg { width: 18px; height: 18px; }
+.fight-btn.wide { width: 100%; justify-content: center; margin-bottom: 12px; --cc: var(--blood); }
+.portrait-pick { display: flex; gap: 16px; align-items: center; }
+.portrait-pick h4 { margin: 0 0 2px; }
+.portrait-pick p { margin: 0 0 8px; }
+@media (max-width: 640px) {
+  .char-banner { padding: 10px 12px; gap: 10px; margin-bottom: 8px; }
+  .char-banner .avatar.xl { width: 58px; height: 58px; }
+  .cbn-id h2 { font-size: 1.2rem; }
+  .fight-btn span { display: none; }
+  .fight-btn { padding: .55em .7em; }
+  .sheet-top .tb-title { visibility: hidden; }
+}
+
+/* ---------- 1.13 : mode combat du joueur ---------- */
+body[data-view="combat"] main.combat { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.cb-top .tb-title strong { display: flex; align-items: center; gap: 6px; }
+.cb-top .tb-title strong svg { width: 18px; height: 18px; color: var(--cc, var(--blood)); }
+.cb-left, .cb-right { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.cb-left > .panel, .cb-right > .panel { margin: 0; }
+.cb-vitals.down { border-color: var(--blood); }
+.cb-hp { display: flex; align-items: baseline; gap: 10px; }
+.cb-hp .hp-num b { font-size: 3rem; }
+.cb-hpq { display: flex; gap: 8px; align-items: center; margin: 8px 0 10px; }
+.cb-hpq .btn { flex: 1; justify-content: center; }
+.cb-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; text-align: center; }
+.cb-stats > div { background: var(--bg2); border: 1px solid var(--line); border-radius: 10px; padding: 6px 2px; display: grid; }
+.cb-stats b { font-size: 1.25rem; }
+.toks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 6px 0; }
+.tok { display: grid; justify-items: center; gap: 4px; padding: 10px 4px; border-radius: 14px; border: 1px solid var(--ember); background: var(--emberbg); font-size: .78rem; font-weight: 700; color: var(--ink); transition: opacity .2s, filter .2s; }
+.tok-ic svg { width: 24px; height: 24px; color: var(--ember2); }
+.tok.used { opacity: .4; filter: grayscale(1); border-style: dashed; text-decoration: line-through; }
+.cb-init.mine { border-color: var(--verd); box-shadow: 0 0 0 3px color-mix(in srgb, var(--verd) 25%, transparent); }
+.cb-init.mine h3 { color: var(--verd); }
+.init-chips { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.init-chips li { display: flex; align-items: center; gap: 6px; padding: 5px 10px 5px 5px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg2); font-size: .85rem; }
+.init-chips .iv { min-width: 26px; height: 22px; border-radius: 999px; display: grid; place-items: center; background: var(--panel2); font-size: .75rem; font-weight: 700; }
+.init-chips li.now { border-color: var(--ember); background: var(--emberbg); font-weight: 700; }
+.init-chips li.me { box-shadow: inset 0 0 0 1px var(--verd); }
+.init-chips li.monstre { color: var(--dmgink); }
+.cb-head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.cb-head h3 { margin: 0; }
+.cb-head .mute { margin-left: auto; }
+.cb-badge { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; background: var(--emberbg); color: var(--ember2); }
+.cb-badge svg { width: 19px; height: 19px; }
+.cb-badge.b { background: var(--arcbg); color: var(--arc); }
+.cb-badge.r { background: var(--verdbg); color: var(--verd); }
+.cb-sec.spent { opacity: .55; }
+.cb-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.cb-name { flex: 1 1 160px; min-width: 0; display: grid; }
+.cb-acts { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+.cb-feat, .std { border: 1px solid var(--line); border-radius: 10px; background: var(--bg2); margin: 6px 0; }
+.cb-feat summary, .std summary { cursor: pointer; padding: 9px 12px; font-weight: 700; display: flex; gap: 8px; align-items: baseline; list-style: none; }
+.cb-feat summary::-webkit-details-marker, .std summary::-webkit-details-marker { display: none; }
+.cb-feat summary .mute { margin-left: auto; font-weight: 400; }
+.cb-feat p, .std p { margin: 0; padding: 0 12px 10px; font-size: .9rem; color: var(--mute); }
+.std .rb { margin: 0 12px 10px; }
+.std-acts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 8px; }
+.std-acts .std[open] { grid-column: 1 / -1; }
+@media (min-width: 900px) {
+  body[data-view="combat"] main.combat { grid-template-columns: minmax(300px, 380px) minmax(0, 1fr); align-items: start; }
+  .cb-left { position: sticky; top: calc(66px + env(safe-area-inset-top, 0px)); max-height: calc(100vh - 150px); overflow-y: auto; scrollbar-width: thin; }
+  .std-acts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* ---------- 1.13 : mode combat du MJ ---------- */
+.fight-top .btn.primary { font-size: 1rem; padding: .6em 1.1em; }
+main.fight { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.fight-order { list-style: none; margin: 0; padding: 0; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+.fight-order::-webkit-scrollbar { display: none; }
+.fo { min-width: 132px; display: grid; gap: 3px; text-align: left; padding: 9px 10px; border-radius: 14px; border: 1px solid var(--line); background: var(--panel); }
+.fo .iv { font-size: .72rem; color: var(--mute); font-weight: 700; }
+.fo-name { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fo-hp { font-size: .8rem; color: var(--mute); font-variant-numeric: tabular-nums; }
+.fo-cond { font-size: .7rem; color: var(--arc); }
+.fo.now { border-color: var(--ember); background: var(--emberbg); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ember) 22%, transparent); }
+.fo.sel { outline: 2px solid var(--ink); outline-offset: 2px; }
+.fo.monstre .fo-name { color: var(--dmgink); }
+.fo.hurt .fo-hp { color: var(--ember2); } .fo.crit .fo-hp { color: var(--blood); } .fo.dead { opacity: .45; } .fo.dead .fo-name { text-decoration: line-through; }
+.fight-card { display: grid; gap: 12px; }
+.fc-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.fc-head h2 { margin: 2px 0 0; font-family: var(--f-display); font-weight: 400; font-size: 1.8rem; }
+.fc-ac { text-align: center; padding: 8px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg2); display: grid; }
+.fc-ac b { font-size: 1.6rem; }
+.fc-hp { display: grid; grid-template-columns: auto auto 1fr; align-items: center; gap: 8px; }
+.fc-hp b { font-size: 2.6rem; font-variant-numeric: tabular-nums; }
+.fc-hp span { color: var(--mute); }
+.fight-card.hurt .fc-hp b { color: var(--ember2); } .fight-card.crit .fc-hp b, .fight-card.dead .fc-hp b { color: var(--blood); }
+.fc-ctl { display: grid; grid-template-columns: 1fr 110px 1fr; gap: 8px; }
+.fc-ctl input { text-align: center; font-size: 1.2rem; }
+.fc-ctl .btn { justify-content: center; }
+.fc-acts { border-top: 1px solid var(--line); padding-top: 4px; }
+@media (min-width: 1024px) {
+  main.fight { grid-template-columns: 300px minmax(0, 1fr); align-items: start; }
+  .fight-order { flex-direction: column; overflow: visible; }
+  .fo { min-width: 0; }
+}
+/* barre de dés : aussi en combat */
+body[data-view="combat"] #rollbar, body[data-view="gmfight"] #rollbar { display: block; }
+body[data-view="combat"], body[data-view="gmfight"] { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+body.dice-rolling .last-roll b { visibility: hidden; }
+@media (max-width: 899px) {
+  body[data-view="combat"] .cb-left { display: contents; }
+  body[data-view="combat"] main.combat > .cb-left > *, body[data-view="combat"] main.combat > .cb-right { order: 8; }
+  body[data-view="combat"] .o1 { order: 1 !important; } body[data-view="combat"] .death { order: 2 !important; }
+  body[data-view="combat"] .o3 { order: 3 !important; } body[data-view="combat"] .o4 { order: 4 !important; }
+  body[data-view="combat"] .o5 { order: 5 !important; } body[data-view="combat"] .o6 { order: 6 !important; } body[data-view="combat"] .o7 { order: 7 !important; }
+}
+.fight-order li { min-width: 0; }
+@media (min-width: 1024px) { .fight-order li, .fo { width: 100%; } }
+@media (max-width: 640px) {
+  .cb-turn > p.mute { display: none; }
+  .cb-turn h3 { display: none; }
+  .tok { padding: 7px 2px; font-size: .7rem; }
+  .tok-ic svg { width: 20px; height: 20px; }
+  .cb-hp .hp-num b { font-size: 2.4rem; }
+  .cb-stats b { font-size: 1.05rem; }
+  .cb-stats .lbl { font-size: .58rem; }
+  .cb-hpq { margin: 6px 0 8px; }
+}

@@ -85,7 +85,7 @@ function statBlock(k, inGM) {
     </dl>
     ${sec("Traits", m.tr)}${sec("Actions", m.act)}${sec("Actions bonus", m.ba)}${sec("Réactions", m.re)}${sec("Actions légendaires", m.la)}
     ${inGM ? `<div class="mon-add"><label class="field"><span>Nombre</span><input id="monAddN" type="number" inputmode="numeric" value="${esc(S.monAddN || 1)}" min="1" max="20"></label>
-      <div class="field"><span>Points de vie</span><div class="chips">${chip("Moyenne (" + m.hp + ")", !S.monHpRoll, "monHpMode", 'data-v="avg"')}${chip("Lancer " + esc(m.hd), !!S.monHpRoll, "monHpMode", 'data-v="roll"')}</div></div>
+      <div class="field"><span>Points de vie</span><div class="chips">${chip("Moyenne (" + m.hp + ")", !S.monHpRoll, "monHpMode", 'data-v="avg"')}${chip(T_ROLL + " " + esc(m.hd), !!S.monHpRoll, "monHpMode", 'data-v="roll"')}</div></div>
       <button class="btn primary" data-a="monAddSrd" data-k="${k}">${ICON.plus} Ajouter au combat</button></div>` : ""}
     <p class="legal">SRD 5.2 · Wizards of the Coast LLC · CC-BY-4.0${LANG === "fr" ? " · traduction non officielle" : ""}</p>
   </div>`;

@@ -77,7 +77,9 @@ const WEAPONS = {
   arbaletelourde: { n: "Arbalète lourde", c: "guerre", k: "dist", d: "1d10", t: "perforant", p: ["M", "LO", "R", "DM"], r: "30/120 m", m: "repousser", w: 9, cost: "50 po" },
   arclong: { n: "Arc long", c: "guerre", k: "dist", d: "1d8", t: "perforant", p: ["M", "LO", "DM"], r: "45/180 m", m: "ralentir", w: 1, cost: "50 po" },
 };
-const WPROP = { F: "Finesse", L: "Légère", LD: "Lancer", P: "Polyvalente", DM: "Deux mains", LO: "Lourde", AL: "Allonge", M: "Munitions", R: "Rechargement" };
+/* « Lancer » a trois sens : lancer un sort, lancer un dé, propriété d’arme */
+const T_CAST = LANG === "en" ? "Cast" : "Lancer", T_ROLL = LANG === "en" ? "Roll" : "Lancer";
+const WPROP = { F: "Finesse", L: "Légère", LD: LANG === "en" ? "Thrown" : "Lancer", P: "Polyvalente", DM: "Deux mains", LO: "Lourde", AL: "Allonge", M: "Munitions", R: "Rechargement" };
 
 const ARMORS = {
   matelassee: { n: "Armure matelassée", t: "legere", ac: 11, dex: 99, st: true, w: 4, cost: "5 po" },
