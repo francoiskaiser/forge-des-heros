@@ -689,3 +689,102 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
 .hb-file { position: relative; overflow: hidden; cursor: pointer; }
 .hb-file input { position: absolute; inset: 0; opacity: 0; cursor: pointer; font-size: 0; }
 .hb-io .row-btns { flex-wrap: wrap; }
+
+/* ---------- Ergonomie 1.12 : fiche, onglets, tablette ---------- */
+.ab-main .ls { display: none; }
+.tab .ti, .tab .ts { display: none; }
+.tab { position: relative; }
+.tab-dot { position: absolute; top: 8px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--verd); }
+.lvl-up { gap: 4px; }
+.lvl-up svg { width: 15px; height: 15px; }
+/* la barre de dés ne sert que sur la fiche, l’écran du MJ et l’accueil */
+body:not([data-view="sheet"]):not([data-view="gm"]):not([data-view="home"]) #rollbar { display: none; }
+body:not([data-view="sheet"]):not([data-view="gm"]):not([data-view="home"]) { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+/* Tablette en paysage et ordinateur : caractéristiques fixées à gauche, onglets à droite */
+@media (min-width: 1024px) {
+  .sheet-layout { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 18px; align-items: start; }
+  .sheet-hero { position: sticky; top: calc(66px + env(safe-area-inset-top, 0px)); max-height: calc(100vh - 150px); overflow-y: auto; scrollbar-width: thin; padding-bottom: 4px; }
+  .sheet-hero .vitals { grid-template-columns: minmax(0, 1fr); gap: 10px; margin-bottom: 10px; }
+  .sheet-hero .stat-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sheet-hero .tile { padding: 9px 4px; }
+  .sheet-hero .tile b { font-size: 1.35rem; }
+  .sheet-hero .abil-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .sheet-hero .ab-main b { font-size: 1.6rem; }
+  .sheet-main .tabs { margin-top: 0; }
+  .sheet-main .tab { padding: 10px 12px; }
+}
+
+/* Téléphone : barre d’onglets en bas, caractéristiques en une rangée */
+@media (max-width: 640px) {
+  body[data-view="sheet"] { padding-bottom: calc(132px + env(safe-area-inset-bottom, 0px)); }
+  body[data-view="sheet"] .sheet-main .tabs {
+    position: fixed; left: 0; right: 0; bottom: 0; top: auto; z-index: 26; margin: 0;
+    display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 2px; overflow: visible;
+    padding: 4px max(4px, env(safe-area-inset-right, 0px)) calc(4px + env(safe-area-inset-bottom, 0px)) max(4px, env(safe-area-inset-left, 0px));
+    background: var(--barbg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 0; border-top: 1px solid var(--line);
+  }
+  body[data-view="sheet"] .tab { display: grid; justify-items: center; gap: 1px; padding: 6px 0 5px; border: 0; border-radius: 10px; font-size: .64rem; font-weight: 700; letter-spacing: .01em; min-width: 0; }
+  body[data-view="sheet"] .tab .ti { display: block; line-height: 0; }
+  body[data-view="sheet"] .tab .ti svg { width: 22px; height: 22px; }
+  body[data-view="sheet"] .tab .tl { display: none; }
+  body[data-view="sheet"] .tab .ts { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  body[data-view="sheet"] .tab.on { color: var(--ember2); background: var(--emberbg); }
+  body[data-view="sheet"] .tab-dot { top: 4px; right: calc(50% - 16px); }
+  body[data-view="sheet"] #rollbar { bottom: calc(57px + env(safe-area-inset-bottom, 0px)); padding: 6px 10px; border-bottom: 1px solid var(--line); }
+  body[data-view="sheet"] .tray-btn { width: 40px; height: 40px; }
+  body[data-view="sheet"] .tray-btn svg { width: 22px; height: 22px; }
+  .sheet-hero .hp-card { padding: 10px 12px; gap: 4px; }
+  .sheet-hero .vitals { gap: 8px; margin-bottom: 8px; }
+  .abil-strip { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; margin-bottom: 8px; }
+  .abil { border-radius: 11px; }
+  .ab-main { padding: 6px 1px 3px; }
+  .ab-main .lf { display: none; }
+  .ab-main .ls { display: inline; }
+  .ab-main .lbl { font-size: .62rem; }
+  .ab-main b { font-size: 1.3rem; }
+  .ab-score { font-size: .68rem; padding: 0 5px; }
+  .ab-save { font-size: .66rem; gap: 3px; padding: 5px 0; }
+  .ab-save i { width: 6px; height: 6px; }
+  .tb-actions { gap: 4px; }
+  .sheet-top .tb-title strong { font-size: 1.05rem; }
+  /* sorts : le nom sur toute la largeur, les boutons en dessous */
+  .sheet-spell { grid-template-columns: minmax(0, 1fr); }
+  .sheet-spell .sr-acts { padding: 0 0 9px; justify-content: flex-start; }
+  .sheet-spell .sr-main { padding-bottom: 4px; }
+}
+.feats-panel .feat summary { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.feat-n { font-weight: 700; }
+.feat-src { margin-left: auto; font-size: .74rem; color: var(--mute); }
+.feats-panel .feat p + .btn { margin: 0 0 10px; }
+.feats-tip { margin: 10px 0 0; }
+@media (min-width: 1024px) {
+  .sheet-hero .stat-tiles { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .sheet-hero .stat-tiles > :nth-child(-n+3) { grid-column: span 2; }
+  .sheet-hero .stat-tiles > :nth-child(n+4) { grid-column: span 3; }
+}
+.invite-card { text-align: center; display: grid; justify-items: center; gap: 8px; padding: 26px 18px; }
+.invite-code { font: 700 clamp(2rem, 9vw, 3.2rem)/1.1 ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .14em; color: var(--ember2); padding: 10px 18px; border: 1px dashed var(--ember); border-radius: 14px; background: var(--emberbg); }
+.invite-card p { max-width: 520px; margin: 4px 0 6px; }
+.invite-card .row-btns { justify-content: center; }
+@media (max-width: 640px) {
+  body[data-view="sheet"] #rolltoast { bottom: calc(140px + env(safe-area-inset-bottom, 0px)); }
+}
+/* Créateur sur téléphone : résumé compact pour laisser la place aux choix */
+@media (max-width: 640px) {
+  .summary .sum-abil { display: none; }
+  .summary .sum-card { padding: 10px 12px; gap: 8px; }
+  .summary .sigil.big { width: 40px; height: 40px; font-size: 1rem; }
+  .summary .sum-name { font-size: 1.05rem; }
+  .summary .sum-vitals { gap: 4px; }
+}
+@media (max-width: 640px) {
+  .sheet-spell { display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px; }
+  .sheet-spell .sr-main { flex: 1 1 170px; min-width: 0; }
+  .sheet-spell .sr-acts { flex: 0 1 auto; margin-left: auto; padding: 4px 0 8px; justify-content: flex-end; }
+  .sheet-spell .sr-body { flex-basis: 100%; }
+  /* historiques : le détail seulement pour celui qui est choisi */
+  .pick-grid.two .pick-card:not(.on) .pc-list { display: none; }
+  .pick-grid.two .pick-card:not(.on) .pc-tag { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+}
+#toast { top: calc(66px + env(safe-area-inset-top, 0px)); }

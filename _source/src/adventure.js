@@ -133,7 +133,9 @@ function viewGM() {
 
 function gmParty() {
   const mem = Live.members.map((m) => ({ m, s: memberStats(m) })).filter((x) => x.s).sort((a, b) => a.m.name.localeCompare(b.m.name, "fr"));
-  if (!mem.length) return `<section class="panel empty-state"><h3 class="ph">En attente des joueurs</h3><p>Donnez le code <b class="code-inline">${esc(S.gmCode)}</b> à vos joueurs. Dans leur fiche, onglet <b>Aventure</b>, ils l’entrent pour rejoindre le groupe.</p></section>`;
+  if (!mem.length) return `<section class="panel invite-card"><span class="lbl">Code de l’aventure</span><b class="invite-code">${esc(S.gmCode)}</b>
+    <p>Envoyez ce code à vos joueurs. Dans leur fiche, onglet <b>Aventure</b>, ils l’entrent pour rejoindre le groupe : leurs personnages apparaîtront ici.</p>
+    <div class="row-btns">${navigator.share ? `<button class="btn primary" data-a="shareCode">Partager le code</button>` : ""}<button class="btn ${navigator.share ? "ghost" : "primary"}" data-a="copyCode">Copier le code</button></div></section>`;
   const totalHp = mem.reduce((t, x) => t + Math.max(0, x.m.p.hp), 0), totalMax = mem.reduce((t, x) => t + x.s.hpMax, 0);
   return `<div class="party-sum"><span><b>${mem.length}</b> personnage${mem.length > 1 ? "s" : ""}</span><span>PV du groupe <b>${totalHp}/${totalMax}</b></span><span>Perception passive max <b>${Math.max(...mem.map((x) => 10 + x.s.perc))}</b></span></div>
   <div class="party-grid">${mem.map(({ m, s }) => {
@@ -273,6 +275,7 @@ async function advAct(a, d, el) {
     }
     case "gmOpen": S.gmCode = d.code; S.gmTab = "groupe"; S.view = "gm"; window.scrollTo(0, 0); return true;
     case "gmTab": S.gmTab = d.v; return true;
+    case "shareCode": { try { await navigator.share({ title: "Forge des Héros", text: "Rejoins mon aventure « " + ((Live.doc && Live.doc.name) || "") + " » dans Forge des Héros avec le code " + S.gmCode + " (fiche › onglet Aventure).", url: location.origin + location.pathname }); } catch (e) { } return true; }
     case "copyCode": { try { await navigator.clipboard.writeText(S.gmCode); toast("Code copié : " + S.gmCode); } catch (e) { toast("Code : " + S.gmCode); } return false; }
     case "gmDetail": S.modal = { k: "gmDetail", id: d.id }; return true;
     case "gmKick": { try { await FB.members(S.gmCode).doc(d.id).delete(); toast("Personnage retiré du groupe"); } catch (e) { toast("Suppression impossible."); } S.modal = null; return true; }

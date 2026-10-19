@@ -1,6 +1,6 @@
 /* Forge des Héros — page Compte et réglages : thème, langue, support, version */
 
-const APP_VERSION = "1.11.1";
+const APP_VERSION = "1.12.0";
 
 /* ---------- Thème ---------- */
 const Theme = {

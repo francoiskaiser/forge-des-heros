@@ -3,6 +3,14 @@ const $ = (s, r = document) => r.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const clone = (o) => JSON.parse(JSON.stringify(o));
 const ICON = {
+  up: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></g></svg>',
+  sword: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4H20v5.5L9.5 20 4 14.5zM7 12l5 5M4.5 19.5l2-2"/></g></svg>',
+  skills: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h9M4 12h9M4 18h9"/><path d="m16 6 1.5 1.5L20 5M16 12l1.5 1.5L20 11M16 18l1.5 1.5L20 17"/></g></svg>',
+  spark: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM18.5 16.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></g></svg>',
+  bag: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 12H6.2zM9 8V7a3 3 0 0 1 6 0v1"/></g></svg>',
+  scroll: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM9 9h6M9 13h6M9 17h3"/></g></svg>',
+  flag: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4h12l-2.5 4L17 12H5"/></g></svg>',
+  notes: '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6zM15 3v3h3M9 11h6M9 15h6"/></g></svg>',
   d20: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 2v6m0 0-9-1m9 1 9-1M12 8l-5 8h10zM7 16l-4 1m14-1 4 1m-9 5v-6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>',
   back: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   plus: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
@@ -97,7 +105,17 @@ function render() {
   else if (S.view === "hb") app.innerHTML = viewHB();
   $("#overlay").innerHTML = (S.modal ? viewModal() : "") + (S.tray ? viewTray() : "");
   $("#rollbar").innerHTML = viewRollbar();
+  document.body.dataset.view = S.view;
   document.body.classList.toggle("noscroll", !!S.modal || S.tray);
+  // en changeant d’onglet plus bas dans la page, revenir au début de l’onglet
+  if (S.scrollTab) {
+    S.scrollTab = false;
+    const m = $(".sheet-main"), bar = $(".topbar");
+    if (m) {
+      const y = m.getBoundingClientRect().top + window.scrollY - (bar ? bar.offsetHeight : 0) - 8;
+      if (window.scrollY > y) window.scrollTo(0, Math.max(0, y));
+    }
+  }
 }
 
 /* ---------------- Accueil ---------------- */
@@ -463,7 +481,8 @@ function viewSheet() {
   const b = ch.b, p = ch.p, s = compute(b, p), c = CLASSES[b.cls], sp = SPECIES[b.species];
   const hpPct = Math.max(0, Math.min(100, (p.hp / s.hpMax) * 100));
   const down = p.hp <= 0;
-  const tabs = [["actions", "Actions"], ["carac", "Compétences"], ...(s.spells.length ? [["sorts", "Sorts"]] : []), ["inv", "Inventaire"], ["traits", "Aptitudes"], ...(typeof FB !== "undefined" && FB.ok ? [["adv", ch.adv ? "Aventure ●" : "Aventure"]] : []), ["notes", "Notes"]];
+  // [clé, libellé, libellé court (barre du bas sur téléphone), icône]
+  const tabs = [["actions", "Actions", "Actions", "sword"], ["carac", "Compétences", "Compét.", "skills"], ...(s.spells.length ? [["sorts", "Sorts", "Sorts", "spark"]] : []), ["inv", "Inventaire", "Sac", "bag"], ["traits", "Aptitudes", "Aptitudes", "scroll"], ...(typeof FB !== "undefined" && FB.ok ? [["adv", "Aventure", "Aventure", "flag"]] : []), ["notes", "Notes", "Notes", "notes"]];
   const tabBody = { actions: tabActions, carac: tabSkills, sorts: tabSpells, inv: tabInventory, traits: tabTraits, notes: tabNotes, adv: typeof tabAdventure === "function" ? tabAdventure : tabActions }[S.tab] || tabActions;
   return `<header class="topbar sheet-top">
     <button class="icon-btn" data-a="home" aria-label="Retour">${ICON.back}</button>
@@ -471,11 +490,12 @@ function viewSheet() {
     <div class="tb-actions">
       <button class="btn small ghost" data-a="rest" data-v="short">${ICON.fire}<span class="hide-s">Repos court</span></button>
       <button class="btn small ghost" data-a="rest" data-v="long">${ICON.moon}<span class="hide-s">Repos long</span></button>
-      ${b.level < MAXLV ? `<button class="btn small" data-a="levelUp">Niveau ${b.level + 1}</button>` : ""}
+      ${b.level < MAXLV ? `<button class="btn small lvl-up" data-a="levelUp" aria-label="Passer au niveau ${b.level + 1}">${ICON.up}<span class="hide-s">Niveau&nbsp;</span>${b.level + 1}</button>` : ""}
       <button class="icon-btn" data-a="edit" aria-label="Modifier le personnage">${ICON.edit}</button>
     </div>
   </header>
-  <main class="sheet">
+  <main class="sheet sheet-layout">
+    <aside class="sheet-hero">
     <section class="vitals">
       <div class="hp-card ${down ? "down" : ""}">
         <div class="hp-top"><span class="lbl">Points de vie</span>${p.temp ? `<span class="temp">+${p.temp} temp.</span>` : ""}</div>
@@ -494,12 +514,15 @@ function viewSheet() {
     ${down ? deathSaves(p) : ""}
     <section class="abil-strip">${ABK.map((k) => {
       const sv = s.saves.find((x) => x.k === k);
-      return `<div class="abil"><button class="ab-main" data-a="r20" data-l="Test de ${ABIL[k].n}" data-m="${s.m[k]}"><span class="lbl">${ABIL[k].n}</span><b>${sg(s.m[k])}</b><span class="ab-score">${s.ab[k]}</span></button>
+      return `<div class="abil"><button class="ab-main" data-a="r20" data-l="Test de ${ABIL[k].n}" data-m="${s.m[k]}"><span class="lbl"><span class="lf">${ABIL[k].n}</span><span class="ls">${ABIL[k].s}</span></span><b>${sg(s.m[k])}</b><span class="ab-score">${s.ab[k]}</span></button>
         <button class="ab-save ${sv.pr ? "pr" : ""}" data-a="r20" data-l="Sauvegarde de ${ABIL[k].n}" data-m="${sv.v}"><i></i>JS ${sg(sv.v)}</button></div>`;
     }).join("")}</section>
     ${p.cond.length ? `<div class="conds">${p.cond.map((x) => `<button class="cond" data-a="cond" data-v="${esc(x)}">${esc(COND_L[x] || x)} ${ICON.close}</button>`).join("")}</div>` : ""}
-    <nav class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" class="tab ${S.tab === k ? "on" : ""}" data-a="tab" data-v="${k}" aria-selected="${S.tab === k}">${n}</button>`).join("")}</nav>
+    </aside>
+    <div class="sheet-main">
+    <nav class="tabs" role="tablist">${tabs.map(([k, n, short, ic]) => `<button role="tab" class="tab ${S.tab === k ? "on" : ""}" data-a="tab" data-v="${k}" aria-selected="${S.tab === k}"><span class="ti">${ICON[ic]}</span><span class="tl">${n}</span><span class="ts">${short}</span>${k === "adv" && ch.adv ? '<i class="tab-dot" aria-label="Dans une aventure"></i>' : ""}</button>`).join("")}</nav>
     <section class="tab-body">${tabBody(ch, s)}</section>
+    </div>
   </main>`;
 }
 
@@ -651,11 +674,33 @@ function tabInventory(ch) {
   </section></div>`;
 }
 
+/* Bloc « Dons » : les dons du personnage, d’où ils viennent, et comment les changer */
+function featsPanel(b) {
+  const rows = featsOf(b).map((f) => {
+    const x = FEATS[f.id];
+    const src = f.src === "bg" ? "Historique · " + (BACKGROUNDS[b.bg] ? BACKGROUNDS[b.bg].n : "") : f.src === "human" ? "Humain · don d’origine" : "Niveau " + f.src.slice(3) + " · à la place d’une amélioration";
+    const step = f.src === "bg" ? "origine" : f.src === "human" ? "options" : "carac";
+    return { n: x.n, d: x.d, src, step, todo: x.todo, hb: x.hb };
+  });
+  if (b.opts.style && FIGHTING_STYLES[b.opts.style]) { const x = FIGHTING_STYLES[b.opts.style]; rows.push({ n: x.n, d: x.d, src: "Style de combat", step: "options", todo: x.todo, hb: x.hb }); }
+  if (b.level >= 19 && b.opts.boon && EPIC_BOONS[b.opts.boon.id]) { const x = EPIC_BOONS[b.opts.boon.id]; rows.push({ n: x.n, d: x.d, src: "Faveur épique · niveau 19", step: "carac", todo: x.todo, hb: x.hb }); }
+  const free = activeAsiLevels(b).filter((lv) => !(b.opts.asis[lv] && b.opts.asis[lv].mode === "feat"));
+  const next = asiLevels(b.cls).find((lv) => lv > b.level);
+  const tip = free.length
+    ? `Aux niveaux ${free.join(", ")}, vous avez pris une amélioration de caractéristique : vous pouvez la remplacer par un don.`
+    : next ? `Prochain don possible au niveau ${next}, à la place d’une amélioration de caractéristique.` : "";
+  return `<section class="panel feats-panel"><div class="adv-head"><h3 class="ph">Dons</h3>${free.length ? `<button class="btn small" data-a="editAt" data-v="carac">${ICON.plus}Prendre un don</button>` : ""}</div>
+    ${rows.map((r) => `<details class="feat"><summary><span class="feat-n">${r.hb ? esc(r.n) : r.n}${hbTag(r)}</span><span class="feat-src">${esc(r.src)}</span></summary><p>${r.hb ? esc(r.d) : r.d}</p><button class="btn small ghost" data-a="editAt" data-v="${r.step}">${ICON.edit}Changer</button></details>`).join("") || `<p class="mute small">Aucun don pour l’instant.</p>`}
+    ${tip ? `<p class="mute small feats-tip">${tip}</p>` : ""}
+  </section>`;
+}
+
 function tabTraits(ch, s) {
   const groups = {};
-  s.features.forEach((f) => (groups[f.src] = groups[f.src] || []).push(f));
+  const featSrc = /^(Historique|Humain|Don \(niv\.|Faveur épique)/;
+  s.features.filter((f) => !featSrc.test(f.src) && !/^Style : /.test(f.n)).forEach((f) => (groups[f.src] = groups[f.src] || []).push(f));
   const todo = typeof hbUsed === "function" ? hbTodoNote([...hbUsed(ch.b)]) : "";
-  return `${todo ? `<section class="panel">${todo}</section>` : ""}<section class="panel">${Object.entries(groups).map(([src, fs]) => `<p class="lvl-sep">${esc(src)}</p>${fs.map((f) => `<details class="feat"><summary>${esc(f.n)}</summary><p>${esc(f.d)}</p></details>`).join("")}`).join("")}</section>`;
+  return `${todo ? `<section class="panel">${todo}</section>` : ""}${featsPanel(ch.b)}<section class="panel">${Object.entries(groups).map(([src, fs]) => `<p class="lvl-sep">${esc(src)}</p>${fs.map((f) => `<details class="feat"><summary>${esc(f.n)}</summary><p>${esc(f.d)}</p></details>`).join("")}`).join("")}</section>`;
 }
 
 function tabNotes(ch) {
@@ -805,7 +850,8 @@ async function act(a, d, el) {
     case "open": S.cur = d.id; S.view = "sheet"; S.tab = "actions"; S.openSpell = null; window.scrollTo(0, 0); break;
     case "edit": S.draft = migrate(clone(ch.b)); S.editId = ch.id; S.step = 0; S.view = "create"; window.scrollTo(0, 0); break;
     case "step": S.step = +d.i; S.openSpell = null; window.scrollTo(0, 0); break;
-    case "tab": S.tab = d.v; S.openSpell = null; break;
+    case "tab": S.tab = d.v; S.openSpell = null; S.scrollTab = true; break;
+    case "editAt": { S.draft = migrate(clone(ch.b)); S.editId = ch.id; const i = stepsFor(S.draft).findIndex((x) => x.k === d.v); S.step = Math.max(0, i); S.view = "create"; window.scrollTo(0, 0); break; }
     /* créateur */
     case "setLevel": b.level = +d.v; cleanBuild(b); break;
     case "setClass": setClass(b, d.v); break;

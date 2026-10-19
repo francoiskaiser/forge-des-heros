@@ -2,6 +2,13 @@
 
 Chaque version correspond à un commit Git dont le message commence par son numéro. Pour revenir en arrière, voir la section en bas.
 
+## 1.12.0 — 19 octobre 2026
+- **Téléphone** : barre d'onglets en bas de la fiche, avec icônes, à portée de pouce ; caractéristiques sur une seule rangée ; l'onglet commence dès le premier écran ; lignes de sorts plus aérées.
+- **Tablette en paysage et ordinateur** : fiche en deux colonnes, PV et caractéristiques toujours visibles à gauche.
+- Bloc **Dons** dans l'onglet Aptitudes, avec la source de chaque don, un bouton « Changer » et le prochain don possible.
+- Écran du MJ : grand code d'aventure avec boutons Partager et Copier.
+- Créateur : résumé compact et historiques repliés sur téléphone ; la barre de dés n'apparaît plus là où elle ne sert pas.
+
 ## 1.11.1 — 19 octobre 2026
 - Import Excel plus tolérant : les sorts toujours préparés et l'incantation d'une sous-classe sont lus sur n'importe quelle ligne de la sous-classe, et une sous-classe peut utiliser un sort créé dans l'onglet Sorts du même fichier.
 
