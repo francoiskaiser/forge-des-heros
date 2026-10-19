@@ -30,4 +30,19 @@ de sécurité qui protègent les données.
 ## Utilisation
 - **MJ** : page d'accueil → *Créer une aventure* → donnez le code aux joueurs.
 - **Joueurs** : ouvrir sa fiche → onglet *Aventure* → entrer le code → *Rejoindre*.
-- L'écran MJ est lié à l'appareil sur lequel l'aventure a été créée.
+- L'écran MJ appartient à l'identité qui a créé l'aventure : l'appareil, ou votre compte si vous
+  êtes connecté. Connecté à votre compte, vous retrouvez vos aventures sur tous vos appareils.
+- **Clé de MJ** (écran du MJ › Groupe) : elle permet de reprendre l'aventure depuis un autre
+  appareil ou compte (accueil › *Ouvrir avec un code* › entrer la clé). Les aventures créées
+  avant la version 1.14.1 n'en ont pas : ouvrez l'écran du MJ sur l'appareil d'origine et
+  touchez *Créer une clé*.
+
+## Débloquer une aventure à la main (console)
+Si l'écran du MJ affiche « Vous n'êtes pas le MJ de cette aventure » et que l'appareil
+d'origine n'est plus disponible : copiez « Votre identifiant sur cet appareil » affiché sur
+cet écran, puis console Firebase → *Firestore Database* → `adventures` → le document au code
+de l'aventure (ex. `JFF-XMR`) → champ `gm` → collez l'identifiant → *Mettre à jour*.
+
+## Mise à jour des règles
+Après une mise à jour de l'app qui touche `firestore.rules` (dernière : 1.14.1, clé de MJ),
+recopiez le fichier dans l'onglet *Règles* de Firestore → *Publier*.

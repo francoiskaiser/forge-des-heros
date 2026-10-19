@@ -2,6 +2,13 @@
 
 Chaque version correspond à un commit Git dont le message commence par son numéro. Pour revenir en arrière, voir la section en bas.
 
+## 1.14.1 — 19 octobre 2026
+- **Accès à l'écran du MJ** : au lieu d'un « Accès refusé » sans issue ou d'un « Chargement… » sans fin, l'app explique ce qui se passe (aventure créée sous une autre identité, aventure supprimée ou code inconnu, pas de connexion) et propose une solution.
+- **Clé de MJ** (écran du MJ › Groupe) : reprendre une aventure depuis un autre appareil, navigateur ou compte. La clé utilisée est aussitôt remplacée.
+- Accueil : bouton « Ouvrir avec un code » pour retrouver une aventure dont vous êtes MJ sur un nouvel appareil.
+- Joueurs : message clair si l'aventure rejointe a été supprimée, avec le bouton pour la quitter.
+- ⚠️ Règles Firestore modifiées : recopiez `firestore.rules` dans la console Firebase (Firestore › Règles › Publier).
+
 ## 1.14.0 — 19 octobre 2026
 - **Équipement** : dans l'onglet Sac, une section « Équipé » (armure, bouclier, armes en main, objets harmonisés, CA détaillée) et une recherche unique « Ajouter de l'équipement » : armes, armures, matériel d'aventurier (corde, torche, poison basique, feu grégeois…), objets magiques et créations, avec ajout libre si l'objet n'est pas au catalogue.
 - **Armes et armures magiques équipables** : une Dague venimeuse, une Épée longue +1 ou un Bouclier +1 se rangent sous leur arme ou armure de base et comptent dans les attaques (bonus au toucher et aux dégâts) et dans la CA. Pour une « Arme +1 » ou « Armure +1 », l'app demande laquelle.

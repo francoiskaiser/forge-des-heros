@@ -1010,6 +1010,13 @@ body.dice-rolling .last-roll b { visibility: hidden; }
 .atk:has(.xd) .atk-name { grid-column: 1 / -1; }
 .rb.xd { color: var(--arc); border-color: rgba(168, 154, 232, .45); }
 @media (max-width: 520px) { .it-edit .two { grid-template-columns: 1fr; } .it-stats > div { grid-template-columns: 1fr; gap: 2px; } }
+/* 1.14.1 accès MJ */
+.gm-why { margin: 8px 0 12px; padding-left: 18px; display: grid; gap: 6px; }
+.uid-code, .gmkey { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .85rem; padding: 2px 6px; border-radius: 6px; background: var(--bg2); border: 1px solid var(--line); overflow-wrap: anywhere; }
+.gmkey { font-size: 1.05rem; letter-spacing: .06em; padding: 6px 10px; }
+.gmkey-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.gmkey-panel { margin-top: 14px; }
+.gm-home-head .row-btns { margin: 0; }
 
 </style>
 </head>
@@ -4251,17 +4258,18 @@ const GmList = {
 
 /* Écoute en direct d’une aventure (une seule à la fois) */
 const Live = {
-  code: null, doc: null, members: [], unsub: [],
+  code: null, doc: null, members: [], unsub: [], st: "",
   watch(code) {
     if (this.code === code) return;
     this.stop();
-    if (!FB.ok || !code) return;
-    this.code = code;
-    this.unsub.push(FB.adv(code).onSnapshot((d) => { this.doc = d.exists ? d.data() : null; liveRender(); }, () => { }));
+    if (!FB.ok || !code) { this.st = code ? "off" : ""; return; }
+    this.code = code; this.st = "loading";
+    this.unsub.push(FB.adv(code).onSnapshot((d) => { this.doc = d.exists ? d.data() : null; this.st = d.exists ? "ok" : "missing"; liveRender(); }, () => { this.st = "err"; liveRender(); }));
     this.unsub.push(FB.members(code).onSnapshot((q) => { this.members = q.docs.map((d) => ({ id: d.id, ...d.data() })); liveRender(); }, () => { }));
     if (typeof HB !== "undefined") this.unsub.push(FB.adv(code).collection("homebrew").onSnapshot((q) => { HB.set(code, q.docs.map((d) => d.data()), this.doc && this.doc.name); liveRender(); }, () => { }));
   },
-  stop() { this.unsub.forEach((u) => u()); this.unsub = []; this.code = null; this.doc = null; this.members = []; },
+  stop() { this.unsub.forEach((u) => u()); this.unsub = []; this.code = null; this.doc = null; this.members = []; this.st = ""; },
+  retry() { const c = this.code || S.gmCode; this.stop(); this.watch(c); },
 };
 let pendingRender = false;
 function liveRender() {
@@ -4307,6 +4315,8 @@ function tabAdventure(ch) {
   }
   Live.watch(ch.adv);
   const doc = Live.doc;
+  if (Live.st === "missing") return `<section class="panel"><h3 class="ph">Adventure not found</h3><p class="mute">Adventure ${esc(ch.advName ? "« " + ch.advName + " » " : "")}(code ${esc(ch.adv)}) no longer exists: the GM may have deleted it. Leave it to join another one.</p><div class="row-btns"><button class="btn ghost danger" data-a="advLeave">Leave the adventure</button></div></section>`;
+  if (Live.st === "err" || Live.st === "off") return `<section class="panel"><h3 class="ph">Adventure unavailable</h3><p class="mute">Can't reach the server for adventure ${esc(ch.adv)}. Check your internet connection.</p><div class="row-btns"><button class="btn" data-a="advRetry">Retry</button></div></section>`;
   const ord = initOrder(doc);
   const mem = Live.members.map((m) => ({ m, s: memberStats(m) })).filter((x) => x.s);
   return `<div class="cols">
@@ -4326,7 +4336,7 @@ function homeAdventures() {
   const list = GmList.get();
   return `${typeof accountNudge === "function" ? accountNudge() : ""}<section class="gm-home">
     <div class="gm-home-head"><div><h2>Game Master</h2><p class="mute small">Create an adventure, give the code to your players, and follow the party live.</p></div>
-    <button class="btn" data-a="advCreateOpen">${ICON.plus} Create an adventure</button></div>
+    <div class="row-btns"><button class="btn" data-a="advCreateOpen">${ICON.plus} Create an adventure</button><button class="btn ghost" data-a="gmFind">Open with a code</button></div></div>
     ${list.length ? `<div class="hero-grid">${list.map((x) => `<button class="hero-card gm" data-a="gmOpen" data-code="${esc(x.code)}"><span class="sigil">GM</span><span class="hc-body"><span class="hc-name">${esc(x.name)}</span><span class="hc-line">Code ${esc(x.code)}</span></span></button>`).join("")}</div>` : ""}
   </section>`;
 }
@@ -4336,9 +4346,11 @@ function viewGM() {
   const code = S.gmCode;
   Live.watch(code);
   const doc = Live.doc;
-  if (doc && doc.gm !== FB.uid) return `<header class="topbar"><button class="icon-btn" data-a="home" aria-label="Back">${ICON.back}</button><div class="tb-title"><strong>Access denied</strong></div></header><main class="sheet"><p class="mute">Only the Game Master who created this adventure can open this screen.</p></main>`;
+  const stop = gmBlocked(code, doc);
+  if (!stop && doc && !GmList.get().some((x) => x.code === code)) GmList.add(code, doc.name);
+  if (stop) return `<header class="topbar"><button class="icon-btn" data-a="home" aria-label="Back">${ICON.back}</button><div class="tb-title"><strong>${esc(doc ? doc.name : code)}</strong><span class="eyebrow">Game Master screen</span></div></header><main class="sheet gm-blocked">${stop}</main>`;
   const tabs = [["groupe", "Party"], ["init", "Initiative"], ["bestiaire", "Bestiary"], ["notes", "Notes"]];
-  const body = { groupe: gmParty, init: gmInit, bestiaire: gmBestiary, notes: gmNotes }[S.gmTab || "groupe"](doc);
+  const body = { groupe: (d) => gmParty(d) + gmKeyPanel(), init: gmInit, bestiaire: gmBestiary, notes: gmNotes }[S.gmTab || "groupe"](doc);
   return `<header class="topbar">
     <button class="icon-btn" data-a="home" aria-label="Back">${ICON.back}</button>
     <div class="tb-title"><strong>${esc(doc ? doc.name : "Loading…")}</strong><span class="eyebrow">Game Master screen</span></div>
@@ -4348,6 +4360,45 @@ function viewGM() {
     <nav class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" class="tab ${(S.gmTab || "groupe") === k ? "on" : ""}" data-a="gmTab" data-v="${k}">${n}</button>`).join("")}<button class="tab" data-a="hbOpen" data-code="${esc(code)}">Books & creations${HB.defs(code).length ? " (" + HB.defs(code).length + ")" : ""}</button></nav>
     <section class="tab-body">${body}</section>
   </main>`;
+}
+
+/* Pourquoi l’écran du MJ ne s’ouvre pas, et comment s’en sortir */
+function gmBlocked(code, doc) {
+  const forget = `<button class="btn small ghost" data-a="gmForget" data-code="${esc(code)}">Remove from my list</button>`;
+  if (Live.st === "off") return `<section class="panel"><h3 class="ph">Adventure mode unavailable</h3><p class="mute">The server couldn't be reached${FB.err ? " (" + esc(FB.err) + ")" : ""}. Check your connection, then reload the app.</p></section>`;
+  if (Live.st === "err") return `<section class="panel"><h3 class="ph">Can’t sign in</h3><p class="mute">Adventure ${esc(code)} couldn't be loaded. Check your internet connection.</p><div class="row-btns"><button class="btn" data-a="advRetry">Retry</button>${forget}</div></section>`;
+  if (Live.st === "missing") return `<section class="panel"><h3 class="ph">Adventure not found</h3><p class="mute">No adventure has the code ${esc(code)}: it was deleted, or the code was mistyped.</p><div class="row-btns">${forget}</div></section>`;
+  if (!doc || doc.gm === FB.uid) return "";
+  const acc = typeof Account !== "undefined" && FB.auth && FB.auth.currentUser && !FB.auth.currentUser.isAnonymous;
+  return `<section class="panel"><h3 class="ph">You're not this adventure's GM</h3>
+    <p>Adventure « ${esc(doc.name)} » belongs to a different identity than this device's. That happens when it was created on another device or browser, or before ${acc ? "signing in to your account" : "signing out"}.</p>
+    <ul class="mute small gm-why">
+      <li>On the device where you created it, sign in to your account (Account, at the top of the home screen): the adventure is attached to it and then opens wherever you're signed in.</li>
+      <li>Or enter the adventure's <b>GM key</b> below (GM screen › Party, on the original device).</li>
+    </ul>
+    <div class="add-item"><label class="field"><span>GM key</span><input id="gmKeyIn" placeholder="E.g. 7KQ2-MX4P-ZT9C" autocomplete="off" autocapitalize="characters"></label><button class="btn primary" data-a="gmRecover">Take over</button></div>
+    <p class="mute small">Your ID on this device: <code class="uid-code">${esc(FB.uid || "—")}</code> <button class="btn small ghost" data-a="copyUid">Copy</button></p>
+    <div class="row-btns">${forget}</div>
+  </section>`;
+}
+/* Clé de MJ : rangée dans un document que seul le MJ lit ; elle permet de reprendre l’aventure ailleurs */
+const gmKeyRef = (code) => FB.adv(code).collection("private").doc("gm");
+function newGmKey() { let c = ""; for (let i = 0; i < 12; i++) c += CODE_CHARS[rollDie(CODE_CHARS.length) - 1]; return c.slice(0, 4) + "-" + c.slice(4, 8) + "-" + c.slice(8); }
+const GmKey = { code: null, k: undefined, show: false };
+async function gmKeyLoad(code) {
+  if (GmKey.code === code && GmKey.k !== undefined) return;
+  GmKey.code = code; GmKey.k = null; GmKey.show = false;
+  try { const d = await gmKeyRef(code).get(); GmKey.k = d.exists ? d.data().k : ""; } catch (e) { GmKey.k = "?"; }
+  liveRender();
+}
+function gmKeyPanel() {
+  gmKeyLoad(S.gmCode);
+  const k = GmKey.code === S.gmCode ? GmKey.k : null;
+  const body = k == null ? `<p class="mute small">Loading…</p>`
+    : k === "?" ? `<p class="mute small">Key unavailable: the Firestore rules need updating (see FIREBASE.md).</p>`
+    : !k ? `<p class="mute small">This adventure has no key yet.</p><button class="btn small" data-a="gmKeyNew">Create a key</button>`
+    : `<div class="gmkey-row"><code class="gmkey">${GmKey.show ? esc(k) : "••••-••••-••••"}</code><button class="btn small ghost" data-a="gmKeyShow">${GmKey.show ? "Hide" : "Show"}</button><button class="btn small ghost" data-a="gmKeyCopy">Copy</button><button class="btn small ghost" data-a="gmKeyNew">Change</button></div>`;
+  return `<section class="panel gmkey-panel"><h3 class="ph">GM key</h3><p class="mute small">Keep it to yourself (not for players): it lets you take this adventure back from another device, browser or account.</p>${body}</section>`;
 }
 
 function gmParty() {
@@ -4487,6 +4538,7 @@ async function advAct(a, d, el) {
         let code, tries = 0;
         do { code = newCode(); tries++; } while ((await FB.adv(code).get()).exists && tries < 5);
         await FB.adv(code).set({ name, gm: FB.uid, created: Date.now(), notes: "", init: { list: [], turn: 0, round: 1 } });
+        try { const k = newGmKey(); await gmKeyRef(code).set({ k }); GmKey.code = code; GmKey.k = k; } catch (e) { }
         GmList.add(code, name);
         S.modal = null; S.gmCode = code; S.gmTab = "groupe"; S.view = "gm";
         toast("Adventure created. Code: " + code);
@@ -4495,6 +4547,39 @@ async function advAct(a, d, el) {
     }
     case "gmOpen": S.gmCode = d.code; S.gmTab = "groupe"; S.view = "gm"; window.scrollTo(0, 0); return true;
     case "gmTab": S.gmTab = d.v; return true;
+    case "advRetry": Live.retry(); return true;
+    case "gmFind": S.modal = { k: "gmFind" }; return true;
+    case "gmFindGo": {
+      const code = normCode($("#gmFindCode").value);
+      if (!code) { toast("The code has 6 characters, for example DRG-7K2."); return true; }
+      S.modal = null; S.gmCode = code; S.gmTab = "groupe"; S.view = "gm"; window.scrollTo(0, 0); return true;
+    }
+    case "gmForget": GmList.remove(d.code); Live.stop(); S.view = "home"; toast("Adventure removed from your list"); return true;
+    case "copyUid": { try { await navigator.clipboard.writeText(FB.uid); toast("ID copied"); } catch (e) { toast(FB.uid); } return false; }
+    case "gmKeyShow": GmKey.show = !GmKey.show; return true;
+    case "gmKeyCopy": { try { await navigator.clipboard.writeText(GmKey.k); toast("Key copied"); } catch (e) { GmKey.show = true; } return true; }
+    case "gmKeyNew": {
+      const k = newGmKey();
+      try { await gmKeyRef(S.gmCode).set({ k }); GmKey.code = S.gmCode; GmKey.k = k; GmKey.show = true; toast("New GM key created"); }
+      catch (e) { toast("Couldn't save the key: update the Firestore rules."); }
+      return true;
+    }
+    case "gmRecover": {
+      const code = S.gmCode, k = ($("#gmKeyIn").value || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+      if (k.length !== 12) { toast("The key has 12 characters, for example 7KQ2-MX4P-ZT9C."); return true; }
+      const key = k.slice(0, 4) + "-" + k.slice(4, 8) + "-" + k.slice(8);
+      try {
+        await FB.adv(code).update({ gm: FB.uid, gmKey: key });
+        // la clé utilisée a été vue dans le document : on la remplace aussitôt
+        const nk = newGmKey();
+        await gmKeyRef(code).set({ k: nk });
+        await FB.adv(code).update({ gmKey: firebase.firestore.FieldValue.delete() });
+        GmKey.code = code; GmKey.k = nk; GmKey.show = false;
+        GmList.add(code, (Live.doc && Live.doc.name) || code);
+        toast("You're now this adventure's GM. A new key was created.");
+      } catch (e) { toast("Key rejected. Check it (or the Firestore rules)."); }
+      return true;
+    }
     case "shareCode": { try { await navigator.share({ title: "Forge des Héros", text: "Join my adventure « " + ((Live.doc && Live.doc.name) || "") + " » in Forge des Héros with the code " + S.gmCode + " (fiche › onglet Aventure).", url: location.origin + location.pathname }); } catch (e) { } return true; }
     case "copyCode": { try { await navigator.clipboard.writeText(S.gmCode); toast("Code copied: " + S.gmCode); } catch (e) { toast("Code: " + S.gmCode); } return false; }
     case "gmDetail": S.modal = { k: "gmDetail", id: d.id }; return true;
@@ -4504,6 +4589,7 @@ async function advAct(a, d, el) {
       try {
         const q = await FB.members(S.gmCode).get();
         await Promise.all(q.docs.map((x) => x.ref.delete()));
+        try { await gmKeyRef(S.gmCode).delete(); } catch (e) { }
         const h = await FB.adv(S.gmCode).collection("homebrew").get();
         await Promise.all(h.docs.map((x) => x.ref.delete()));
         await FB.adv(S.gmCode).delete();
@@ -4556,6 +4642,7 @@ function advModal(m) {
   if (im) return im;
   if (sm) return sm;
   if (m.k === "advCreate") return `<h3>New adventure</h3><p class="mute">You’ll be its Game Master. A code will be created for your players.</p><label class="field big"><span>Adventure name</span><input id="advName" placeholder="E.g. The Lost Mine" autocomplete="off"></label><div class="row-btns"><button class="btn primary" data-a="advCreate">Create</button></div>`;
+  if (m.k === "gmFind") return `<h3>Open an existing adventure</h3><p class="mute">GM of an adventure created elsewhere? Enter its code. If it doesn't belong to this device or your account yet, you can take it over with its GM key.</p><label class="field big"><span>Adventure code</span><input id="gmFindCode" placeholder="E.g. DRG-7K2" autocomplete="off" autocapitalize="characters" maxlength="8"></label><div class="row-btns"><button class="btn primary" data-a="gmFindGo">Open</button></div>`;
   if (m.k === "gmDetail") { const mm = Live.members.find((x) => x.id === m.id); return mm ? gmDetailModal(mm) : "<p>This character left the party.</p>"; }
   if (m.k === "advDelete") return `<h3>Delete the adventure?</h3><p>The party, initiative, books & creations and your notes will be erased. Players' sheets stay on their devices.</p><div class="row-btns"><button class="btn dmgb" data-a="advDelete">Delete permanently</button><button class="btn ghost" data-a="closeModal">Cancel</button></div>`;
   return null;
@@ -4783,7 +4870,7 @@ function accountStart() { if (Account.user()) syncAccount(); }
 
 /* Forge des Héros — page Compte et réglages : thème, langue, support, version */
 
-const APP_VERSION = "1.14.0";
+const APP_VERSION = "1.14.1";
 
 /* ---------- Thème ---------- */
 const Theme = {
@@ -5709,7 +5796,7 @@ function hbioModal(m) {
 }
 function hbioPanel(code) {
   return `<section class="panel hb-io"><h4>Import or export</h4>
-    <p class="mute small">The Excel file lists every Player's Handbook entry (empty until filled in) and your creations. Fill it in at your own pace, then import it: empty rows are ignored. The .json backup keeps an exact copy of ${code === "_moi" ? "this content" : "l’aventure"}.</p>
+    <p class="mute small">The Excel file lists every Player's Handbook entry (empty until filled in) and your creations. Fill it in at your own pace, then import it: empty rows are ignored. The .json backup keeps an exact copy of ${code === "_moi" ? "this content" : "the adventure"}.</p>
     <div class="row-btns"><button class="btn small" data-a="hbExportX">${ICON.down || ""}Export to Excel</button><button class="btn small ghost" data-a="hbExportJ">.json backup</button>
     <label class="btn small ghost hb-file">Import a file<input type="file" id="hbImport" accept=".xlsx,.json,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></label></div>
   </section>`;

@@ -32,17 +32,18 @@ const GmList = {
 
 /* Écoute en direct d’une aventure (une seule à la fois) */
 const Live = {
-  code: null, doc: null, members: [], unsub: [],
+  code: null, doc: null, members: [], unsub: [], st: "",
   watch(code) {
     if (this.code === code) return;
     this.stop();
-    if (!FB.ok || !code) return;
-    this.code = code;
-    this.unsub.push(FB.adv(code).onSnapshot((d) => { this.doc = d.exists ? d.data() : null; liveRender(); }, () => { }));
+    if (!FB.ok || !code) { this.st = code ? "off" : ""; return; }
+    this.code = code; this.st = "loading";
+    this.unsub.push(FB.adv(code).onSnapshot((d) => { this.doc = d.exists ? d.data() : null; this.st = d.exists ? "ok" : "missing"; liveRender(); }, () => { this.st = "err"; liveRender(); }));
     this.unsub.push(FB.members(code).onSnapshot((q) => { this.members = q.docs.map((d) => ({ id: d.id, ...d.data() })); liveRender(); }, () => { }));
     if (typeof HB !== "undefined") this.unsub.push(FB.adv(code).collection("homebrew").onSnapshot((q) => { HB.set(code, q.docs.map((d) => d.data()), this.doc && this.doc.name); liveRender(); }, () => { }));
   },
-  stop() { this.unsub.forEach((u) => u()); this.unsub = []; this.code = null; this.doc = null; this.members = []; },
+  stop() { this.unsub.forEach((u) => u()); this.unsub = []; this.code = null; this.doc = null; this.members = []; this.st = ""; },
+  retry() { const c = this.code || S.gmCode; this.stop(); this.watch(c); },
 };
 let pendingRender = false;
 function liveRender() {
@@ -88,6 +89,8 @@ function tabAdventure(ch) {
   }
   Live.watch(ch.adv);
   const doc = Live.doc;
+  if (Live.st === "missing") return `<section class="panel"><h3 class="ph">Aventure introuvable</h3><p class="mute">L’aventure ${esc(ch.advName ? "« " + ch.advName + " » " : "")}(code ${esc(ch.adv)}) n’existe plus : le MJ l’a peut-être supprimée. Quittez-la pour en rejoindre une autre.</p><div class="row-btns"><button class="btn ghost danger" data-a="advLeave">Quitter l’aventure</button></div></section>`;
+  if (Live.st === "err" || Live.st === "off") return `<section class="panel"><h3 class="ph">Aventure inaccessible</h3><p class="mute">Impossible de joindre le serveur pour l’aventure ${esc(ch.adv)}. Vérifiez votre connexion internet.</p><div class="row-btns"><button class="btn" data-a="advRetry">Réessayer</button></div></section>`;
   const ord = initOrder(doc);
   const mem = Live.members.map((m) => ({ m, s: memberStats(m) })).filter((x) => x.s);
   return `<div class="cols">
@@ -107,7 +110,7 @@ function homeAdventures() {
   const list = GmList.get();
   return `${typeof accountNudge === "function" ? accountNudge() : ""}<section class="gm-home">
     <div class="gm-home-head"><div><h2>Maître du jeu</h2><p class="mute small">Créez une aventure, donnez le code à vos joueurs et suivez le groupe en direct.</p></div>
-    <button class="btn" data-a="advCreateOpen">${ICON.plus} Créer une aventure</button></div>
+    <div class="row-btns"><button class="btn" data-a="advCreateOpen">${ICON.plus} Créer une aventure</button><button class="btn ghost" data-a="gmFind">Ouvrir avec un code</button></div></div>
     ${list.length ? `<div class="hero-grid">${list.map((x) => `<button class="hero-card gm" data-a="gmOpen" data-code="${esc(x.code)}"><span class="sigil">MJ</span><span class="hc-body"><span class="hc-name">${esc(x.name)}</span><span class="hc-line">Code ${esc(x.code)}</span></span></button>`).join("")}</div>` : ""}
   </section>`;
 }
@@ -117,9 +120,11 @@ function viewGM() {
   const code = S.gmCode;
   Live.watch(code);
   const doc = Live.doc;
-  if (doc && doc.gm !== FB.uid) return `<header class="topbar"><button class="icon-btn" data-a="home" aria-label="Retour">${ICON.back}</button><div class="tb-title"><strong>Accès refusé</strong></div></header><main class="sheet"><p class="mute">Seul le maître du jeu qui a créé cette aventure peut ouvrir cet écran, depuis l’appareil où il l’a créée.</p></main>`;
+  const stop = gmBlocked(code, doc);
+  if (!stop && doc && !GmList.get().some((x) => x.code === code)) GmList.add(code, doc.name);
+  if (stop) return `<header class="topbar"><button class="icon-btn" data-a="home" aria-label="Retour">${ICON.back}</button><div class="tb-title"><strong>${esc(doc ? doc.name : code)}</strong><span class="eyebrow">Écran du maître du jeu</span></div></header><main class="sheet gm-blocked">${stop}</main>`;
   const tabs = [["groupe", "Groupe"], ["init", "Initiative"], ["bestiaire", "Bestiaire"], ["notes", "Notes"]];
-  const body = { groupe: gmParty, init: gmInit, bestiaire: gmBestiary, notes: gmNotes }[S.gmTab || "groupe"](doc);
+  const body = { groupe: (d) => gmParty(d) + gmKeyPanel(), init: gmInit, bestiaire: gmBestiary, notes: gmNotes }[S.gmTab || "groupe"](doc);
   return `<header class="topbar">
     <button class="icon-btn" data-a="home" aria-label="Retour">${ICON.back}</button>
     <div class="tb-title"><strong>${esc(doc ? doc.name : "Chargement…")}</strong><span class="eyebrow">Écran du maître du jeu</span></div>
@@ -129,6 +134,45 @@ function viewGM() {
     <nav class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" class="tab ${(S.gmTab || "groupe") === k ? "on" : ""}" data-a="gmTab" data-v="${k}">${n}</button>`).join("")}<button class="tab" data-a="hbOpen" data-code="${esc(code)}">Livres et créations${HB.defs(code).length ? " (" + HB.defs(code).length + ")" : ""}</button></nav>
     <section class="tab-body">${body}</section>
   </main>`;
+}
+
+/* Pourquoi l’écran du MJ ne s’ouvre pas, et comment s’en sortir */
+function gmBlocked(code, doc) {
+  const forget = `<button class="btn small ghost" data-a="gmForget" data-code="${esc(code)}">Retirer de ma liste</button>`;
+  if (Live.st === "off") return `<section class="panel"><h3 class="ph">Mode aventure indisponible</h3><p class="mute">Le serveur n’a pas pu être joint${FB.err ? " (" + esc(FB.err) + ")" : ""}. Vérifiez votre connexion, puis rechargez l’app.</p></section>`;
+  if (Live.st === "err") return `<section class="panel"><h3 class="ph">Connexion impossible</h3><p class="mute">L’aventure ${esc(code)} n’a pas pu être chargée. Vérifiez votre connexion internet.</p><div class="row-btns"><button class="btn" data-a="advRetry">Réessayer</button>${forget}</div></section>`;
+  if (Live.st === "missing") return `<section class="panel"><h3 class="ph">Aventure introuvable</h3><p class="mute">Aucune aventure n’a le code ${esc(code)} : elle a été supprimée, ou le code est mal recopié.</p><div class="row-btns">${forget}</div></section>`;
+  if (!doc || doc.gm === FB.uid) return "";
+  const acc = typeof Account !== "undefined" && FB.auth && FB.auth.currentUser && !FB.auth.currentUser.isAnonymous;
+  return `<section class="panel"><h3 class="ph">Vous n’êtes pas le MJ de cette aventure</h3>
+    <p>L’aventure « ${esc(doc.name)} » appartient à une autre identité que celle de cet appareil. C’est le cas si elle a été créée sur un autre appareil ou navigateur, ou avant ${acc ? "la connexion à votre compte" : "une déconnexion"}.</p>
+    <ul class="mute small gm-why">
+      <li>Sur l’appareil où vous l’avez créée, connectez-vous à votre compte (Compte, en haut de l’accueil) : l’aventure y est rattachée et s’ouvre ensuite partout où vous êtes connecté.</li>
+      <li>Ou entrez ci-dessous la <b>clé de MJ</b> de l’aventure (écran du MJ › Groupe, sur l’appareil d’origine).</li>
+    </ul>
+    <div class="add-item"><label class="field"><span>Clé de MJ</span><input id="gmKeyIn" placeholder="Ex. 7KQ2-MX4P-ZT9C" autocomplete="off" autocapitalize="characters"></label><button class="btn primary" data-a="gmRecover">Reprendre la main</button></div>
+    <p class="mute small">Votre identifiant sur cet appareil : <code class="uid-code">${esc(FB.uid || "—")}</code> <button class="btn small ghost" data-a="copyUid">Copier</button></p>
+    <div class="row-btns">${forget}</div>
+  </section>`;
+}
+/* Clé de MJ : rangée dans un document que seul le MJ lit ; elle permet de reprendre l’aventure ailleurs */
+const gmKeyRef = (code) => FB.adv(code).collection("private").doc("gm");
+function newGmKey() { let c = ""; for (let i = 0; i < 12; i++) c += CODE_CHARS[rollDie(CODE_CHARS.length) - 1]; return c.slice(0, 4) + "-" + c.slice(4, 8) + "-" + c.slice(8); }
+const GmKey = { code: null, k: undefined, show: false };
+async function gmKeyLoad(code) {
+  if (GmKey.code === code && GmKey.k !== undefined) return;
+  GmKey.code = code; GmKey.k = null; GmKey.show = false;
+  try { const d = await gmKeyRef(code).get(); GmKey.k = d.exists ? d.data().k : ""; } catch (e) { GmKey.k = "?"; }
+  liveRender();
+}
+function gmKeyPanel() {
+  gmKeyLoad(S.gmCode);
+  const k = GmKey.code === S.gmCode ? GmKey.k : null;
+  const body = k == null ? `<p class="mute small">Chargement…</p>`
+    : k === "?" ? `<p class="mute small">Clé indisponible : les règles Firestore doivent être mises à jour (voir FIREBASE.md).</p>`
+    : !k ? `<p class="mute small">Cette aventure n’a pas encore de clé.</p><button class="btn small" data-a="gmKeyNew">Créer une clé</button>`
+    : `<div class="gmkey-row"><code class="gmkey">${GmKey.show ? esc(k) : "••••-••••-••••"}</code><button class="btn small ghost" data-a="gmKeyShow">${GmKey.show ? "Masquer" : "Afficher"}</button><button class="btn small ghost" data-a="gmKeyCopy">Copier</button><button class="btn small ghost" data-a="gmKeyNew">Changer</button></div>`;
+  return `<section class="panel gmkey-panel"><h3 class="ph">Clé de MJ</h3><p class="mute small">Gardez-la pour vous (pas pour les joueurs) : elle permet de reprendre cette aventure depuis un autre appareil, un autre navigateur ou un autre compte.</p>${body}</section>`;
 }
 
 function gmParty() {
@@ -268,6 +312,7 @@ async function advAct(a, d, el) {
         let code, tries = 0;
         do { code = newCode(); tries++; } while ((await FB.adv(code).get()).exists && tries < 5);
         await FB.adv(code).set({ name, gm: FB.uid, created: Date.now(), notes: "", init: { list: [], turn: 0, round: 1 } });
+        try { const k = newGmKey(); await gmKeyRef(code).set({ k }); GmKey.code = code; GmKey.k = k; } catch (e) { }
         GmList.add(code, name);
         S.modal = null; S.gmCode = code; S.gmTab = "groupe"; S.view = "gm";
         toast("Aventure créée. Code : " + code);
@@ -276,6 +321,39 @@ async function advAct(a, d, el) {
     }
     case "gmOpen": S.gmCode = d.code; S.gmTab = "groupe"; S.view = "gm"; window.scrollTo(0, 0); return true;
     case "gmTab": S.gmTab = d.v; return true;
+    case "advRetry": Live.retry(); return true;
+    case "gmFind": S.modal = { k: "gmFind" }; return true;
+    case "gmFindGo": {
+      const code = normCode($("#gmFindCode").value);
+      if (!code) { toast("Le code fait 6 caractères, par exemple DRG-7K2."); return true; }
+      S.modal = null; S.gmCode = code; S.gmTab = "groupe"; S.view = "gm"; window.scrollTo(0, 0); return true;
+    }
+    case "gmForget": GmList.remove(d.code); Live.stop(); S.view = "home"; toast("Aventure retirée de votre liste"); return true;
+    case "copyUid": { try { await navigator.clipboard.writeText(FB.uid); toast("Identifiant copié"); } catch (e) { toast(FB.uid); } return false; }
+    case "gmKeyShow": GmKey.show = !GmKey.show; return true;
+    case "gmKeyCopy": { try { await navigator.clipboard.writeText(GmKey.k); toast("Clé copiée"); } catch (e) { GmKey.show = true; } return true; }
+    case "gmKeyNew": {
+      const k = newGmKey();
+      try { await gmKeyRef(S.gmCode).set({ k }); GmKey.code = S.gmCode; GmKey.k = k; GmKey.show = true; toast("Nouvelle clé de MJ créée"); }
+      catch (e) { toast("Impossible d’enregistrer la clé : mettez à jour les règles Firestore."); }
+      return true;
+    }
+    case "gmRecover": {
+      const code = S.gmCode, k = ($("#gmKeyIn").value || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+      if (k.length !== 12) { toast("La clé fait 12 caractères, par exemple 7KQ2-MX4P-ZT9C."); return true; }
+      const key = k.slice(0, 4) + "-" + k.slice(4, 8) + "-" + k.slice(8);
+      try {
+        await FB.adv(code).update({ gm: FB.uid, gmKey: key });
+        // la clé utilisée a été vue dans le document : on la remplace aussitôt
+        const nk = newGmKey();
+        await gmKeyRef(code).set({ k: nk });
+        await FB.adv(code).update({ gmKey: firebase.firestore.FieldValue.delete() });
+        GmKey.code = code; GmKey.k = nk; GmKey.show = false;
+        GmList.add(code, (Live.doc && Live.doc.name) || code);
+        toast("Vous êtes maintenant le MJ de cette aventure. Une nouvelle clé a été créée.");
+      } catch (e) { toast("Clé refusée. Vérifiez-la (ou les règles Firestore)."); }
+      return true;
+    }
     case "shareCode": { try { await navigator.share({ title: "Forge des Héros", text: "Rejoins mon aventure « " + ((Live.doc && Live.doc.name) || "") + " » dans Forge des Héros avec le code " + S.gmCode + " (fiche › onglet Aventure).", url: location.origin + location.pathname }); } catch (e) { } return true; }
     case "copyCode": { try { await navigator.clipboard.writeText(S.gmCode); toast("Code copié : " + S.gmCode); } catch (e) { toast("Code : " + S.gmCode); } return false; }
     case "gmDetail": S.modal = { k: "gmDetail", id: d.id }; return true;
@@ -285,6 +363,7 @@ async function advAct(a, d, el) {
       try {
         const q = await FB.members(S.gmCode).get();
         await Promise.all(q.docs.map((x) => x.ref.delete()));
+        try { await gmKeyRef(S.gmCode).delete(); } catch (e) { }
         const h = await FB.adv(S.gmCode).collection("homebrew").get();
         await Promise.all(h.docs.map((x) => x.ref.delete()));
         await FB.adv(S.gmCode).delete();
@@ -337,6 +416,7 @@ function advModal(m) {
   if (im) return im;
   if (sm) return sm;
   if (m.k === "advCreate") return `<h3>Nouvelle aventure</h3><p class="mute">Vous en serez le maître du jeu. Un code sera créé pour vos joueurs.</p><label class="field big"><span>Nom de l’aventure</span><input id="advName" placeholder="Ex. La Mine perdue" autocomplete="off"></label><div class="row-btns"><button class="btn primary" data-a="advCreate">Créer</button></div>`;
+  if (m.k === "gmFind") return `<h3>Ouvrir une aventure existante</h3><p class="mute">Vous êtes MJ d’une aventure créée ailleurs ? Entrez son code. Si elle n’appartient pas encore à cet appareil ou à votre compte, vous pourrez la reprendre avec sa clé de MJ.</p><label class="field big"><span>Code d’aventure</span><input id="gmFindCode" placeholder="Ex. DRG-7K2" autocomplete="off" autocapitalize="characters" maxlength="8"></label><div class="row-btns"><button class="btn primary" data-a="gmFindGo">Ouvrir</button></div>`;
   if (m.k === "gmDetail") { const mm = Live.members.find((x) => x.id === m.id); return mm ? gmDetailModal(mm) : "<p>Ce personnage a quitté le groupe.</p>"; }
   if (m.k === "advDelete") return `<h3>Supprimer l’aventure ?</h3><p>Le groupe, l’initiative, les livres et créations et vos notes seront effacés. Les fiches des joueurs restent sur leurs appareils.</p><div class="row-btns"><button class="btn dmgb" data-a="advDelete">Supprimer définitivement</button><button class="btn ghost" data-a="closeModal">Annuler</button></div>`;
   return null;

@@ -990,3 +990,10 @@ body.dice-rolling .last-roll b { visibility: hidden; }
 .atk:has(.xd) .atk-name { grid-column: 1 / -1; }
 .rb.xd { color: var(--arc); border-color: rgba(168, 154, 232, .45); }
 @media (max-width: 520px) { .it-edit .two { grid-template-columns: 1fr; } .it-stats > div { grid-template-columns: 1fr; gap: 2px; } }
+/* 1.14.1 accès MJ */
+.gm-why { margin: 8px 0 12px; padding-left: 18px; display: grid; gap: 6px; }
+.uid-code, .gmkey { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .85rem; padding: 2px 6px; border-radius: 6px; background: var(--bg2); border: 1px solid var(--line); overflow-wrap: anywhere; }
+.gmkey { font-size: 1.05rem; letter-spacing: .06em; padding: 6px 10px; }
+.gmkey-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.gmkey-panel { margin-top: 14px; }
+.gm-home-head .row-btns { margin: 0; }
