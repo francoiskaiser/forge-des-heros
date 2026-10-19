@@ -27,6 +27,17 @@ function isSubFeat(cls, n) {
 }
 
 const hbKey = (d) => "hb_" + d.id;
+/* Incantation donnée par une sous-classe : celle de l’entrée, sinon celle du catalogue */
+function hbCastOf(d) {
+  if (d.cast !== undefined) return d.cast && ABIL[d.cast.ab] ? d.cast : null;
+  const sk = typeof PHB_RAW !== "undefined" && PHB_RAW["hb_" + d.id];
+  return (sk && sk.cast) || null;
+}
+/* Aventure (ou appareil) où une entrée complétée est enregistrée */
+function hbCodeOf(id) {
+  const hit = Object.entries(HB.cache).find(([, a]) => (a.defs || []).some((x) => x.id === id));
+  return hit ? hit[0] : null;
+}
 const clampLv = (v, lo, hi) => Math.max(lo, Math.min(hi, parseInt(v, 10) || lo));
 function parseGear(txt) {
   return String(txt || "").split(/[,\n;]+/).map((x) => x.trim()).filter(Boolean).slice(0, 30).map((x) => {
@@ -40,7 +51,7 @@ function parseGear(txt) {
 function hbShape(d) {
   const base = { n: d.n || "Sans nom", hb: true, hbId: d.id, adv: d.adv || null, todo: !!d.sk };
   switch (d.type) {
-    case "sub": return { ...base, cls: d.cls, d: d.d || "", feats: d.sk ? (d.feats || []).map((f) => ({ l: f.l, n: "Aptitude de sous-classe", d: HB_TODO_D })) : (d.feats || []).filter((f) => f && f.n).map((f) => ({ l: clampLv(f.l, 3, 20), n: f.n, d: f.d || "" })), spells: d.spells || {} };
+    case "sub": return { ...base, cls: d.cls, d: d.d || "", feats: d.sk ? (d.feats || []).map((f) => ({ l: f.l, n: "Aptitude de sous-classe", d: HB_TODO_D })) : (d.feats || []).filter((f) => f && f.n).map((f) => ({ l: clampLv(f.l, 3, 20), n: f.n, d: f.d || "" })), spells: d.spells || {}, cast: hbCastOf(d) };
     case "bg": return { ...base, ab: (d.ab || []).slice(0, 3), skills: (d.skills || []).slice(0, 2), tool: d.tool || "—", feat: d.feat || "vigilant", featList: d.feat === "initie" ? d.featList || "clr" : undefined, desc: d.d || "", gear: parseGear(d.gear), gold: Math.max(0, parseInt(d.gold, 10) || 0) };
     case "feat": return { ...base, d: d.d || (d.sk ? HB_TODO_D : ""), cat: d.cat === "general" ? "general" : "origine", ab: d.ab || [], pre: d.pre || "" };
     case "spell": {
@@ -142,9 +153,12 @@ function hbHome() {
 const hbLocal = (code) => code === "_moi" || typeof FB === "undefined" || !FB.ok;
 /* Encadré « à compléter » pour une liste de clés */
 function hbTodoNote(keys) {
-  const todo = [...new Set(keys)].filter((k) => k && HB_RAW[k] && HB_RAW[k].sk);
-  if (!todo.length) return "";
-  return `<div class="hb-todo"><p><b>À compléter depuis votre livre.</b> Le texte n’est pas fourni par l’app : recopiez-le une fois, il apparaîtra pour ${hbHome() === "_moi" ? "vos personnages" : "toute l’aventure"}.</p><div class="row-btns">${todo.map((k) => `<button class="btn small" data-a="hbFill" data-k="${k}">${ICON.edit || ""}Compléter : ${esc(HB_RAW[k].n)}</button>`).join("")}</div></div>`;
+  const uniq = [...new Set(keys)].filter((k) => k && HB_RAW[k]);
+  const todo = uniq.filter((k) => HB_RAW[k].sk);
+  const done = uniq.filter((k) => !HB_RAW[k].sk);
+  const edit = done.length ? `<div class="hb-edit">${done.map((k) => `<button class="btn small ghost" data-a="hbFill" data-k="${k}">${ICON.edit || ""}Modifier : ${esc(HB_RAW[k].n)}</button>`).join("")}</div>` : "";
+  if (!todo.length) return edit;
+  return edit + `<div class="hb-todo"><p><b>À compléter depuis votre livre.</b> Le texte n’est pas fourni par l’app : recopiez-le une fois, il apparaîtra pour ${hbHome() === "_moi" ? "vos personnages" : "toute l’aventure"}.</p><div class="row-btns">${todo.map((k) => `<button class="btn small" data-a="hbFill" data-k="${k}">${ICON.edit || ""}Compléter : ${esc(HB_RAW[k].n)}</button>`).join("")}</div></div>`;
 }
 function hbCanEdit(d, code) {
   if (d.sk || code === "_moi") return true;
@@ -186,6 +200,7 @@ function viewHB() {
   <main class="sheet hb-page">
     <section class="panel hb-intro"><p>Les sous-classes, historiques et dons du Manuel des joueurs sont déjà dans le créateur : il ne manque que leur texte, à recopier une fois depuis votre livre. Vous pouvez aussi ajouter vos propres créations.</p>
       <p class="mute small">${local ? "Ce contenu est enregistré sur cet appareil et dans les personnages qui l’utilisent." : "Ce contenu n’est visible que par les personnes qui ont le code de l’aventure. Chacun peut compléter ou ajouter des entrées ; seuls leur auteur et le MJ peuvent les modifier."}</p></section>
+    ${typeof hbioPanel === "function" ? hbioPanel(code) : ""}
     <div class="chips hb-filter">${chip("À compléter (" + todo.length + ")", f === "todo", "hbFilter", 'data-v="todo"')}${chip("Tout (" + defs.length + ")", f === "all", "hbFilter", 'data-v="all"')}${HB_TYPES.map(([k, n]) => chip(n + (counts[k] ? " (" + counts[k] + ")" : ""), f === k, "hbFilter", `data-v="${k}"`)).join("")}</div>
     ${f === "todo" ? (shown.length ? `<div class="hb-list">${shown.map((d) => `<article class="hb-card todo">
       <div class="hb-top"><span class="hb-type">${HB_TYPE_L[d.type] || ""}</span><b>${esc(d.n)}</b></div>
@@ -201,11 +216,14 @@ function viewHB() {
 }
 
 function hbBlank(type) {
-  return { type, n: "", d: "", cls: S.hbCls || "barbare", feats: [{ l: 3, n: "", d: "" }], spellsTxt: "", ab: [], skills: [], tool: "", feat: "vigilant", featList: "clr", gear: "", gold: 15, cat: "origine", pre: "", fab: [], l: 1, e: "evo", t: "1 action", p: "18 m", c: "V, S", du: "Instantanée", co: false, ri: false, cl: [], dmg: "", ty: "feu", heal: "", atk: "", up: "", rarity: K("peu commun"), attune: false, kind: "" };
+  return { type, n: "", d: "", castMode: "", castAb: "int", castList: "magicien", cls: S.hbCls || "barbare", feats: [{ l: 3, n: "", d: "" }], spellsTxt: "", ab: [], skills: [], tool: "", feat: "vigilant", featList: "clr", gear: "", gold: 15, cat: "origine", pre: "", fab: [], l: 1, e: "evo", t: "1 action", p: "18 m", c: "V, S", du: "Instantanée", co: false, ri: false, cl: [], dmg: "", ty: "feu", heal: "", atk: "", up: "", rarity: K("peu commun"), attune: false, kind: "" };
 }
 function hbFormFrom(d) {
   const f = { ...hbBlank(d.type), ...clone(d) };
   delete f.sk; delete f.src;
+  const cast = d.type === "sub" ? hbCastOf(d) : null;
+  if (cast) Object.assign(f, { castMode: "third", castAb: cast.ab, castList: cast.list });
+  delete f.cast;
   if (d.type === "feat") f.fab = d.ab || [];
   if (d.type === "sub" && (!f.feats || !f.feats.length)) f.feats = [{ l: 3, n: "", d: "" }];
   return f;
@@ -225,11 +243,14 @@ function viewHBForm() {
   if (t === "sub") {
     body = `${one("cls", Object.entries(CLASSES).map(([k, c]) => [k, c.n]), "Classe")}
       <p class="mute small">Les aptitudes de la sous-classe du SRD (${esc(CLASSES[f.cls].sub.n)}) seront remplacées par celles-ci. Les aptitudes de base de la classe restent.</p>
+      ${CLASSES[f.cls].caster ? "" : `${one("castMode", [["", "Aucune"], ["third", "Oui, à partir du niveau 3"]], "La sous-classe donne-t-elle l’incantation ?")}
+      ${f.castMode === "third" ? `<p class="mute small">Progression de tiers-lanceur (comme le chevalier occulte ou l’arnaqueur arcanique) : emplacements, tours de magie et sorts préparés sont calculés.</p>${one("castAb", ["int", "sag", "cha"].map((k) => [k, ABIL[k].n]), "Caractéristique d’incantation")}${one("castList", Object.entries(CLASSES).filter(([, c]) => c.caster).map(([k, c]) => [k, c.n]), "Liste de sorts")}` : ""}`}
       <div class="field"><span>Aptitudes</span></div>
       ${f.feats.map((x, i) => `<div class="hb-feat"><div class="hb-feat-top"><label class="field lv"><span>Niveau</span><input data-hbf="feats.${i}.l" type="number" inputmode="numeric" min="3" max="20" value="${esc(x.l)}"></label><label class="field"><span>Nom</span><input data-hbf="feats.${i}.n" value="${esc(x.n)}" placeholder="Ex. Frappe tonitruante" autocomplete="off"></label><button class="icon-btn" data-a="hbFeatDel" data-i="${i}" aria-label="Retirer l’aptitude">${ICON.close}</button></div>
         <label class="field"><span>Effet</span><textarea data-hbf="feats.${i}.d" rows="3" placeholder="Ce que fait l’aptitude">${esc(x.d)}</textarea></label></div>`).join("")}
       <button class="btn small ghost" data-a="hbFeatAdd">${ICON.plus} Ajouter une aptitude</button>
-      ${hbInput("spellsTxt", "Sorts toujours préparés (facultatif)", "Une ligne par niveau, par exemple : 3 : Bénédiction, Soins", { area: true, rows: 4 })}
+      ${hbInput("spellsTxt", "Sorts toujours préparés (facultatif)", "Une ligne par niveau de personnage, par exemple : 3 : Bénédiction, Soins", { area: true, rows: 4 })}
+      <p class="mute small">Ces sorts s’ajoutent à l’onglet Sorts de la fiche, sans compter dans les sorts préparés. Une ligne sans niveau compte pour le niveau 3.</p>
       ${f.spellsTxt ? `<p class="mute small">${hbSpellPreview(f.spellsTxt)}</p>` : ""}`;
   } else if (t === "bg") {
     const origin = Object.entries(FEATS).filter(([, x]) => x.cat !== "general");
@@ -282,8 +303,8 @@ function hbParseSpells(txt) {
   const byName = {};
   Object.entries(SPELLS).forEach(([id, s]) => (byName[normName(s.n)] = id));
   String(txt || "").split("\n").forEach((line) => {
-    const m = line.match(/^\s*(\d+)\s*[:\-–]\s*(.+)$/);
-    if (!m) { if (line.trim()) unknown.push(line.trim()); return; }
+    if (!line.trim()) return;
+    const m = line.match(/^\s*(?:niv(?:eau)?\.?\s*)?(\d+)\s*[:\-–.)]\s*(.+)$/i) || [null, "3", line];
     const lv = clampLv(m[1], 1, 20);
     m[2].split(/[,;]/).map((x) => x.trim()).filter(Boolean).forEach((n) => {
       const id = byName[normName(n)];
@@ -318,7 +339,7 @@ function hbValidate(f) {
 }
 function hbToDoc(f) {
   const d = { id: f.id || uid(), type: f.type, n: f.n.trim().slice(0, 120), d: (f.d || "").slice(0, 6000), adv: S.hbCode, updated: Date.now() };
-  if (f.type === "sub") { d.cls = f.cls; d.feats = f.feats.filter((x) => x.n.trim()).slice(0, 30).map((x) => ({ l: clampLv(x.l, 3, 20), n: x.n.trim().slice(0, 120), d: (x.d || "").slice(0, 3000) })); d.spellsTxt = (f.spellsTxt || "").slice(0, 2000); d.spells = hbParseSpells(f.spellsTxt).spells; }
+  if (f.type === "sub") { d.cls = f.cls; d.feats = f.feats.filter((x) => x.n.trim()).slice(0, 30).map((x) => ({ l: clampLv(x.l, 3, 20), n: x.n.trim().slice(0, 120), d: (x.d || "").slice(0, 3000) })); d.spellsTxt = (f.spellsTxt || "").slice(0, 2000); d.spells = hbParseSpells(f.spellsTxt).spells; d.cast = !CLASSES[f.cls].caster && f.castMode === "third" ? { ab: f.castAb, list: f.castList } : null; }
   if (f.type === "bg") Object.assign(d, { ab: f.ab, skills: f.skills, tool: f.tool.slice(0, 120), feat: f.feat, featList: f.featList, gear: f.gear.slice(0, 1000), gold: Math.max(0, parseInt(f.gold, 10) || 0) });
   if (f.type === "feat") Object.assign(d, { cat: f.cat, pre: f.pre.slice(0, 200), ab: f.fab });
   if (f.type === "spell") Object.assign(d, { l: +f.l, e: f.e, cl: f.cl, t: f.t.slice(0, 80), p: f.p.slice(0, 80), c: f.c.slice(0, 200), du: f.du.slice(0, 80), co: !!f.co, ri: !!f.ri, atk: f.atk, dmg: f.dmg.replace(/\s/g, ""), ty: f.ty, heal: f.heal.replace(/\s/g, ""), up: f.up.slice(0, 200) });
@@ -330,8 +351,11 @@ async function hbAct(a, d, el) {
   switch (a) {
     case "hbOpen": S.hbCode = d.code; S.hbBack = { view: S.view, tab: S.tab, gmTab: S.gmTab }; S.hbf = null; S.hbDirect = false; S.hbFilter = HB.defs(d.code).length ? "all" : "todo"; S.view = "hb"; window.scrollTo(0, 0); return true;
     case "hbFill": {
-      const raw = PHB_RAW[d.k] || HB_RAW[d.k]; if (!raw) return true;
-      if (S.view !== "hb") { S.hbCode = hbHome(); S.hbBack = { view: S.view, tab: S.tab, gmTab: S.gmTab, y: window.scrollY }; S.hbDirect = true; S.view = "hb"; }
+      const filled = HB_RAW[d.k] && !HB_RAW[d.k].sk ? HB_RAW[d.k] : null;
+      const raw = filled || PHB_RAW[d.k]; if (!raw) return true;
+      const where = filled ? hbCodeOf(filled.id) || filled.adv || hbHome() : null;
+      if (filled && !hbCanEdit(filled, where)) { toast("Seuls l’auteur de cette entrée et le MJ peuvent la modifier."); return true; }
+      if (S.view !== "hb") { S.hbCode = where || hbHome(); S.hbBack = { view: S.view, tab: S.tab, gmTab: S.gmTab, y: window.scrollY }; S.hbDirect = true; S.view = "hb"; }
       S.hbf = hbFormFrom(raw); window.scrollTo(0, 0); return true;
     }
     case "hbBack": { const bk = S.hbBack || { view: "home" }; S.view = bk.view; if (bk.tab) S.tab = bk.tab; if (bk.gmTab) S.gmTab = bk.gmTab; S.hbf = null; S.hbDirect = false; setTimeout(() => window.scrollTo(0, bk.y || 0), 0); return true; }

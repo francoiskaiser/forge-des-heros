@@ -704,6 +704,11 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
 .hb-todo .row-btns { flex-wrap: wrap; }
 .hb-todo .btn svg { width: 15px; height: 15px; margin-right: 4px; vertical-align: -2px; }
 .hb-card.todo { border-style: dashed; }
+.hb-edit { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.hb-edit .btn svg { width: 14px; height: 14px; margin-right: 4px; vertical-align: -2px; }
+.hb-file { position: relative; overflow: hidden; cursor: pointer; }
+.hb-file input { position: absolute; inset: 0; opacity: 0; cursor: pointer; font-size: 0; }
+.hb-io .row-btns { flex-wrap: wrap; }
 
 </style>
 </head>
@@ -2061,10 +2066,24 @@ function armorProfs(b) {
   return a;
 }
 
-function slotsOf(b) {
+/* Tiers-lanceur (sous-classe qui donne l’incantation, ex. chevalier occulte, arnaqueur arcanique) */
+const THIRD_SLOTS = [[], [], [2], [3], [3], [3], [4, 2], [4, 2], [4, 2], [4, 3], [4, 3], [4, 3], [4, 3, 2], [4, 3, 2], [4, 3, 2], [4, 3, 3], [4, 3, 3], [4, 3, 3], [4, 3, 3, 1], [4, 3, 3, 1]];
+const THIRD_CANT = [0, 0, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
+const THIRD_PREP = [0, 0, 3, 4, 4, 4, 5, 6, 6, 7, 8, 8, 9, 10, 10, 11, 11, 11, 12, 13];
+/* Incantation effective : celle de la classe, ou celle donnée par la sous-classe */
+function casterOf(b) {
   const c = CLASSES[b.cls];
-  if (!c || !c.caster) return null;
+  if (!c) return null;
+  if (c.caster) return { caster: c.caster, sab: c.sab, cant: c.cant, prep: c.prep, n: c.n };
+  const h = hbSub(b);
+  if (h && h.cast && b.level >= 3) return { caster: "third", sab: h.cast.ab || "int", cant: THIRD_CANT, prep: THIRD_PREP, list: h.cast.list || "magicien", n: h.n };
+  return null;
+}
+function slotsOf(b) {
+  const c = casterOf(b);
+  if (!c) return null;
   const i = b.level - 1;
+  if (c.caster === "third") return { type: "std", slots: THIRD_SLOTS[i] };
   if (c.caster === "full") return { type: "std", slots: FULL_SLOTS[i] };
   if (c.caster === "half") return { type: "std", slots: HALF_SLOTS[i] };
   return { type: "pact", n: PACT_SLOTS[i][0], lvl: PACT_SLOTS[i][1] };
@@ -2075,15 +2094,15 @@ function maxSpellLevel(b) {
   return s.type === "pact" ? s.lvl : s.slots.length;
 }
 function cantripCount(b) {
-  const c = CLASSES[b.cls];
-  if (!c || !c.caster) return 0;
+  const c = casterOf(b);
+  if (!c) return 0;
   let n = c.cant[b.level - 1];
   if ((b.cls === "clerc" && b.opts.order === "thaumaturge") || (b.cls === "druide" && b.opts.order === "magicien")) n += 1;
   return n;
 }
 function prepCount(b) {
-  const c = CLASSES[b.cls];
-  return c && c.caster ? c.prep[b.level - 1] : 0;
+  const c = casterOf(b);
+  return c ? c.prep[b.level - 1] : 0;
 }
 
 /* Sorts « toujours préparés » ou donnés par l’espèce/les dons */
@@ -2095,7 +2114,7 @@ function grantedSpells(b) {
     if (c.always) Object.entries(c.always).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: "Classe", ab: c.sab, always: true, free: b.cls === "paladin" ? "smite" : b.cls === "rodeur" ? "ennemi" : null })); });
     if (b.cls === "druide") out.push({ id: "comanimaux", src: "Druidique", ab: c.sab, always: true });
     const hs = hbSub(b), subSpells = hs ? hs.spells : srdSub(b) ? c.sub.spells : null;
-    if (subActive(b) && subSpells) Object.entries(subSpells).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: subName(b), ab: c.sab || "sag", always: true })); });
+    if (subActive(b) && subSpells) Object.entries(subSpells).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: subName(b), ab: (casterOf(b) || c).sab || "int", always: true })); });
     if (b.cls === "druide" && subActive(b) && srdSub(b) && b.opts.land) Object.entries(LAND_SPELLS[b.opts.land].s).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: "Cercle de la Terre", ab: c.sab, always: true })); });
   }
   if (sp) {
@@ -2119,7 +2138,7 @@ function grantedSpells(b) {
 }
 
 const ARCANUM_LV = { 6: 11, 7: 13, 8: 15, 9: 17 };
-function poolClasses(b) { return b.cls === "barde" && b.level >= 10 ? ["barde", "clerc", "druide", "magicien"] : [b.cls]; }
+function poolClasses(b) { const cc = casterOf(b); if (cc && cc.list) return [cc.list]; return b.cls === "barde" && b.level >= 10 ? ["barde", "clerc", "druide", "magicien"] : [b.cls]; }
 function classSpellPool(b, lvl) {
   const cls = poolClasses(b);
   return Object.keys(SPELLS).filter((id) => SPELLS[id].l === lvl && SPELLS[id].cl.some((c) => cls.includes(c))).sort((x, y) => SPELLS[x].n.localeCompare(SPELLS[y].n, "fr"));
@@ -2290,8 +2309,9 @@ function compute(b, p) {
   // Incantation
   let casting = null;
   const granted = grantedSpells(b);
-  if (c && c.caster) {
-    casting = { ab: c.sab, dc: 8 + pb + m[c.sab], atk: pb + m[c.sab], slots: slotsOf(b), max: maxSpellLevel(b) };
+  const cc = casterOf(b);
+  if (cc) {
+    casting = { ab: cc.sab, dc: 8 + pb + m[cc.sab], atk: pb + m[cc.sab], slots: slotsOf(b), max: maxSpellLevel(b) };
   }
   const spellList = [];
   const potent = (b.cls === "clerc" || b.cls === "druide") && L >= 7 && b.opts.strike === "puissant";
@@ -2309,8 +2329,7 @@ function compute(b, p) {
     const db = s.dmg ? dmgBonus({ ...s, id }) : { v: 0, why: [] };
     spellList.push({ id, ...s, src, ab: abk, dc: 8 + pb + m[abk], atk: pb + m[abk], mod: m[abk], always, free, dmgBonus: db.v, dmgWhy: db.why });
   };
-  b.cant.forEach((id) => pushSpell(id, c.n, c.sab, false));
-  b.prep.forEach((id) => pushSpell(id, c.n, c.sab, false));
+  if (cc) { b.cant.forEach((id) => pushSpell(id, cc.n, cc.sab, false)); b.prep.forEach((id) => pushSpell(id, cc.n, cc.sab, false)); }
   granted.forEach((g) => pushSpell(g.id, g.src, g.ab, true, g.free));
   spellList.sort((x, y) => x.l - y.l || x.n.localeCompare(y.n, "fr"));
 
@@ -2420,7 +2439,7 @@ function issues(b) {
     if (STRIKE_OPTS[b.cls] && b.level >= STRIKE_OPTS[b.cls].lvl && !b.opts.strike) out.options.push(STRIKE_OPTS[b.cls].label);
     if (b.cls === "rodeur" && b.level >= 3 && srdSub(b) && !b.opts.prey) out.options.push("Proie du chasseur");
     if (b.cls === "druide" && b.level >= 3 && srdSub(b) && !b.opts.land) out.options.push("Type de terre");
-    if (c.caster) {
+    if (casterOf(b)) {
       if (b.cant.length < cantripCount(b)) out.sorts.push(`Tours de magie (${b.cant.length}/${cantripCount(b)})`);
       if (b.prep.length < prepCount(b)) out.sorts.push(`Sorts préparés (${b.prep.length}/${prepCount(b)})`);
       if (b.cls === "barde" && b.level >= 6 && srdSub(b) && b.opts.lore2.length < 2) out.sorts.push(`Découvertes magiques (${b.opts.lore2.length}/2)`);
@@ -2546,7 +2565,7 @@ const STEPS = [
 ];
 const S = { view: "home", chars: [], draft: null, step: 0, editId: null, cur: null, tab: "actions", rollMode: "normal", log: [], tray: false, modal: null, spellLvl: "all", openSpell: null, trayExpr: "", trayCount: 1, loaded: false };
 
-function stepsFor(b) { return STEPS.filter((s) => s.k !== "sorts" || (CLASSES[b.cls] && CLASSES[b.cls].caster) || !b.cls); }
+function stepsFor(b) { return STEPS.filter((s) => s.k !== "sorts" || (CLASSES[b.cls] && casterOf(b)) || !b.cls); }
 const curChar = () => S.chars.find((c) => c.id === S.cur);
 
 /* ---------------- Rendu racine ---------------- */
@@ -2859,8 +2878,8 @@ function spellDetail(s) {
 }
 
 function stepSpells(b) {
-  const c = CLASSES[b.cls];
-  if (!c || !c.caster) return `<p class="mute">Cette classe ne lance pas de sorts.</p>`;
+  const c = casterOf(b);
+  if (!c) return `<p class="mute">Cette classe ne lance pas de sorts.</p>`;
   const nc = cantripCount(b), np = prepCount(b), max = maxSpellLevel(b);
   const granted = grantedSpells(b);
   const gIds = new Set(granted.map((g) => g.id));
@@ -3250,7 +3269,7 @@ function cleanBuild(b) {
   b.skillsClass = b.skillsClass.filter((k) => pool.includes(k)).slice(0, c.skills.n);
   const ex = expertiseCount(b), ep = expertisePool(b);
   b.expertise = b.expertise.filter((k) => ep.includes(k)).slice(0, ex);
-  if (c.caster) {
+  if (casterOf(b)) {
     b.cant = b.cant.slice(0, cantripCount(b));
     const max = maxSpellLevel(b);
     b.prep = b.prep.filter((id) => SPELLS[id] && SPELLS[id].l <= max).slice(0, prepCount(b));
@@ -3794,6 +3813,7 @@ function sortedIds(it) { return it.list.slice().sort((a, b) => b.v - a.v || (b.d
 async function advAct(a, d, el) {
   if (typeof hbAct === "function" && (await hbAct(a, d, el))) return true;
   if (typeof srdAct === "function" && (await srdAct(a, d, el))) return true;
+  if (typeof hbioAct === "function" && (await hbioAct(a, d, el))) return true;
   if (typeof accAct === "function" && (await accAct(a, d, el))) return true;
   const ch = curChar();
   switch (a) {
@@ -3889,6 +3909,8 @@ function advModal(m) {
   const hm = typeof hbModal === "function" ? hbModal(m) : null;
   if (hm) return hm;
   const sm = typeof srdModal === "function" ? srdModal(m) : null;
+  const im = typeof hbioModal === "function" ? hbioModal(m) : null;
+  if (im) return im;
   if (sm) return sm;
   if (m.k === "advCreate") return `<h3>Nouvelle aventure</h3><p class="mute">Vous en serez le maître du jeu. Un code sera créé pour vos joueurs.</p><label class="field big"><span>Nom de l’aventure</span><input id="advName" placeholder="Ex. La Mine perdue" autocomplete="off"></label><div class="row-btns"><button class="btn primary" data-a="advCreate">Créer</button></div>`;
   if (m.k === "gmDetail") { const mm = Live.members.find((x) => x.id === m.id); return mm ? gmDetailModal(mm) : "<p>Ce personnage a quitté le groupe.</p>"; }
@@ -4118,7 +4140,7 @@ function accountStart() { if (Account.user()) syncAccount(); }
 
 /* Forge des Héros — page Compte et réglages : thème, langue, support, version */
 
-const APP_VERSION = "1.9.0";
+const APP_VERSION = "1.10.0";
 
 /* ---------- Thème ---------- */
 const Theme = {
@@ -4203,6 +4225,7 @@ function viewSettings() {
           <div class="chips">${langs.map(([k, n, ok]) => `<button class="chip ${k === LANG ? "on" : ""}" ${ok ? "" : 'aria-disabled="true"'} data-a="${ok ? "setLang" : "langSoon"}" data-v="${k}" aria-pressed="${k === LANG}">${n}${ok ? "" : `<small>${k === "en" ? "app installée" : "bientôt"}</small>`}</button>`).join("")}</div>
           <p class="mute small">L’allemand et l’espagnol sont en préparation.</p>
         </section>
+        <section class="panel set-sec"><h3 class="ph">Livres et créations</h3><p class="mute small">Le contenu de vos livres complété hors aventure, enregistré sur cet appareil. Dans une aventure, passez par l’onglet Aventure d’une fiche ou l’écran du MJ.</p><div class="row-btns"><button class="btn small" data-a="hbOpen" data-code="_moi">Ouvrir</button></div></section>
         <section class="panel set-sec"><h3 class="ph">Support</h3>
           <p class="mute small">Votre message arrive directement chez le créateur de l’app.</p>
           <div class="support-grid">
@@ -4296,6 +4319,17 @@ function isSubFeat(cls, n) {
 }
 
 const hbKey = (d) => "hb_" + d.id;
+/* Incantation donnée par une sous-classe : celle de l’entrée, sinon celle du catalogue */
+function hbCastOf(d) {
+  if (d.cast !== undefined) return d.cast && ABIL[d.cast.ab] ? d.cast : null;
+  const sk = typeof PHB_RAW !== "undefined" && PHB_RAW["hb_" + d.id];
+  return (sk && sk.cast) || null;
+}
+/* Aventure (ou appareil) où une entrée complétée est enregistrée */
+function hbCodeOf(id) {
+  const hit = Object.entries(HB.cache).find(([, a]) => (a.defs || []).some((x) => x.id === id));
+  return hit ? hit[0] : null;
+}
 const clampLv = (v, lo, hi) => Math.max(lo, Math.min(hi, parseInt(v, 10) || lo));
 function parseGear(txt) {
   return String(txt || "").split(/[,\n;]+/).map((x) => x.trim()).filter(Boolean).slice(0, 30).map((x) => {
@@ -4309,7 +4343,7 @@ function parseGear(txt) {
 function hbShape(d) {
   const base = { n: d.n || "Sans nom", hb: true, hbId: d.id, adv: d.adv || null, todo: !!d.sk };
   switch (d.type) {
-    case "sub": return { ...base, cls: d.cls, d: d.d || "", feats: d.sk ? (d.feats || []).map((f) => ({ l: f.l, n: "Aptitude de sous-classe", d: HB_TODO_D })) : (d.feats || []).filter((f) => f && f.n).map((f) => ({ l: clampLv(f.l, 3, 20), n: f.n, d: f.d || "" })), spells: d.spells || {} };
+    case "sub": return { ...base, cls: d.cls, d: d.d || "", feats: d.sk ? (d.feats || []).map((f) => ({ l: f.l, n: "Aptitude de sous-classe", d: HB_TODO_D })) : (d.feats || []).filter((f) => f && f.n).map((f) => ({ l: clampLv(f.l, 3, 20), n: f.n, d: f.d || "" })), spells: d.spells || {}, cast: hbCastOf(d) };
     case "bg": return { ...base, ab: (d.ab || []).slice(0, 3), skills: (d.skills || []).slice(0, 2), tool: d.tool || "—", feat: d.feat || "vigilant", featList: d.feat === "initie" ? d.featList || "clr" : undefined, desc: d.d || "", gear: parseGear(d.gear), gold: Math.max(0, parseInt(d.gold, 10) || 0) };
     case "feat": return { ...base, d: d.d || (d.sk ? HB_TODO_D : ""), cat: d.cat === "general" ? "general" : "origine", ab: d.ab || [], pre: d.pre || "" };
     case "spell": {
@@ -4411,9 +4445,12 @@ function hbHome() {
 const hbLocal = (code) => code === "_moi" || typeof FB === "undefined" || !FB.ok;
 /* Encadré « à compléter » pour une liste de clés */
 function hbTodoNote(keys) {
-  const todo = [...new Set(keys)].filter((k) => k && HB_RAW[k] && HB_RAW[k].sk);
-  if (!todo.length) return "";
-  return `<div class="hb-todo"><p><b>À compléter depuis votre livre.</b> Le texte n’est pas fourni par l’app : recopiez-le une fois, il apparaîtra pour ${hbHome() === "_moi" ? "vos personnages" : "toute l’aventure"}.</p><div class="row-btns">${todo.map((k) => `<button class="btn small" data-a="hbFill" data-k="${k}">${ICON.edit || ""}Compléter : ${esc(HB_RAW[k].n)}</button>`).join("")}</div></div>`;
+  const uniq = [...new Set(keys)].filter((k) => k && HB_RAW[k]);
+  const todo = uniq.filter((k) => HB_RAW[k].sk);
+  const done = uniq.filter((k) => !HB_RAW[k].sk);
+  const edit = done.length ? `<div class="hb-edit">${done.map((k) => `<button class="btn small ghost" data-a="hbFill" data-k="${k}">${ICON.edit || ""}Modifier : ${esc(HB_RAW[k].n)}</button>`).join("")}</div>` : "";
+  if (!todo.length) return edit;
+  return edit + `<div class="hb-todo"><p><b>À compléter depuis votre livre.</b> Le texte n’est pas fourni par l’app : recopiez-le une fois, il apparaîtra pour ${hbHome() === "_moi" ? "vos personnages" : "toute l’aventure"}.</p><div class="row-btns">${todo.map((k) => `<button class="btn small" data-a="hbFill" data-k="${k}">${ICON.edit || ""}Compléter : ${esc(HB_RAW[k].n)}</button>`).join("")}</div></div>`;
 }
 function hbCanEdit(d, code) {
   if (d.sk || code === "_moi") return true;
@@ -4455,6 +4492,7 @@ function viewHB() {
   <main class="sheet hb-page">
     <section class="panel hb-intro"><p>Les sous-classes, historiques et dons du Manuel des joueurs sont déjà dans le créateur : il ne manque que leur texte, à recopier une fois depuis votre livre. Vous pouvez aussi ajouter vos propres créations.</p>
       <p class="mute small">${local ? "Ce contenu est enregistré sur cet appareil et dans les personnages qui l’utilisent." : "Ce contenu n’est visible que par les personnes qui ont le code de l’aventure. Chacun peut compléter ou ajouter des entrées ; seuls leur auteur et le MJ peuvent les modifier."}</p></section>
+    ${typeof hbioPanel === "function" ? hbioPanel(code) : ""}
     <div class="chips hb-filter">${chip("À compléter (" + todo.length + ")", f === "todo", "hbFilter", 'data-v="todo"')}${chip("Tout (" + defs.length + ")", f === "all", "hbFilter", 'data-v="all"')}${HB_TYPES.map(([k, n]) => chip(n + (counts[k] ? " (" + counts[k] + ")" : ""), f === k, "hbFilter", `data-v="${k}"`)).join("")}</div>
     ${f === "todo" ? (shown.length ? `<div class="hb-list">${shown.map((d) => `<article class="hb-card todo">
       <div class="hb-top"><span class="hb-type">${HB_TYPE_L[d.type] || ""}</span><b>${esc(d.n)}</b></div>
@@ -4470,11 +4508,14 @@ function viewHB() {
 }
 
 function hbBlank(type) {
-  return { type, n: "", d: "", cls: S.hbCls || "barbare", feats: [{ l: 3, n: "", d: "" }], spellsTxt: "", ab: [], skills: [], tool: "", feat: "vigilant", featList: "clr", gear: "", gold: 15, cat: "origine", pre: "", fab: [], l: 1, e: "evo", t: "1 action", p: "18 m", c: "V, S", du: "Instantanée", co: false, ri: false, cl: [], dmg: "", ty: "feu", heal: "", atk: "", up: "", rarity: K("peu commun"), attune: false, kind: "" };
+  return { type, n: "", d: "", castMode: "", castAb: "int", castList: "magicien", cls: S.hbCls || "barbare", feats: [{ l: 3, n: "", d: "" }], spellsTxt: "", ab: [], skills: [], tool: "", feat: "vigilant", featList: "clr", gear: "", gold: 15, cat: "origine", pre: "", fab: [], l: 1, e: "evo", t: "1 action", p: "18 m", c: "V, S", du: "Instantanée", co: false, ri: false, cl: [], dmg: "", ty: "feu", heal: "", atk: "", up: "", rarity: K("peu commun"), attune: false, kind: "" };
 }
 function hbFormFrom(d) {
   const f = { ...hbBlank(d.type), ...clone(d) };
   delete f.sk; delete f.src;
+  const cast = d.type === "sub" ? hbCastOf(d) : null;
+  if (cast) Object.assign(f, { castMode: "third", castAb: cast.ab, castList: cast.list });
+  delete f.cast;
   if (d.type === "feat") f.fab = d.ab || [];
   if (d.type === "sub" && (!f.feats || !f.feats.length)) f.feats = [{ l: 3, n: "", d: "" }];
   return f;
@@ -4494,11 +4535,14 @@ function viewHBForm() {
   if (t === "sub") {
     body = `${one("cls", Object.entries(CLASSES).map(([k, c]) => [k, c.n]), "Classe")}
       <p class="mute small">Les aptitudes de la sous-classe du SRD (${esc(CLASSES[f.cls].sub.n)}) seront remplacées par celles-ci. Les aptitudes de base de la classe restent.</p>
+      ${CLASSES[f.cls].caster ? "" : `${one("castMode", [["", "Aucune"], ["third", "Oui, à partir du niveau 3"]], "La sous-classe donne-t-elle l’incantation ?")}
+      ${f.castMode === "third" ? `<p class="mute small">Progression de tiers-lanceur (comme le chevalier occulte ou l’arnaqueur arcanique) : emplacements, tours de magie et sorts préparés sont calculés.</p>${one("castAb", ["int", "sag", "cha"].map((k) => [k, ABIL[k].n]), "Caractéristique d’incantation")}${one("castList", Object.entries(CLASSES).filter(([, c]) => c.caster).map(([k, c]) => [k, c.n]), "Liste de sorts")}` : ""}`}
       <div class="field"><span>Aptitudes</span></div>
       ${f.feats.map((x, i) => `<div class="hb-feat"><div class="hb-feat-top"><label class="field lv"><span>Niveau</span><input data-hbf="feats.${i}.l" type="number" inputmode="numeric" min="3" max="20" value="${esc(x.l)}"></label><label class="field"><span>Nom</span><input data-hbf="feats.${i}.n" value="${esc(x.n)}" placeholder="Ex. Frappe tonitruante" autocomplete="off"></label><button class="icon-btn" data-a="hbFeatDel" data-i="${i}" aria-label="Retirer l’aptitude">${ICON.close}</button></div>
         <label class="field"><span>Effet</span><textarea data-hbf="feats.${i}.d" rows="3" placeholder="Ce que fait l’aptitude">${esc(x.d)}</textarea></label></div>`).join("")}
       <button class="btn small ghost" data-a="hbFeatAdd">${ICON.plus} Ajouter une aptitude</button>
-      ${hbInput("spellsTxt", "Sorts toujours préparés (facultatif)", "Une ligne par niveau, par exemple : 3 : Bénédiction, Soins", { area: true, rows: 4 })}
+      ${hbInput("spellsTxt", "Sorts toujours préparés (facultatif)", "Une ligne par niveau de personnage, par exemple : 3 : Bénédiction, Soins", { area: true, rows: 4 })}
+      <p class="mute small">Ces sorts s’ajoutent à l’onglet Sorts de la fiche, sans compter dans les sorts préparés. Une ligne sans niveau compte pour le niveau 3.</p>
       ${f.spellsTxt ? `<p class="mute small">${hbSpellPreview(f.spellsTxt)}</p>` : ""}`;
   } else if (t === "bg") {
     const origin = Object.entries(FEATS).filter(([, x]) => x.cat !== "general");
@@ -4551,8 +4595,8 @@ function hbParseSpells(txt) {
   const byName = {};
   Object.entries(SPELLS).forEach(([id, s]) => (byName[normName(s.n)] = id));
   String(txt || "").split("\n").forEach((line) => {
-    const m = line.match(/^\s*(\d+)\s*[:\-–]\s*(.+)$/);
-    if (!m) { if (line.trim()) unknown.push(line.trim()); return; }
+    if (!line.trim()) return;
+    const m = line.match(/^\s*(?:niv(?:eau)?\.?\s*)?(\d+)\s*[:\-–.)]\s*(.+)$/i) || [null, "3", line];
     const lv = clampLv(m[1], 1, 20);
     m[2].split(/[,;]/).map((x) => x.trim()).filter(Boolean).forEach((n) => {
       const id = byName[normName(n)];
@@ -4587,7 +4631,7 @@ function hbValidate(f) {
 }
 function hbToDoc(f) {
   const d = { id: f.id || uid(), type: f.type, n: f.n.trim().slice(0, 120), d: (f.d || "").slice(0, 6000), adv: S.hbCode, updated: Date.now() };
-  if (f.type === "sub") { d.cls = f.cls; d.feats = f.feats.filter((x) => x.n.trim()).slice(0, 30).map((x) => ({ l: clampLv(x.l, 3, 20), n: x.n.trim().slice(0, 120), d: (x.d || "").slice(0, 3000) })); d.spellsTxt = (f.spellsTxt || "").slice(0, 2000); d.spells = hbParseSpells(f.spellsTxt).spells; }
+  if (f.type === "sub") { d.cls = f.cls; d.feats = f.feats.filter((x) => x.n.trim()).slice(0, 30).map((x) => ({ l: clampLv(x.l, 3, 20), n: x.n.trim().slice(0, 120), d: (x.d || "").slice(0, 3000) })); d.spellsTxt = (f.spellsTxt || "").slice(0, 2000); d.spells = hbParseSpells(f.spellsTxt).spells; d.cast = !CLASSES[f.cls].caster && f.castMode === "third" ? { ab: f.castAb, list: f.castList } : null; }
   if (f.type === "bg") Object.assign(d, { ab: f.ab, skills: f.skills, tool: f.tool.slice(0, 120), feat: f.feat, featList: f.featList, gear: f.gear.slice(0, 1000), gold: Math.max(0, parseInt(f.gold, 10) || 0) });
   if (f.type === "feat") Object.assign(d, { cat: f.cat, pre: f.pre.slice(0, 200), ab: f.fab });
   if (f.type === "spell") Object.assign(d, { l: +f.l, e: f.e, cl: f.cl, t: f.t.slice(0, 80), p: f.p.slice(0, 80), c: f.c.slice(0, 200), du: f.du.slice(0, 80), co: !!f.co, ri: !!f.ri, atk: f.atk, dmg: f.dmg.replace(/\s/g, ""), ty: f.ty, heal: f.heal.replace(/\s/g, ""), up: f.up.slice(0, 200) });
@@ -4599,8 +4643,11 @@ async function hbAct(a, d, el) {
   switch (a) {
     case "hbOpen": S.hbCode = d.code; S.hbBack = { view: S.view, tab: S.tab, gmTab: S.gmTab }; S.hbf = null; S.hbDirect = false; S.hbFilter = HB.defs(d.code).length ? "all" : "todo"; S.view = "hb"; window.scrollTo(0, 0); return true;
     case "hbFill": {
-      const raw = PHB_RAW[d.k] || HB_RAW[d.k]; if (!raw) return true;
-      if (S.view !== "hb") { S.hbCode = hbHome(); S.hbBack = { view: S.view, tab: S.tab, gmTab: S.gmTab, y: window.scrollY }; S.hbDirect = true; S.view = "hb"; }
+      const filled = HB_RAW[d.k] && !HB_RAW[d.k].sk ? HB_RAW[d.k] : null;
+      const raw = filled || PHB_RAW[d.k]; if (!raw) return true;
+      const where = filled ? hbCodeOf(filled.id) || filled.adv || hbHome() : null;
+      if (filled && !hbCanEdit(filled, where)) { toast("Seuls l’auteur de cette entrée et le MJ peuvent la modifier."); return true; }
+      if (S.view !== "hb") { S.hbCode = where || hbHome(); S.hbBack = { view: S.view, tab: S.tab, gmTab: S.gmTab, y: window.scrollY }; S.hbDirect = true; S.view = "hb"; }
       S.hbf = hbFormFrom(raw); window.scrollTo(0, 0); return true;
     }
     case "hbBack": { const bk = S.hbBack || { view: "home" }; S.view = bk.view; if (bk.tab) S.tab = bk.tab; if (bk.gmTab) S.gmTab = bk.gmTab; S.hbf = null; S.hbDirect = false; setTimeout(() => window.scrollTo(0, bk.y || 0), 0); return true; }
@@ -4728,8 +4775,263 @@ const PHB_RAW = {};
   Object.entries(PHB_SUBS).forEach(([cls, list]) => list.forEach(([k, n]) => add({ id: "phb_" + cls + "_" + k, type: "sub", n, cls, d: "", feats: SUB_LEVELS[cls].map((l) => ({ l, n: "", d: "" })), spellsTxt: "" })));
   PHB_FEATS.forEach(([k, n, cat]) => add({ id: "phb_" + k, type: "feat", n, cat: cat || "general", pre: cat ? "" : "Niveau 4", ab: [], d: "" }));
   PHB_BGS.forEach(([k, n, ab, skills, tool, feat, featList]) => add({ id: "phb_" + k, type: "bg", n, ab, skills, tool, feat, featList: featList || "clr", d: "", gear: "", gold: 0 }));
+  // sous-classes qui donnent l’incantation (règle de jeu, pas de texte)
+  PHB_RAW.hb_phb_guerrier_chevalierocculte.cast = { ab: "int", list: "magicien" };
+  PHB_RAW.hb_phb_roublard_arnaqueur.cast = { ab: "int", list: "magicien" };
   Object.values(PHB_RAW).forEach((d) => hbRegister(d, true));
 })();
+
+/* Forge des Héros — import et export des livres et créations (Excel ou sauvegarde .json).
+   Le fichier Excel liste toutes les entrées du catalogue (à compléter ou non) et les créations du groupe :
+   on le remplit tranquillement, puis on l’importe en une fois. */
+
+const XLSX_URL = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+const HBIO = { p: null, busy: false };
+function xlsxLoad() {
+  if (window.XLSX) return Promise.resolve();
+  if (HBIO.p) return HBIO.p;
+  HBIO.p = new Promise((res, rej) => {
+    const s = document.createElement("script");
+    s.src = XLSX_URL;
+    s.onload = () => res();
+    s.onerror = () => { HBIO.p = null; s.remove(); rej(new Error("xlsx")); };
+    document.head.appendChild(s);
+  });
+  return HBIO.p;
+}
+function downloadFile(name, blob) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+}
+const hbFileName = (code, ext) => "forge-livres-" + (code === "_moi" ? "appareil" : code) + "." + ext;
+
+/* Feuilles du classeur : clé interne, nom (FR et EN acceptés à l’import), en-têtes */
+const HBX_SHEETS = [
+  [K("sub"), "Sous-classes", ["id", "Classe", "Sous-classe", "Niveau", "Aptitude", "Texte", "Sorts toujours préparés", "Incantation"]],
+  [K("bg"), "Historiques", ["id", "Nom", "Caractéristiques", "Compétences", "Outil", "Don", "Description", "Équipement", "po"]],
+  [K("feat"), "Dons", ["id", "Nom", "Catégorie", "Prérequis", "+1 parmi", "Texte"]],
+  [K("spell"), "Sorts", ["id", "Nom", "Niveau", "École", "Classes", "Temps", "Portée", "Composantes", "Durée", "Concentration", "Rituel", "Jet", "Dégâts", "Type", "Soins", "Niveaux supérieurs", "Texte"]],
+  [K("item"), "Objets", ["id", "Nom", "Catégorie", "Rareté", "Harmonisation", "Texte"]],
+];
+const HBX_NAMES = { "sous-classes": "sub", subclasses: "sub", historiques: "bg", backgrounds: "bg", dons: "feat", feats: "feat", sorts: "spell", spells: "spell", objets: "item", items: "item" };
+
+/* Entrées à exporter : complétées dans cette aventure, sinon complétées ailleurs sur l’appareil, sinon le catalogue vide */
+function hbExportDefs(code) {
+  const defs = HB.defs(code);
+  const ids = new Set(defs.map((d) => d.id));
+  const out = [...defs];
+  Object.values(PHB_RAW).forEach((sk) => {
+    if (ids.has(sk.id)) return;
+    const cur = HB_RAW["hb_" + sk.id];
+    out.push(cur && !cur.sk ? cur : sk);
+  });
+  return out;
+}
+const yes = (v) => /^(oui|yes|x|1|true|vrai|o|y)$/i.test(String(v).trim());
+const list = (v) => String(v || "").split(/[,;\s]+/).map((x) => x.trim().toLowerCase()).filter(Boolean);
+
+function hbRows(defs) {
+  const rows = { sub: [], bg: [], feat: [], spell: [], item: [] };
+  const sorted = defs.slice().sort((a, b) => (a.cls || "").localeCompare(b.cls || "") || String(a.n).localeCompare(String(b.n), "fr"));
+  sorted.forEach((d) => {
+    switch (d.type) {
+      case "sub": {
+        const cast = hbCastOf(d);
+        rows.sub.push([d.id, d.cls, d.n, "", "", d.d || "", d.spellsTxt || "", cast ? cast.ab + ":" + cast.list : ""]);
+        (d.feats || []).forEach((f) => rows.sub.push([d.id, d.cls, d.n, f.l, f.n || "", f.d || "", "", ""]));
+        break;
+      }
+      case "bg": rows.bg.push([d.id, d.n, (d.ab || []).join(", "), (d.skills || []).join(", "), d.tool || "", d.feat || "", d.d || "", d.gear || "", d.gold || 0]); break;
+      case "feat": rows.feat.push([d.id, d.n, d.cat || "origine", d.pre || "", (d.ab || []).join(", "), d.d || ""]); break;
+      case "spell": rows.spell.push([d.id, d.n, d.l, d.e, (d.cl || []).join(", "), d.t || "", d.p || "", d.c || "", d.du || "", d.co ? "oui" : "", d.ri ? "oui" : "", d.atk || "", d.dmg || "", d.ty || "", d.heal || "", d.up || "", d.d || ""]); break;
+      case "item": rows.item.push([d.id, d.n, d.kind || "", d.rarity || "", d.attune ? "oui" : "", d.d || ""]); break;
+    }
+  });
+  return rows;
+}
+
+function hbReadme() {
+  const codes = (o, f) => Object.entries(o).map(([k, v]) => k + " = " + (f ? f(v) : v)).join(" · ");
+  return [
+    ["Forge des Héros — livres et créations"],
+    ["Remplissez les colonnes Texte, Aptitude ou Description, puis importez ce fichier dans l’app (Livres et créations › Importer)."],
+    ["Les lignes laissées vides sont ignorées : vous pouvez importer un fichier à moitié rempli et le compléter plus tard."],
+    ["Ne modifiez pas la colonne id d’une ligne existante. Pour une nouvelle création, laissez id vide."],
+    ["Sous-classes : la ligne sans niveau porte la description, les sorts toujours préparés (ex. « 3 : Bénédiction, Soins ») et l’incantation (ex. int:magicien)."],
+    ["Sous-classes : plusieurs aptitudes au même niveau ? Copiez la ligne et changez le nom de l’aptitude."],
+    [""],
+    ["Codes des classes", codes(CLASSES, (c) => c.n)],
+    ["Codes des caractéristiques", codes(ABIL, (a) => a.n)],
+    ["Codes des compétences", codes(SKILLS, (s) => s.n)],
+    ["Codes des écoles", codes(SC)],
+    ["Codes des dons d’origine", Object.entries(FEATS).filter(([, f]) => f.cat !== "general").map(([k, f]) => k + " = " + f.n).join(" · ")],
+    ["Jet d’un sort", "cac = attaque au corps à corps · dist = attaque à distance · for, dex, con, int, sag, cha = jet de sauvegarde"],
+    ["Codes des dégâts", codes(DMG)],
+    [""],
+    ["Le texte des livres n’est pas fourni par l’app : il reste privé, dans votre aventure."],
+  ];
+}
+
+async function hbExportXlsx(code) {
+  await xlsxLoad();
+  const wb = XLSX.utils.book_new();
+  const readme = XLSX.utils.aoa_to_sheet(hbReadme());
+  readme["!cols"] = [{ wch: 28 }, { wch: 120 }];
+  XLSX.utils.book_append_sheet(wb, readme, "À lire");
+  const rows = hbRows(hbExportDefs(code));
+  const widths = { sub: [26, 12, 26, 7, 28, 80, 30, 14], bg: [18, 18, 16, 16, 26, 22, 60, 50, 6], feat: [24, 26, 10, 18, 12, 80], spell: [18, 22, 6, 6, 22, 14, 10, 12, 12, 8, 8, 6, 8, 10, 8, 18, 80], item: [18, 26, 20, 12, 8, 80] };
+  HBX_SHEETS.forEach(([k, name, head]) => {
+    const ws = XLSX.utils.aoa_to_sheet([head, ...rows[k]]);
+    ws["!cols"] = widths[k].map((w) => ({ wch: w }));
+    ws["!freeze"] = { xSplit: 0, ySplit: 1 };
+    XLSX.utils.book_append_sheet(wb, ws, name);
+  });
+  const out = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+  downloadFile(hbFileName(code, "xlsx"), new Blob([out], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
+}
+function hbExportJson(code) {
+  const data = { app: "forge-des-heros", kind: "livres", v: 1, exported: new Date().toISOString(), entries: HB.defs(code) };
+  downloadFile(hbFileName(code, "json"), new Blob([JSON.stringify(data, null, 1)], { type: "application/json" }));
+}
+
+/* ---------- Import ---------- */
+const slugId = (s) => "x" + normName(s).replace(/[^a-z0-9]+/g, "").slice(0, 24) + "_" + uid().slice(0, 5);
+function hbFromSheets(sheets, report) {
+  const docs = [];
+  const cell = (r, i) => String(r[i] == null ? "" : r[i]).trim();
+  const skOf = (id) => PHB_RAW["hb_" + id];
+  // Sous-classes : regroupées par id (ou par nom)
+  const subs = new Map();
+  (sheets.sub || []).forEach((r, i) => {
+    const id = cell(r, 0) || "", name = cell(r, 2);
+    if (!id && !name) return;
+    const key = id || "new:" + cell(r, 1) + ":" + name;
+    if (!subs.has(key)) subs.set(key, { id, cls: cell(r, 1).toLowerCase(), n: name, d: "", spellsTxt: "", cast: undefined, feats: [], line: i + 2 });
+    const s = subs.get(key);
+    const lv = parseInt(cell(r, 3), 10);
+    if (!lv) { s.d = cell(r, 5) || s.d; s.spellsTxt = cell(r, 6) || s.spellsTxt; const c = cell(r, 7); if (c) { const [ab, li] = c.toLowerCase().split(/[:\/ ]+/); s.cast = ABIL[ab] && CLASSES[li] ? { ab, list: li } : null; } else if (s.cast === undefined) s.cast = undefined; }
+    else s.feats.push({ l: clampLv(lv, 3, 20), n: cell(r, 4), d: cell(r, 5) });
+  });
+  subs.forEach((s) => {
+    const sk = s.id && skOf(s.id);
+    const named = s.feats.filter((f) => f.n);
+    if (!named.length) { report.skip++; return; }
+    const cls = CLASSES[s.cls] ? s.cls : sk ? sk.cls : null;
+    if (!cls) { report.bad.push("Sous-classe « " + s.n + " » : classe inconnue (" + s.cls + ")."); return; }
+    const doc = { id: s.id || slugId(s.n), type: "sub", n: (s.n || (sk && sk.n) || "").slice(0, 120), d: s.d.slice(0, 6000), cls, feats: named.slice(0, 30).map((f) => ({ l: f.l, n: f.n.slice(0, 120), d: f.d.slice(0, 3000) })), spellsTxt: s.spellsTxt.slice(0, 2000) };
+    doc.spells = hbParseSpells(doc.spellsTxt).spells;
+    if (s.cast !== undefined) doc.cast = s.cast; else if (sk && sk.cast) doc.cast = sk.cast;
+    docs.push(doc);
+  });
+  (sheets.bg || []).forEach((r, i) => {
+    const id = cell(r, 0), n = cell(r, 1); if (!id && !n) return;
+    const sk = id && skOf(id);
+    const d = cell(r, 6), gear = cell(r, 7);
+    if (sk && !d && !gear) { report.skip++; return; }
+    const ab = list(cell(r, 2)).filter((a) => ABIL[a]), skills = list(cell(r, 3)).filter((k) => SKILLS[k]);
+    if (ab.length !== 3 || skills.length !== 2) { report.bad.push("Historique « " + n + " » (ligne " + (i + 2) + ") : il faut 3 caractéristiques et 2 compétences."); return; }
+    const feat = FEATS[cell(r, 5)] ? cell(r, 5) : sk ? sk.feat : "vigilant";
+    docs.push({ id: id || slugId(n), type: "bg", n: (n || sk.n).slice(0, 120), d: d.slice(0, 6000), ab, skills, tool: cell(r, 4).slice(0, 120), feat, featList: sk ? sk.featList : "clr", gear: gear.slice(0, 1000), gold: Math.max(0, parseInt(cell(r, 8), 10) || 0) });
+  });
+  (sheets.feat || []).forEach((r) => {
+    const id = cell(r, 0), n = cell(r, 1); if (!id && !n) return;
+    const sk = id && skOf(id), d = cell(r, 5);
+    if (!d) { report.skip++; return; }
+    docs.push({ id: id || slugId(n), type: "feat", n: (n || sk.n).slice(0, 120), d: d.slice(0, 6000), cat: /^g/i.test(cell(r, 2)) ? "general" : "origine", pre: cell(r, 3).slice(0, 200), ab: list(cell(r, 4)).filter((a) => ABIL[a]) });
+  });
+  (sheets.spell || []).forEach((r, i) => {
+    const n = cell(r, 1); if (!n) return;
+    const cl = list(cell(r, 4)).filter((k) => CLASSES[k]);
+    if (!cl.length) { report.bad.push("Sort « " + n + " » (ligne " + (i + 2) + ") : indiquez au moins une classe."); return; }
+    const atk = cell(r, 11).toLowerCase();
+    docs.push({ id: cell(r, 0) || slugId(n), type: "spell", n: n.slice(0, 120), l: clampLv(cell(r, 2), 0, 9), e: SC[cell(r, 3)] ? cell(r, 3) : "evo", cl, t: cell(r, 5) || "1 action", p: cell(r, 6) || "—", c: cell(r, 7) || "V, S", du: cell(r, 8) || "Instantanée", co: yes(cell(r, 9)), ri: yes(cell(r, 10)), atk: atk === "cac" || atk === "dist" || ABIL[atk] ? atk : "", dmg: cell(r, 12).replace(/\s/g, ""), ty: DMG[cell(r, 13)] ? cell(r, 13) : "force", heal: cell(r, 14).replace(/\s/g, ""), up: cell(r, 15).slice(0, 200), d: cell(r, 16).slice(0, 6000) });
+  });
+  (sheets.item || []).forEach((r) => {
+    const n = cell(r, 1); if (!n) return;
+    docs.push({ id: cell(r, 0) || slugId(n), type: "item", n: n.slice(0, 120), kind: cell(r, 2).slice(0, 120), rarity: HB_RARITY.includes(cell(r, 3).toLowerCase()) ? cell(r, 3).toLowerCase() : K("peu commun"), attune: yes(cell(r, 4)), d: cell(r, 5).slice(0, 6000) });
+  });
+  return docs;
+}
+
+async function hbImportFile(file, code) {
+  const report = { ok: 0, skip: 0, bad: [], refused: 0 };
+  let docs = [];
+  try {
+    if (/\.json$/i.test(file.name)) {
+      const data = JSON.parse(await file.text());
+      const entries = Array.isArray(data) ? data : data && data.entries;
+      if (!Array.isArray(entries)) throw new Error("format");
+      docs = entries.filter((d) => d && d.id && d.type && HB_TYPE_L[d.type] && typeof d.n === "string").map((d) => ({ ...d, n: d.n.slice(0, 120), d: String(d.d || "").slice(0, 6000) }));
+    } else {
+      await xlsxLoad();
+      const wb = XLSX.read(await file.arrayBuffer(), { type: "array" });
+      const sheets = {};
+      wb.SheetNames.forEach((name, i) => {
+        const k = HBX_NAMES[normName(name)] || (HBX_SHEETS[i - 1] && HBX_SHEETS[i - 1][0]);
+        if (!k || name === wb.SheetNames[0] && !HBX_NAMES[normName(name)]) return;
+        sheets[k] = XLSX.utils.sheet_to_json(wb.Sheets[name], { header: 1, defval: "", raw: false }).slice(1);
+      });
+      if (!Object.keys(sheets).length) throw new Error("format");
+      docs = hbFromSheets(sheets, report);
+    }
+  } catch (e) {
+    return { ...report, fail: e && e.message === "xlsx" ? "Impossible de charger le lecteur Excel. Vérifiez votre connexion." : "Ce fichier n’est pas un export de Forge des Héros." };
+  }
+  const prevAll = HB.defs(code);
+  const done = [];
+  for (const raw of docs) {
+    const prev = prevAll.find((x) => x.id === raw.id);
+    if (prev && !hbCanEdit(prev, code)) { report.refused++; continue; }
+    const doc = JSON.parse(JSON.stringify({ ...raw, adv: code, updated: Date.now(), by: prev ? prev.by : (typeof FB !== "undefined" && FB.uid) || "local", byName: prev ? prev.byName : hbAuthorName() }));
+    done.push(doc);
+  }
+  if (!hbLocal(code)) {
+    const res = await Promise.allSettled(done.map((doc) => FB.adv(code).collection("homebrew").doc(doc.id).set(doc)));
+    const okDocs = done.filter((_, i) => res[i].status === "fulfilled");
+    report.refused += done.length - okDocs.length;
+    done.length = 0; done.push(...okDocs);
+  }
+  HB.set(code, [...prevAll.filter((x) => !done.some((d) => d.id === x.id)), ...done], code === "_moi" ? "Cet appareil" : undefined);
+  report.ok = done.length;
+  return report;
+}
+
+/* Actions et fenêtre de résultat */
+async function hbioAct(a, d) {
+  switch (a) {
+    case "hbExportX": try { toast("Préparation du fichier…"); await hbExportXlsx(S.hbCode); toast("Fichier Excel téléchargé"); } catch (e) { toast("Impossible de charger le module Excel. Vérifiez votre connexion."); } return true;
+    case "hbExportJ": hbExportJson(S.hbCode); toast("Sauvegarde téléchargée"); return true;
+  }
+  return false;
+}
+function hbioModal(m) {
+  if (m.k !== "hbIo") return null;
+  const r = m.r;
+  if (r.fail) return `<h3>Import impossible</h3><p>${esc(r.fail)}</p><div class="row-btns"><button class="btn primary" data-a="closeModal">OK</button></div>`;
+  return `<h3>Import terminé</h3>
+    <dl class="facts"><div><dt>Importées</dt><dd><b>${r.ok}</b> ${r.ok > 1 ? "entrées" : "entrée"}</dd></div>
+    <div><dt>Encore vides</dt><dd>${r.skip} (ignorées, à compléter plus tard)</dd></div>
+    ${r.refused ? `<div><dt>Refusées</dt><dd>${r.refused} (entrées d’un autre joueur : seul le MJ peut les remplacer)</dd></div>` : ""}</dl>
+    ${r.bad.length ? `<p class="bad small">${r.bad.slice(0, 8).map(esc).join("<br>")}${r.bad.length > 8 ? "<br>…" : ""}</p>` : ""}
+    <div class="row-btns"><button class="btn primary" data-a="closeModal">OK</button></div>`;
+}
+function hbioPanel(code) {
+  return `<section class="panel hb-io"><h4>Importer ou exporter</h4>
+    <p class="mute small">Le fichier Excel contient toutes les entrées du Manuel des joueurs (vides tant qu’elles ne sont pas complétées) et vos créations. Remplissez-le à votre rythme, puis importez-le : les lignes vides sont ignorées. La sauvegarde .json garde une copie exacte de ${code === "_moi" ? "ce contenu" : "l’aventure"}.</p>
+    <div class="row-btns"><button class="btn small" data-a="hbExportX">${ICON.down || ""}Exporter en Excel</button><button class="btn small ghost" data-a="hbExportJ">Sauvegarde .json</button>
+    <label class="btn small ghost hb-file">Importer un fichier<input type="file" id="hbImport" accept=".xlsx,.json,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></label></div>
+  </section>`;
+}
+document.addEventListener("change", async (e) => {
+  if (e.target.id !== "hbImport" || !e.target.files || !e.target.files[0]) return;
+  const f = e.target.files[0]; e.target.value = "";
+  if (HBIO.busy) return; HBIO.busy = true;
+  toast("Import en cours…");
+  try { S.modal = { k: "hbIo", r: await hbImportFile(f, S.hbCode) }; } finally { HBIO.busy = false; }
+  render();
+});
 
 /* Forge des Héros — bestiaire et objets magiques du SRD 5.2.
    Les données (MONSTERS, MAGIC_ITEMS) sont dans srd.js, chargé à la demande pour garder l’app légère. */

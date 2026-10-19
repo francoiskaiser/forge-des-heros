@@ -2,7 +2,7 @@
 import json, os, subprocess, sys, glob
 
 SRC = 'src/'
-FILES = ['data.js', 'data2.js', 'data3.js', 'rules.js', 'app.js', 'adventure.js', 'account.js', 'settings.js', 'homebrew.js', 'phb.js', 'bestiary.js']
+FILES = ['data.js', 'data2.js', 'data3.js', 'rules.js', 'app.js', 'adventure.js', 'account.js', 'settings.js', 'homebrew.js', 'phb.js', 'hbio.js', 'bestiary.js']
 css = open(SRC + 'style.css').read()
 reset = ":root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}\n"
 

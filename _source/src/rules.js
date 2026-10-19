@@ -153,10 +153,24 @@ function armorProfs(b) {
   return a;
 }
 
-function slotsOf(b) {
+/* Tiers-lanceur (sous-classe qui donne l’incantation, ex. chevalier occulte, arnaqueur arcanique) */
+const THIRD_SLOTS = [[], [], [2], [3], [3], [3], [4, 2], [4, 2], [4, 2], [4, 3], [4, 3], [4, 3], [4, 3, 2], [4, 3, 2], [4, 3, 2], [4, 3, 3], [4, 3, 3], [4, 3, 3], [4, 3, 3, 1], [4, 3, 3, 1]];
+const THIRD_CANT = [0, 0, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
+const THIRD_PREP = [0, 0, 3, 4, 4, 4, 5, 6, 6, 7, 8, 8, 9, 10, 10, 11, 11, 11, 12, 13];
+/* Incantation effective : celle de la classe, ou celle donnée par la sous-classe */
+function casterOf(b) {
   const c = CLASSES[b.cls];
-  if (!c || !c.caster) return null;
+  if (!c) return null;
+  if (c.caster) return { caster: c.caster, sab: c.sab, cant: c.cant, prep: c.prep, n: c.n };
+  const h = hbSub(b);
+  if (h && h.cast && b.level >= 3) return { caster: "third", sab: h.cast.ab || "int", cant: THIRD_CANT, prep: THIRD_PREP, list: h.cast.list || "magicien", n: h.n };
+  return null;
+}
+function slotsOf(b) {
+  const c = casterOf(b);
+  if (!c) return null;
   const i = b.level - 1;
+  if (c.caster === "third") return { type: "std", slots: THIRD_SLOTS[i] };
   if (c.caster === "full") return { type: "std", slots: FULL_SLOTS[i] };
   if (c.caster === "half") return { type: "std", slots: HALF_SLOTS[i] };
   return { type: "pact", n: PACT_SLOTS[i][0], lvl: PACT_SLOTS[i][1] };
@@ -167,15 +181,15 @@ function maxSpellLevel(b) {
   return s.type === "pact" ? s.lvl : s.slots.length;
 }
 function cantripCount(b) {
-  const c = CLASSES[b.cls];
-  if (!c || !c.caster) return 0;
+  const c = casterOf(b);
+  if (!c) return 0;
   let n = c.cant[b.level - 1];
   if ((b.cls === "clerc" && b.opts.order === "thaumaturge") || (b.cls === "druide" && b.opts.order === "magicien")) n += 1;
   return n;
 }
 function prepCount(b) {
-  const c = CLASSES[b.cls];
-  return c && c.caster ? c.prep[b.level - 1] : 0;
+  const c = casterOf(b);
+  return c ? c.prep[b.level - 1] : 0;
 }
 
 /* Sorts « toujours préparés » ou donnés par l’espèce/les dons */
@@ -187,7 +201,7 @@ function grantedSpells(b) {
     if (c.always) Object.entries(c.always).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: "Classe", ab: c.sab, always: true, free: b.cls === "paladin" ? "smite" : b.cls === "rodeur" ? "ennemi" : null })); });
     if (b.cls === "druide") out.push({ id: "comanimaux", src: "Druidique", ab: c.sab, always: true });
     const hs = hbSub(b), subSpells = hs ? hs.spells : srdSub(b) ? c.sub.spells : null;
-    if (subActive(b) && subSpells) Object.entries(subSpells).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: subName(b), ab: c.sab || "sag", always: true })); });
+    if (subActive(b) && subSpells) Object.entries(subSpells).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: subName(b), ab: (casterOf(b) || c).sab || "int", always: true })); });
     if (b.cls === "druide" && subActive(b) && srdSub(b) && b.opts.land) Object.entries(LAND_SPELLS[b.opts.land].s).forEach(([lv, ids]) => { if (b.level >= +lv) ids.forEach((id) => out.push({ id, src: "Cercle de la Terre", ab: c.sab, always: true })); });
   }
   if (sp) {
@@ -211,7 +225,7 @@ function grantedSpells(b) {
 }
 
 const ARCANUM_LV = { 6: 11, 7: 13, 8: 15, 9: 17 };
-function poolClasses(b) { return b.cls === "barde" && b.level >= 10 ? ["barde", "clerc", "druide", "magicien"] : [b.cls]; }
+function poolClasses(b) { const cc = casterOf(b); if (cc && cc.list) return [cc.list]; return b.cls === "barde" && b.level >= 10 ? ["barde", "clerc", "druide", "magicien"] : [b.cls]; }
 function classSpellPool(b, lvl) {
   const cls = poolClasses(b);
   return Object.keys(SPELLS).filter((id) => SPELLS[id].l === lvl && SPELLS[id].cl.some((c) => cls.includes(c))).sort((x, y) => SPELLS[x].n.localeCompare(SPELLS[y].n, "fr"));
@@ -382,8 +396,9 @@ function compute(b, p) {
   // Incantation
   let casting = null;
   const granted = grantedSpells(b);
-  if (c && c.caster) {
-    casting = { ab: c.sab, dc: 8 + pb + m[c.sab], atk: pb + m[c.sab], slots: slotsOf(b), max: maxSpellLevel(b) };
+  const cc = casterOf(b);
+  if (cc) {
+    casting = { ab: cc.sab, dc: 8 + pb + m[cc.sab], atk: pb + m[cc.sab], slots: slotsOf(b), max: maxSpellLevel(b) };
   }
   const spellList = [];
   const potent = (b.cls === "clerc" || b.cls === "druide") && L >= 7 && b.opts.strike === "puissant";
@@ -401,8 +416,7 @@ function compute(b, p) {
     const db = s.dmg ? dmgBonus({ ...s, id }) : { v: 0, why: [] };
     spellList.push({ id, ...s, src, ab: abk, dc: 8 + pb + m[abk], atk: pb + m[abk], mod: m[abk], always, free, dmgBonus: db.v, dmgWhy: db.why });
   };
-  b.cant.forEach((id) => pushSpell(id, c.n, c.sab, false));
-  b.prep.forEach((id) => pushSpell(id, c.n, c.sab, false));
+  if (cc) { b.cant.forEach((id) => pushSpell(id, cc.n, cc.sab, false)); b.prep.forEach((id) => pushSpell(id, cc.n, cc.sab, false)); }
   granted.forEach((g) => pushSpell(g.id, g.src, g.ab, true, g.free));
   spellList.sort((x, y) => x.l - y.l || x.n.localeCompare(y.n, "fr"));
 
@@ -512,7 +526,7 @@ function issues(b) {
     if (STRIKE_OPTS[b.cls] && b.level >= STRIKE_OPTS[b.cls].lvl && !b.opts.strike) out.options.push(STRIKE_OPTS[b.cls].label);
     if (b.cls === "rodeur" && b.level >= 3 && srdSub(b) && !b.opts.prey) out.options.push("Proie du chasseur");
     if (b.cls === "druide" && b.level >= 3 && srdSub(b) && !b.opts.land) out.options.push("Type de terre");
-    if (c.caster) {
+    if (casterOf(b)) {
       if (b.cant.length < cantripCount(b)) out.sorts.push(`Tours de magie (${b.cant.length}/${cantripCount(b)})`);
       if (b.prep.length < prepCount(b)) out.sorts.push(`Sorts préparés (${b.prep.length}/${prepCount(b)})`);
       if (b.cls === "barde" && b.level >= 6 && srdSub(b) && b.opts.lore2.length < 2) out.sorts.push(`Découvertes magiques (${b.opts.lore2.length}/2)`);

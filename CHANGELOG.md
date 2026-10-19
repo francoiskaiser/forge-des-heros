@@ -2,6 +2,13 @@
 
 Chaque version correspond à un commit Git dont le message commence par son numéro. Pour revenir en arrière, voir la section en bas.
 
+## 1.10.0 — 19 octobre 2026
+- **Incantation de sous-classe** : l'Arnaqueur arcanique et le Chevalier occulte lancent des sorts (progression de tiers-lanceur : emplacements, tours de magie, sorts préparés, liste du magicien). Option disponible pour toute sous-classe créée.
+- Les **sorts toujours préparés** d'une sous-classe apparaissent dans l'onglet Sorts (une ligne sans niveau compte pour le niveau 3).
+- Bouton **Modifier** sur une sous-classe, un historique ou un don déjà complété (créateur et onglet Aptitudes).
+- **Import / export** dans Livres et créations : fichier Excel (toutes les entrées du Manuel des joueurs à compléter et les créations) et sauvegarde .json. Les lignes vides sont ignorées.
+- Livres et créations accessibles hors aventure depuis Compte et réglages.
+
 ## 1.9.0 — 19 octobre 2026
 - **Catalogue du Manuel des joueurs intégré** : les 36 autres sous-classes, 12 historiques et 47 dons apparaissent dans le créateur comme les options du SRD, avec leurs niveaux, caractéristiques, compétences et don d'origine.
 - Leur texte n'est pas fourni : un bouton **Compléter** permet de le recopier une fois depuis son livre. Il est partagé avec toute l'aventure (ou gardé sur l'appareil hors aventure).

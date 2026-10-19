@@ -1,6 +1,6 @@
 /* Forge des Héros — page Compte et réglages : thème, langue, support, version */
 
-const APP_VERSION = "1.9.0";
+const APP_VERSION = "1.10.0";
 
 /* ---------- Thème ---------- */
 const Theme = {
@@ -85,6 +85,7 @@ function viewSettings() {
           <div class="chips">${langs.map(([k, n, ok]) => `<button class="chip ${k === LANG ? "on" : ""}" ${ok ? "" : 'aria-disabled="true"'} data-a="${ok ? "setLang" : "langSoon"}" data-v="${k}" aria-pressed="${k === LANG}">${n}${ok ? "" : `<small>${k === "en" ? "app installée" : "bientôt"}</small>`}</button>`).join("")}</div>
           <p class="mute small">L’allemand et l’espagnol sont en préparation.</p>
         </section>
+        <section class="panel set-sec"><h3 class="ph">Livres et créations</h3><p class="mute small">Le contenu de vos livres complété hors aventure, enregistré sur cet appareil. Dans une aventure, passez par l’onglet Aventure d’une fiche ou l’écran du MJ.</p><div class="row-btns"><button class="btn small" data-a="hbOpen" data-code="_moi">Ouvrir</button></div></section>
         <section class="panel set-sec"><h3 class="ph">Support</h3>
           <p class="mute small">Votre message arrive directement chez le créateur de l’app.</p>
           <div class="support-grid">

@@ -233,6 +233,7 @@ function sortedIds(it) { return it.list.slice().sort((a, b) => b.v - a.v || (b.d
 async function advAct(a, d, el) {
   if (typeof hbAct === "function" && (await hbAct(a, d, el))) return true;
   if (typeof srdAct === "function" && (await srdAct(a, d, el))) return true;
+  if (typeof hbioAct === "function" && (await hbioAct(a, d, el))) return true;
   if (typeof accAct === "function" && (await accAct(a, d, el))) return true;
   const ch = curChar();
   switch (a) {
@@ -328,6 +329,8 @@ function advModal(m) {
   const hm = typeof hbModal === "function" ? hbModal(m) : null;
   if (hm) return hm;
   const sm = typeof srdModal === "function" ? srdModal(m) : null;
+  const im = typeof hbioModal === "function" ? hbioModal(m) : null;
+  if (im) return im;
   if (sm) return sm;
   if (m.k === "advCreate") return `<h3>Nouvelle aventure</h3><p class="mute">Vous en serez le maître du jeu. Un code sera créé pour vos joueurs.</p><label class="field big"><span>Nom de l’aventure</span><input id="advName" placeholder="Ex. La Mine perdue" autocomplete="off"></label><div class="row-btns"><button class="btn primary" data-a="advCreate">Créer</button></div>`;
   if (m.k === "gmDetail") { const mm = Live.members.find((x) => x.id === m.id); return mm ? gmDetailModal(mm) : "<p>Ce personnage a quitté le groupe.</p>"; }

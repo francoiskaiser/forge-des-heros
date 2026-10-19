@@ -59,5 +59,8 @@ const PHB_RAW = {};
   Object.entries(PHB_SUBS).forEach(([cls, list]) => list.forEach(([k, n]) => add({ id: "phb_" + cls + "_" + k, type: "sub", n, cls, d: "", feats: SUB_LEVELS[cls].map((l) => ({ l, n: "", d: "" })), spellsTxt: "" })));
   PHB_FEATS.forEach(([k, n, cat]) => add({ id: "phb_" + k, type: "feat", n, cat: cat || "general", pre: cat ? "" : "Niveau 4", ab: [], d: "" }));
   PHB_BGS.forEach(([k, n, ab, skills, tool, feat, featList]) => add({ id: "phb_" + k, type: "bg", n, ab, skills, tool, feat, featList: featList || "clr", d: "", gear: "", gold: 0 }));
+  // sous-classes qui donnent l’incantation (règle de jeu, pas de texte)
+  PHB_RAW.hb_phb_guerrier_chevalierocculte.cast = { ab: "int", list: "magicien" };
+  PHB_RAW.hb_phb_roublard_arnaqueur.cast = { ab: "int", list: "magicien" };
   Object.values(PHB_RAW).forEach((d) => hbRegister(d, true));
 })();

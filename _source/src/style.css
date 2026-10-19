@@ -684,3 +684,8 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
 .hb-todo .row-btns { flex-wrap: wrap; }
 .hb-todo .btn svg { width: 15px; height: 15px; margin-right: 4px; vertical-align: -2px; }
 .hb-card.todo { border-style: dashed; }
+.hb-edit { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.hb-edit .btn svg { width: 14px; height: 14px; margin-right: 4px; vertical-align: -2px; }
+.hb-file { position: relative; overflow: hidden; cursor: pointer; }
+.hb-file input { position: absolute; inset: 0; opacity: 0; cursor: pointer; font-size: 0; }
+.hb-io .row-btns { flex-wrap: wrap; }

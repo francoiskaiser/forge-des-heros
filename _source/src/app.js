@@ -83,7 +83,7 @@ const STEPS = [
 ];
 const S = { view: "home", chars: [], draft: null, step: 0, editId: null, cur: null, tab: "actions", rollMode: "normal", log: [], tray: false, modal: null, spellLvl: "all", openSpell: null, trayExpr: "", trayCount: 1, loaded: false };
 
-function stepsFor(b) { return STEPS.filter((s) => s.k !== "sorts" || (CLASSES[b.cls] && CLASSES[b.cls].caster) || !b.cls); }
+function stepsFor(b) { return STEPS.filter((s) => s.k !== "sorts" || (CLASSES[b.cls] && casterOf(b)) || !b.cls); }
 const curChar = () => S.chars.find((c) => c.id === S.cur);
 
 /* ---------------- Rendu racine ---------------- */
@@ -396,8 +396,8 @@ function spellDetail(s) {
 }
 
 function stepSpells(b) {
-  const c = CLASSES[b.cls];
-  if (!c || !c.caster) return `<p class="mute">Cette classe ne lance pas de sorts.</p>`;
+  const c = casterOf(b);
+  if (!c) return `<p class="mute">Cette classe ne lance pas de sorts.</p>`;
   const nc = cantripCount(b), np = prepCount(b), max = maxSpellLevel(b);
   const granted = grantedSpells(b);
   const gIds = new Set(granted.map((g) => g.id));
@@ -787,7 +787,7 @@ function cleanBuild(b) {
   b.skillsClass = b.skillsClass.filter((k) => pool.includes(k)).slice(0, c.skills.n);
   const ex = expertiseCount(b), ep = expertisePool(b);
   b.expertise = b.expertise.filter((k) => ep.includes(k)).slice(0, ex);
-  if (c.caster) {
+  if (casterOf(b)) {
     b.cant = b.cant.slice(0, cantripCount(b));
     const max = maxSpellLevel(b);
     b.prep = b.prep.filter((id) => SPELLS[id] && SPELLS[id].l <= max).slice(0, prepCount(b));
