@@ -2,6 +2,11 @@
 
 Chaque version correspond à un commit Git dont le message commence par son numéro. Pour revenir en arrière, voir la section en bas.
 
+## 1.9.0 — 19 octobre 2026
+- **Catalogue du Manuel des joueurs intégré** : les 36 autres sous-classes, 12 historiques et 47 dons apparaissent dans le créateur comme les options du SRD, avec leurs niveaux, caractéristiques, compétences et don d'origine.
+- Leur texte n'est pas fourni : un bouton **Compléter** permet de le recopier une fois depuis son livre. Il est partagé avec toute l'aventure (ou gardé sur l'appareil hors aventure).
+- « Contenu maison » devient **Livres et créations**, avec un filtre « À compléter » ; l'étiquette « Maison » disparaît, le contenu de l'aventure est au même rang que le reste.
+
 ## 1.8.0 — 19 octobre 2026
 - **Contenu maison partagé par l'aventure** : sous-classes, historiques, dons, sorts et objets à ajouter depuis l'onglet Aventure d'une fiche ou l'écran du MJ. Ils apparaissent dans le créateur et sur les fiches de tous les membres (nouvelles règles Firestore nécessaires).
 - **Bestiaire du SRD 5.2** dans l'écran du MJ : 330+ créatures en français, recherche, blocs de statistiques avec jets cliquables, ajout direct au combat (PV moyens ou lancés).

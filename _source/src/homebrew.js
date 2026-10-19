@@ -6,6 +6,7 @@ const HBSUB = {};        // sous-classes maison, clé "hb_<id>"
 const HBITEMS = {};      // objets maison
 const HB_RAW = {};       // définitions brutes, clé "hb_<id>"
 const HB_TYPES = [["sub", "Sous-classe"], ["bg", "Historique"], ["feat", "Don"], ["spell", "Sort"], ["item", "Objet"]];
+const HB_TODO_D = "Texte à compléter depuis votre livre : touchez « Compléter ».";
 const HB_TYPE_L = Object.fromEntries(HB_TYPES);
 const HB_RARITY = [K("commun"), K("peu commun"), K("rare"), K("très rare"), K("légendaire"), K("artefact")];
 const HB_RARITY_L = { [K("commun")]: "Commun", [K("peu commun")]: "Peu commun", [K("rare")]: "Rare", [K("très rare")]: "Très rare", [K("légendaire")]: "Légendaire", [K("artefact")]: "Artefact" };
@@ -37,11 +38,11 @@ function parseGear(txt) {
 
 /* Transforme une entrée brute en objet compatible avec les données du SRD */
 function hbShape(d) {
-  const base = { n: d.n || "Sans nom", hb: true, hbId: d.id, adv: d.adv || null };
+  const base = { n: d.n || "Sans nom", hb: true, hbId: d.id, adv: d.adv || null, todo: !!d.sk };
   switch (d.type) {
-    case "sub": return { ...base, cls: d.cls, d: d.d || "", feats: (d.feats || []).filter((f) => f && f.n).map((f) => ({ l: clampLv(f.l, 3, 20), n: f.n, d: f.d || "" })), spells: d.spells || {} };
+    case "sub": return { ...base, cls: d.cls, d: d.d || "", feats: d.sk ? (d.feats || []).map((f) => ({ l: f.l, n: "Aptitude de sous-classe", d: HB_TODO_D })) : (d.feats || []).filter((f) => f && f.n).map((f) => ({ l: clampLv(f.l, 3, 20), n: f.n, d: f.d || "" })), spells: d.spells || {} };
     case "bg": return { ...base, ab: (d.ab || []).slice(0, 3), skills: (d.skills || []).slice(0, 2), tool: d.tool || "—", feat: d.feat || "vigilant", featList: d.feat === "initie" ? d.featList || "clr" : undefined, desc: d.d || "", gear: parseGear(d.gear), gold: Math.max(0, parseInt(d.gold, 10) || 0) };
-    case "feat": return { ...base, d: d.d || "", cat: d.cat === "general" ? "general" : "origine", ab: d.ab || [], pre: d.pre || "" };
+    case "feat": return { ...base, d: d.d || (d.sk ? HB_TODO_D : ""), cat: d.cat === "general" ? "general" : "origine", ab: d.ab || [], pre: d.pre || "" };
     case "spell": {
       const o = { ...base, l: clampLv(d.l, 0, 9), e: SC[d.e] ? d.e : "evo", t: d.t || "1 action", p: d.p || "—", c: d.c || "V, S", du: d.du || "Instantanée", co: !!d.co, ri: !!d.ri, cl: (d.cl || []).filter((k) => CLASSES[k]), d: d.d || "" };
       if (d.dmg) { o.dmg = d.dmg; o.ty = DMG[d.ty] ? d.ty : "force"; }
@@ -60,7 +61,8 @@ function hbShape(d) {
 function hbRegister(d, force) {
   if (!d || !d.id || !d.type) return;
   const k = hbKey(d);
-  if (HB_RAW[k] && !force) return;
+  if (HB_RAW[k] && !force && !HB_RAW[k].sk) return;
+  if (d.sk && HB_RAW[k] && !HB_RAW[k].sk) return; // ne remplace pas un texte complété par le squelette
   const shaped = hbShape(d);
   if (!shaped) return;
   HB_RAW[k] = d;
@@ -70,6 +72,7 @@ function hbRegister(d, force) {
 function hbUnregister(k) {
   delete HB_RAW[k];
   [HBSUB, BACKGROUNDS, FEATS, SPELLS, HBITEMS].forEach((t) => { if (t[k] && t[k].hb) delete t[k]; });
+  if (typeof PHB_RAW !== "undefined" && PHB_RAW[k]) hbRegister(PHB_RAW[k], true); // l’entrée du catalogue redevient « à compléter »
 }
 
 /* Entrées utilisées par un personnage, copiées dans b.hb */
@@ -88,7 +91,7 @@ function hbUsed(b) {
 function hbEmbed(b) {
   if (!b || !b.opts) return;
   const out = {};
-  hbUsed(b).forEach((k) => { const d = HB_RAW[k] || (b.hb && b.hb[k]); if (d) out[k] = d; });
+  hbUsed(b).forEach((k) => { const d = HB_RAW[k] && !HB_RAW[k].sk ? HB_RAW[k] : b.hb && b.hb[k]; if (d && !d.sk) out[k] = d; });
   if (Object.keys(out).length) b.hb = out; else delete b.hb;
 }
 
@@ -128,8 +131,23 @@ const HB = {
   },
 };
 
-const hbTag = (o) => (o && o.hb ? `<span class="hb-tag" title="Contenu maison">Maison</span>` : "");
+const hbTag = (o) => (o && o.todo ? `<span class="hb-tag todo" title="Texte à compléter depuis votre livre">À compléter</span>` : "");
+/* Où enregistrer le texte : l’aventure du personnage, sinon l’unique aventure connue, sinon cet appareil (« _moi ») */
+function hbHome() {
+  const ch = S.view === "create" ? S.editId && S.chars.find((c) => c.id === S.editId) : curChar();
+  if (ch && ch.adv) return ch.adv;
+  const codes = HB.codes();
+  return codes.length === 1 ? codes[0] : "_moi";
+}
+const hbLocal = (code) => code === "_moi" || typeof FB === "undefined" || !FB.ok;
+/* Encadré « à compléter » pour une liste de clés */
+function hbTodoNote(keys) {
+  const todo = [...new Set(keys)].filter((k) => k && HB_RAW[k] && HB_RAW[k].sk);
+  if (!todo.length) return "";
+  return `<div class="hb-todo"><p><b>À compléter depuis votre livre.</b> Le texte n’est pas fourni par l’app : recopiez-le une fois, il apparaîtra pour ${hbHome() === "_moi" ? "vos personnages" : "toute l’aventure"}.</p><div class="row-btns">${todo.map((k) => `<button class="btn small" data-a="hbFill" data-k="${k}">${ICON.edit || ""}Compléter : ${esc(HB_RAW[k].n)}</button>`).join("")}</div></div>`;
+}
 function hbCanEdit(d, code) {
+  if (d.sk || code === "_moi") return true;
   if (typeof FB === "undefined" || !FB.ok) return false;
   if (d.by === FB.uid) return true;
   return !!(Live.code === code && Live.doc && Live.doc.gm === FB.uid);
@@ -140,7 +158,7 @@ function hbMeta(d) {
   const o = hbShape(d);
   if (!o) return "";
   switch (d.type) {
-    case "sub": return (CLASSES[o.cls] ? CLASSES[o.cls].n : "") + " · " + o.feats.length + " aptitude" + (o.feats.length > 1 ? "s" : "");
+    case "sub": return (CLASSES[o.cls] ? CLASSES[o.cls].n : "") + " · " + (d.sk ? "niveaux " + o.feats.map((x) => x.l).join(", ") : o.feats.length + " aptitude" + (o.feats.length > 1 ? "s" : ""));
     case "bg": return o.ab.map((a) => ABIL[a].s).join(", ") + " · " + o.skills.map((k) => SKILLS[k] ? SKILLS[k].n : k).join(", ") + (FEATS[o.feat] ? " · " + FEATS[o.feat].n : "");
     case "feat": return o.cat === "general" ? "Don général (niveau 4 et plus)" : "Don d’origine";
     case "spell": return (o.l ? "Niveau " + o.l : "Tour de magie") + " · " + SC[o.e] + (o.cl.length ? " · " + o.cl.map((k) => CLASSES[k].n).join(", ") : "");
@@ -151,23 +169,29 @@ function hbMeta(d) {
 
 function viewHB() {
   const code = S.hbCode;
-  if (typeof FB === "undefined" || !FB.ok) return `<header class="topbar"><button class="icon-btn" data-a="hbBack" aria-label="Retour">${ICON.back}</button><div class="tb-title"><strong>Contenu maison</strong></div></header><main class="sheet"><p class="mute">Le contenu maison demande une connexion à l’aventure.</p></main>`;
-  Live.watch(code);
+  const local = code === "_moi";
+  if (!local && (typeof FB === "undefined" || !FB.ok)) return `<header class="topbar"><button class="icon-btn" data-a="hbBack" aria-label="Retour">${ICON.back}</button><div class="tb-title"><strong>Livres et créations</strong></div></header><main class="sheet"><p class="mute">Le contenu de l’aventure demande une connexion.</p></main>`;
+  if (!local) Live.watch(code);
   if (S.hbf) return viewHBForm();
+  const todo = Object.values(PHB_RAW).filter((d) => HB_RAW["hb_" + d.id] && HB_RAW["hb_" + d.id].sk);
   const defs = HB.defs(code).slice().sort((a, b) => (a.type === b.type ? (a.n || "").localeCompare(b.n || "", "fr") : HB_TYPES.findIndex((t) => t[0] === a.type) - HB_TYPES.findIndex((t) => t[0] === b.type)));
   const f = S.hbFilter || "all";
-  const shown = defs.filter((d) => f === "all" || d.type === f);
+  const shown = f === "todo" ? todo.slice().sort((a, b) => HB_TYPES.findIndex((t) => t[0] === a.type) - HB_TYPES.findIndex((t) => t[0] === b.type) || (a.cls || "").localeCompare(b.cls || "") || a.n.localeCompare(b.n, "fr")) : defs.filter((d) => f === "all" || d.type === f);
   const counts = {}; defs.forEach((d) => (counts[d.type] = (counts[d.type] || 0) + 1));
   return `<header class="topbar">
     <button class="icon-btn" data-a="hbBack" aria-label="Retour">${ICON.back}</button>
-    <div class="tb-title"><strong>Contenu maison</strong><span class="eyebrow">${esc(HB.advName(code))} · ${esc(code)}</span></div>
+    <div class="tb-title"><strong>Livres et créations</strong><span class="eyebrow">${local ? "Sur cet appareil" : esc(HB.advName(code)) + " · " + esc(code)}</span></div>
     <button class="btn small primary" data-a="hbNew">${ICON.plus}<span class="hide-s">Ajouter</span></button>
   </header>
   <main class="sheet hb-page">
-    <section class="panel hb-intro"><p>Ajoutez ici les sous-classes, historiques, dons, sorts et objets de vos livres ou de vos créations. Ils apparaissent dans le créateur de personnage et sur les fiches de tous les membres de cette aventure.</p>
-      <p class="mute small">Ce contenu n’est visible que par les personnes qui ont le code de l’aventure. Chacun peut ajouter des entrées ; seuls leur auteur et le MJ peuvent les modifier.</p></section>
-    <div class="chips hb-filter">${chip("Tout (" + defs.length + ")", f === "all", "hbFilter", 'data-v="all"')}${HB_TYPES.map(([k, n]) => chip(n + (counts[k] ? " (" + counts[k] + ")" : ""), f === k, "hbFilter", `data-v="${k}"`)).join("")}</div>
-    ${shown.length ? `<div class="hb-list">${shown.map((d) => `<article class="hb-card">
+    <section class="panel hb-intro"><p>Les sous-classes, historiques et dons du Manuel des joueurs sont déjà dans le créateur : il ne manque que leur texte, à recopier une fois depuis votre livre. Vous pouvez aussi ajouter vos propres créations.</p>
+      <p class="mute small">${local ? "Ce contenu est enregistré sur cet appareil et dans les personnages qui l’utilisent." : "Ce contenu n’est visible que par les personnes qui ont le code de l’aventure. Chacun peut compléter ou ajouter des entrées ; seuls leur auteur et le MJ peuvent les modifier."}</p></section>
+    <div class="chips hb-filter">${chip("À compléter (" + todo.length + ")", f === "todo", "hbFilter", 'data-v="todo"')}${chip("Tout (" + defs.length + ")", f === "all", "hbFilter", 'data-v="all"')}${HB_TYPES.map(([k, n]) => chip(n + (counts[k] ? " (" + counts[k] + ")" : ""), f === k, "hbFilter", `data-v="${k}"`)).join("")}</div>
+    ${f === "todo" ? (shown.length ? `<div class="hb-list">${shown.map((d) => `<article class="hb-card todo">
+      <div class="hb-top"><span class="hb-type">${HB_TYPE_L[d.type] || ""}</span><b>${esc(d.n)}</b></div>
+      <span class="mute small">${esc(hbMeta(d))}</span>
+      <div class="hb-foot"><span></span><button class="btn small" data-a="hbFill" data-k="hb_${esc(d.id)}">Compléter</button></div>
+    </article>`).join("")}</div>` : `<section class="panel empty-state"><h3 class="ph">Tout est complété</h3><p>Le contenu du Manuel des joueurs est entièrement renseigné.</p></section>`) : shown.length ? `<div class="hb-list">${shown.map((d) => `<article class="hb-card">
       <div class="hb-top"><span class="hb-type">${HB_TYPE_L[d.type] || ""}</span><b>${esc(d.n)}</b></div>
       <span class="mute small">${esc(hbMeta(d))}</span>
       ${d.d ? `<p class="hb-desc">${esc(d.d.length > 220 ? d.d.slice(0, 220) + "…" : d.d)}</p>` : ""}
@@ -181,6 +205,7 @@ function hbBlank(type) {
 }
 function hbFormFrom(d) {
   const f = { ...hbBlank(d.type), ...clone(d) };
+  delete f.sk; delete f.src;
   if (d.type === "feat") f.fab = d.ab || [];
   if (d.type === "sub" && (!f.feats || !f.feats.length)) f.feats = [{ l: 3, n: "", d: "" }];
   return f;
@@ -303,13 +328,18 @@ function hbToDoc(f) {
 
 async function hbAct(a, d, el) {
   switch (a) {
-    case "hbOpen": S.hbCode = d.code; S.hbBack = { view: S.view, tab: S.tab, gmTab: S.gmTab }; S.hbf = null; S.hbFilter = "all"; S.view = "hb"; window.scrollTo(0, 0); return true;
-    case "hbBack": { const bk = S.hbBack || { view: "home" }; S.view = bk.view; if (bk.tab) S.tab = bk.tab; if (bk.gmTab) S.gmTab = bk.gmTab; S.hbf = null; window.scrollTo(0, 0); return true; }
+    case "hbOpen": S.hbCode = d.code; S.hbBack = { view: S.view, tab: S.tab, gmTab: S.gmTab }; S.hbf = null; S.hbDirect = false; S.hbFilter = HB.defs(d.code).length ? "all" : "todo"; S.view = "hb"; window.scrollTo(0, 0); return true;
+    case "hbFill": {
+      const raw = PHB_RAW[d.k] || HB_RAW[d.k]; if (!raw) return true;
+      if (S.view !== "hb") { S.hbCode = hbHome(); S.hbBack = { view: S.view, tab: S.tab, gmTab: S.gmTab, y: window.scrollY }; S.hbDirect = true; S.view = "hb"; }
+      S.hbf = hbFormFrom(raw); window.scrollTo(0, 0); return true;
+    }
+    case "hbBack": { const bk = S.hbBack || { view: "home" }; S.view = bk.view; if (bk.tab) S.tab = bk.tab; if (bk.gmTab) S.gmTab = bk.gmTab; S.hbf = null; S.hbDirect = false; setTimeout(() => window.scrollTo(0, bk.y || 0), 0); return true; }
     case "hbFilter": S.hbFilter = d.v; return true;
-    case "hbNew": S.hbf = hbBlank(S.hbFilter && S.hbFilter !== "all" ? S.hbFilter : "sub"); window.scrollTo(0, 0); return true;
+    case "hbNew": S.hbf = hbBlank(HB_TYPE_L[S.hbFilter] ? S.hbFilter : "sub"); window.scrollTo(0, 0); return true;
     case "hbType": { const keep = { n: S.hbf.n, d: S.hbf.d }; S.hbf = { ...hbBlank(d.v), ...keep }; return true; }
     case "hbEdit": { const def = HB.defs(S.hbCode).find((x) => x.id === d.id); if (def) { S.hbf = hbFormFrom(def); window.scrollTo(0, 0); } return true; }
-    case "hbCancel": S.hbf = null; return true;
+    case "hbCancel": S.hbf = null; if (S.hbDirect) return hbAct("hbBack", {}); return true;
     case "hbSet": { const f = S.hbf; f[d.k] = d.k === "l" ? +d.v : d.v; if (d.k === "cls") S.hbCls = d.v; return true; }
     case "hbFlag": S.hbf[d.k] = !S.hbf[d.k]; return true;
     case "hbToggle": { if (el && el.getAttribute("aria-disabled") === "true") return true; toggleIn(S.hbf[d.k], d.v, d.max ? +d.max : null); return true; }
@@ -323,17 +353,19 @@ async function hbAct(a, d, el) {
       doc.by = prev ? prev.by : FB.uid;
       doc.byName = prev ? prev.byName : hbAuthorName();
       try {
-        await FB.adv(S.hbCode).collection("homebrew").doc(doc.id).set(doc);
-        HB.set(S.hbCode, [...HB.defs(S.hbCode).filter((x) => x.id !== doc.id), doc]);
-        S.hbf = null; S.hbFilter = doc.type;
-        toast(prev ? "Modifications enregistrées" : "« " + doc.n + " » ajouté à l’aventure");
+        if (!hbLocal(S.hbCode)) await FB.adv(S.hbCode).collection("homebrew").doc(doc.id).set(doc);
+        HB.set(S.hbCode, [...HB.defs(S.hbCode).filter((x) => x.id !== doc.id), doc], S.hbCode === "_moi" ? "Cet appareil" : undefined);
+        S.hbf = null; S.hbFilter = doc.id.startsWith("phb_") ? "todo" : doc.type;
+        const ch = curChar(); if (ch && S.hbBack && S.hbBack.view === "sheet") { hbEmbed(ch.b); saveSoon(ch); }
+        toast(prev ? "Modifications enregistrées" : doc.id.startsWith("phb_") ? "« " + doc.n + " » complété" : "« " + doc.n + " » ajouté");
+        if (S.hbDirect) return hbAct("hbBack", {});
       } catch (e) { f.err = e && e.code === "permission-denied" ? "Enregistrement refusé : publiez les nouvelles règles Firestore (voir FIREBASE.md)." : "Enregistrement impossible. Vérifiez votre connexion."; }
       return true;
     }
     case "hbDelAsk": S.modal = { k: "hbDel", id: d.id }; return true;
     case "hbDel": {
       try {
-        await FB.adv(S.hbCode).collection("homebrew").doc(d.id).delete();
+        if (!hbLocal(S.hbCode)) await FB.adv(S.hbCode).collection("homebrew").doc(d.id).delete();
         HB.set(S.hbCode, HB.defs(S.hbCode).filter((x) => x.id !== d.id));
         toast("Entrée supprimée");
       } catch (e) { toast("Suppression impossible."); }

@@ -697,6 +697,14 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
   .mon-add { grid-template-columns: minmax(0, 1fr); }
 }
 
+/* Catalogue du Manuel des joueurs : entrées à compléter */
+.hb-tag.todo { color: var(--ember); background: var(--emberbg); }
+.hb-todo { margin-top: 12px; padding: 12px 14px; border-radius: 12px; border: 1px dashed var(--ember); background: var(--emberbg); display: grid; gap: 10px; }
+.hb-todo p { margin: 0; font-size: .92rem; }
+.hb-todo .row-btns { flex-wrap: wrap; }
+.hb-todo .btn svg { width: 15px; height: 15px; margin-right: 4px; vertical-align: -2px; }
+.hb-card.todo { border-style: dashed; }
+
 </style>
 </head>
 <body>
@@ -2661,9 +2669,9 @@ function stepClass(b) {
     const subs = Object.entries(HBSUB).filter(([, x]) => x.cls === b.cls);
     const subPick = `<section class="panel"><h4>Sous-classe (niveau 3)</h4><div class="opt-grid">
       <button class="opt ${!b.subHb ? "on" : ""}" data-a="setSub" data-v=""><b>${c.sub.n}</b><span>${c.sub.d}</span></button>
-      ${subs.map(([k, x]) => `<button class="opt ${b.subHb === k ? "on" : ""}" data-a="setSub" data-v="${k}"><b>${esc(x.n)}${hbTag(x)}</b><span>${esc(x.d || x.feats.map((f) => f.n).join(", "))}</span></button>`).join("")}
+      ${subs.map(([k, x]) => `<button class="opt ${b.subHb === k ? "on" : ""}" data-a="setSub" data-v="${k}"><b>${esc(x.n)}${hbTag(x)}</b><span>${x.todo ? "Aptitudes aux niveaux " + x.feats.map((f) => f.l).join(", ") : esc(x.d || x.feats.map((f) => f.n).join(", "))}</span></button>`).join("")}
       ${b.subHb && !hs ? `<button class="opt on" data-a="setSub" data-v=""><b>Sous-classe maison introuvable</b><span>Elle a été supprimée de l’aventure. Touchez pour revenir à ${c.sub.n}.</span></button>` : ""}
-    </div>${!subs.length && typeof FB !== "undefined" && FB.ok ? `<p class="mute small">Vous avez d’autres sous-classes dans vos livres ? Ajoutez-les dans <b>Contenu maison</b>, depuis l’onglet Aventure d’une fiche ou l’écran du MJ.</p>` : ""}</section>`;
+    </div>${hbTodoNote([b.subHb])}</section>`;
     detail = `<section class="panel detail">
       <h3>${c.n}</h3>
       <dl class="facts">
@@ -2706,7 +2714,7 @@ function stepOrigin(b) {
     spDetail = `<section class="panel detail"><h3>${sp.n}</h3><p class="mute">${sp.desc}</p>
       <div class="feats">${sp.traits.map((t) => `<details class="feat" open><summary>${t.n}</summary><p>${t.d}</p></details>`).join("")}</div>${choice}${size}${sab}</section>`;
   }
-  return `<section class="block"><h3 class="bh">Historique</h3><p class="mute small">Votre passé détermine trois caractéristiques à améliorer, un don d’origine et deux compétences.</p><div class="pick-grid two">${bgs}</div></section>
+  return `<section class="block"><h3 class="bh">Historique</h3><p class="mute small">Votre passé détermine trois caractéristiques à améliorer, un don d’origine et deux compétences.</p><div class="pick-grid two">${bgs}</div>${b.bg && BACKGROUNDS[b.bg] ? hbTodoNote([b.bg, BACKGROUNDS[b.bg].feat]) : ""}</section>
   <section class="block"><h3 class="bh">Espèce</h3><div class="pick-grid">${sps}</div></section>${spDetail}`;
 }
 
@@ -2755,7 +2763,7 @@ function asiFeatUi(b, a, lv) {
   const taken = new Set(featsOf(b).filter((f) => f.src !== "asi" + lv).map((f) => f.id));
   const list = Object.entries(FEATS).filter(([k, f]) => f.cat === "general" && !taken.has(k));
   const f = FEATS[a.feat], dl = `data-lv="${lv}"`;
-  return `<p class="mute small">Un don général à la place de l’amélioration.${typeof FB !== "undefined" && FB.ok ? " Ajoutez les dons de vos livres dans le contenu maison d’une aventure." : ""}</p>
+  return `<p class="mute small">Un don général à la place de l’amélioration.</p>${hbTodoNote([a.feat])}
     <div class="opt-grid">${list.map(([k, x]) => `<button class="opt ${a.feat === k ? "on" : ""}" data-a="setAsiFeat" data-v="${k}" ${dl}><b>${esc(x.n)}${hbTag(x)}</b><span>${x.pre ? "<i>Prérequis : " + esc(x.pre) + "</i> · " : ""}${esc(x.d)}</span></button>`).join("")}</div>
     ${f && (f.ab || []).length ? `<div class="bonus-pick"><span>+1</span><div class="chips">${f.ab.map((x) => chip(ABIL[x].s, a.a === x, "setAsiA", `data-v="${x}" ${dl}`)).join("")}</div></div>` : ""}`;
 }
@@ -2792,7 +2800,7 @@ function stepOptions(b) {
     ${bg ? `<p class="mute small">Déjà acquises par l’historique : ${bg.skills.map((k) => SKILLS[k].n).join(", ")}.</p>` : ""}
     ${skillChips(b, classSkillPool(b), b.skillsClass, c.skills.n, "skClass", fromOthers(b.skillsClass))}</section>`);
   if (sp && sp.skillPick) out.push(`<section class="panel"><h4>Compétence d’espèce (${sp.n})</h4>${skillChips(b, sp.skillPick.from === "all" ? SKK : sp.skillPick.from, b.skillsSpecies, sp.skillPick.n, "skSpecies", fromOthers(b.skillsSpecies))}</section>`);
-  if (sp && sp.bonusFeat) out.push(`<section class="panel"><h4>Don d’origine (humain)</h4><div class="opt-grid">${Object.entries(FEATS).filter(([, f]) => f.cat !== "general").map(([k, f]) => `<button class="opt ${b.humanFeat === k ? "on" : ""}" data-a="humanFeat" data-v="${k}"><b>${esc(f.n)}${hbTag(f)}</b><span>${esc(f.d)}</span></button>`).join("")}</div></section>`);
+  if (sp && sp.bonusFeat) out.push(`<section class="panel"><h4>Don d’origine (humain)</h4>${hbTodoNote([b.humanFeat])}<div class="opt-grid">${Object.entries(FEATS).filter(([, f]) => f.cat !== "general").map(([k, f]) => `<button class="opt ${b.humanFeat === k ? "on" : ""}" data-a="humanFeat" data-v="${k}"><b>${esc(f.n)}${hbTag(f)}</b><span>${esc(f.d)}</span></button>`).join("")}</div></section>`);
   featsOf(b).forEach((f) => {
     if (f.id === "doue") out.push(`<section class="panel"><h4>Don Doué — ${b.skilled.length}/3</h4>${skillChips(b, SKK, b.skilled, 3, "skSkilled", fromOthers(b.skilled))}</section>`);
     if (f.id === "initie") out.push(`<section class="panel">${magicPicker(b, f.src)}</section>`);
@@ -3109,7 +3117,8 @@ function tabInventory(ch) {
 function tabTraits(ch, s) {
   const groups = {};
   s.features.forEach((f) => (groups[f.src] = groups[f.src] || []).push(f));
-  return `<section class="panel">${Object.entries(groups).map(([src, fs]) => `<p class="lvl-sep">${esc(src)}</p>${fs.map((f) => `<details class="feat"><summary>${esc(f.n)}</summary><p>${esc(f.d)}</p></details>`).join("")}`).join("")}</section>`;
+  const todo = typeof hbUsed === "function" ? hbTodoNote([...hbUsed(ch.b)]) : "";
+  return `${todo ? `<section class="panel">${todo}</section>` : ""}<section class="panel">${Object.entries(groups).map(([src, fs]) => `<p class="lvl-sep">${esc(src)}</p>${fs.map((f) => `<details class="feat"><summary>${esc(f.n)}</summary><p>${esc(f.d)}</p></details>`).join("")}`).join("")}</section>`;
 }
 
 function tabNotes(ch) {
@@ -3646,7 +3655,7 @@ function tabAdventure(ch) {
     <section class="panel"><div class="adv-head"><div><span class="eyebrow">Aventure</span><h3 class="ph">${esc(doc ? doc.name : "Chargement…")}</h3></div><span class="code-chip">${esc(ch.adv)}</span></div>
       <p class="lbl">Le groupe</p>
       <div class="party-mini">${mem.length ? mem.map(({ m, s }) => `<div class="pm ${m.charId === ch.id ? "me" : ""}"><div class="pm-top"><b>${esc(m.name)}</b><span class="mute small">${CLASSES[m.b.cls] ? CLASSES[m.b.cls].n : ""} ${m.b.level}</span></div>${hpBar(m.p.hp, s.hpMax)}<span class="mute small">${m.p.hp}/${s.hpMax} PV${m.p.cond && m.p.cond.length ? " · " + m.p.cond.map((x) => esc(COND_L[x] || x)).join(", ") : ""}</span></div>`).join("") : '<p class="mute small">Personne pour l’instant.</p>'}</div>
-      <div class="row-btns"><button class="btn small" data-a="hbOpen" data-code="${esc(ch.adv)}">Contenu maison${HB.defs(ch.adv).length ? " (" + HB.defs(ch.adv).length + ")" : ""}</button><button class="btn small ghost danger" data-a="advLeave">Quitter l’aventure</button></div>
+      <div class="row-btns"><button class="btn small" data-a="hbOpen" data-code="${esc(ch.adv)}">Livres et créations${HB.defs(ch.adv).length ? " (" + HB.defs(ch.adv).length + ")" : ""}</button><button class="btn small ghost danger" data-a="advLeave">Quitter l’aventure</button></div>
     </section>
     <section class="panel"><h3 class="ph">Initiative</h3>
       ${ord.list.length ? `<p class="mute small">Round ${ord.round}</p><ol class="init-ro">${ord.list.map((e, i) => `<li class="${i === ord.turn ? "now" : ""} ${e.kind}"><span class="iv">${e.v}</span><b>${esc(e.name)}</b>${i === ord.turn ? '<span class="turn-tag">à son tour</span>' : ""}</li>`).join("")}</ol>` : '<p class="mute small">Le MJ n’a pas encore lancé de combat.</p>'}
@@ -3678,7 +3687,7 @@ function viewGM() {
     <button class="code-chip big" data-a="copyCode" title="Copier le code">${esc(code)}</button>
   </header>
   <main class="sheet">
-    <nav class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" class="tab ${(S.gmTab || "groupe") === k ? "on" : ""}" data-a="gmTab" data-v="${k}">${n}</button>`).join("")}<button class="tab" data-a="hbOpen" data-code="${esc(code)}">Contenu maison${HB.defs(code).length ? " (" + HB.defs(code).length + ")" : ""}</button></nav>
+    <nav class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" class="tab ${(S.gmTab || "groupe") === k ? "on" : ""}" data-a="gmTab" data-v="${k}">${n}</button>`).join("")}<button class="tab" data-a="hbOpen" data-code="${esc(code)}">Livres et créations${HB.defs(code).length ? " (" + HB.defs(code).length + ")" : ""}</button></nav>
     <section class="tab-body">${body}</section>
   </main>`;
 }
@@ -3883,7 +3892,7 @@ function advModal(m) {
   if (sm) return sm;
   if (m.k === "advCreate") return `<h3>Nouvelle aventure</h3><p class="mute">Vous en serez le maître du jeu. Un code sera créé pour vos joueurs.</p><label class="field big"><span>Nom de l’aventure</span><input id="advName" placeholder="Ex. La Mine perdue" autocomplete="off"></label><div class="row-btns"><button class="btn primary" data-a="advCreate">Créer</button></div>`;
   if (m.k === "gmDetail") { const mm = Live.members.find((x) => x.id === m.id); return mm ? gmDetailModal(mm) : "<p>Ce personnage a quitté le groupe.</p>"; }
-  if (m.k === "advDelete") return `<h3>Supprimer l’aventure ?</h3><p>Le groupe, l’initiative, le contenu maison et vos notes seront effacés. Les fiches des joueurs restent sur leurs appareils.</p><div class="row-btns"><button class="btn dmgb" data-a="advDelete">Supprimer définitivement</button><button class="btn ghost" data-a="closeModal">Annuler</button></div>`;
+  if (m.k === "advDelete") return `<h3>Supprimer l’aventure ?</h3><p>Le groupe, l’initiative, les livres et créations et vos notes seront effacés. Les fiches des joueurs restent sur leurs appareils.</p><div class="row-btns"><button class="btn dmgb" data-a="advDelete">Supprimer définitivement</button><button class="btn ghost" data-a="closeModal">Annuler</button></div>`;
   return null;
 }
 
@@ -4109,7 +4118,7 @@ function accountStart() { if (Account.user()) syncAccount(); }
 
 /* Forge des Héros — page Compte et réglages : thème, langue, support, version */
 
-const APP_VERSION = "1.8.0";
+const APP_VERSION = "1.9.0";
 
 /* ---------- Thème ---------- */
 const Theme = {
@@ -4266,6 +4275,7 @@ const HBSUB = {};        // sous-classes maison, clé "hb_<id>"
 const HBITEMS = {};      // objets maison
 const HB_RAW = {};       // définitions brutes, clé "hb_<id>"
 const HB_TYPES = [["sub", "Sous-classe"], ["bg", "Historique"], ["feat", "Don"], ["spell", "Sort"], ["item", "Objet"]];
+const HB_TODO_D = "Texte à compléter depuis votre livre : touchez « Compléter ».";
 const HB_TYPE_L = Object.fromEntries(HB_TYPES);
 const HB_RARITY = [K("commun"), K("peu commun"), K("rare"), K("très rare"), K("légendaire"), K("artefact")];
 const HB_RARITY_L = { [K("commun")]: "Commun", [K("peu commun")]: "Peu commun", [K("rare")]: "Rare", [K("très rare")]: "Très rare", [K("légendaire")]: "Légendaire", [K("artefact")]: "Artefact" };
@@ -4297,11 +4307,11 @@ function parseGear(txt) {
 
 /* Transforme une entrée brute en objet compatible avec les données du SRD */
 function hbShape(d) {
-  const base = { n: d.n || "Sans nom", hb: true, hbId: d.id, adv: d.adv || null };
+  const base = { n: d.n || "Sans nom", hb: true, hbId: d.id, adv: d.adv || null, todo: !!d.sk };
   switch (d.type) {
-    case "sub": return { ...base, cls: d.cls, d: d.d || "", feats: (d.feats || []).filter((f) => f && f.n).map((f) => ({ l: clampLv(f.l, 3, 20), n: f.n, d: f.d || "" })), spells: d.spells || {} };
+    case "sub": return { ...base, cls: d.cls, d: d.d || "", feats: d.sk ? (d.feats || []).map((f) => ({ l: f.l, n: "Aptitude de sous-classe", d: HB_TODO_D })) : (d.feats || []).filter((f) => f && f.n).map((f) => ({ l: clampLv(f.l, 3, 20), n: f.n, d: f.d || "" })), spells: d.spells || {} };
     case "bg": return { ...base, ab: (d.ab || []).slice(0, 3), skills: (d.skills || []).slice(0, 2), tool: d.tool || "—", feat: d.feat || "vigilant", featList: d.feat === "initie" ? d.featList || "clr" : undefined, desc: d.d || "", gear: parseGear(d.gear), gold: Math.max(0, parseInt(d.gold, 10) || 0) };
-    case "feat": return { ...base, d: d.d || "", cat: d.cat === "general" ? "general" : "origine", ab: d.ab || [], pre: d.pre || "" };
+    case "feat": return { ...base, d: d.d || (d.sk ? HB_TODO_D : ""), cat: d.cat === "general" ? "general" : "origine", ab: d.ab || [], pre: d.pre || "" };
     case "spell": {
       const o = { ...base, l: clampLv(d.l, 0, 9), e: SC[d.e] ? d.e : "evo", t: d.t || "1 action", p: d.p || "—", c: d.c || "V, S", du: d.du || "Instantanée", co: !!d.co, ri: !!d.ri, cl: (d.cl || []).filter((k) => CLASSES[k]), d: d.d || "" };
       if (d.dmg) { o.dmg = d.dmg; o.ty = DMG[d.ty] ? d.ty : "force"; }
@@ -4320,7 +4330,8 @@ function hbShape(d) {
 function hbRegister(d, force) {
   if (!d || !d.id || !d.type) return;
   const k = hbKey(d);
-  if (HB_RAW[k] && !force) return;
+  if (HB_RAW[k] && !force && !HB_RAW[k].sk) return;
+  if (d.sk && HB_RAW[k] && !HB_RAW[k].sk) return; // ne remplace pas un texte complété par le squelette
   const shaped = hbShape(d);
   if (!shaped) return;
   HB_RAW[k] = d;
@@ -4330,6 +4341,7 @@ function hbRegister(d, force) {
 function hbUnregister(k) {
   delete HB_RAW[k];
   [HBSUB, BACKGROUNDS, FEATS, SPELLS, HBITEMS].forEach((t) => { if (t[k] && t[k].hb) delete t[k]; });
+  if (typeof PHB_RAW !== "undefined" && PHB_RAW[k]) hbRegister(PHB_RAW[k], true); // l’entrée du catalogue redevient « à compléter »
 }
 
 /* Entrées utilisées par un personnage, copiées dans b.hb */
@@ -4348,7 +4360,7 @@ function hbUsed(b) {
 function hbEmbed(b) {
   if (!b || !b.opts) return;
   const out = {};
-  hbUsed(b).forEach((k) => { const d = HB_RAW[k] || (b.hb && b.hb[k]); if (d) out[k] = d; });
+  hbUsed(b).forEach((k) => { const d = HB_RAW[k] && !HB_RAW[k].sk ? HB_RAW[k] : b.hb && b.hb[k]; if (d && !d.sk) out[k] = d; });
   if (Object.keys(out).length) b.hb = out; else delete b.hb;
 }
 
@@ -4388,8 +4400,23 @@ const HB = {
   },
 };
 
-const hbTag = (o) => (o && o.hb ? `<span class="hb-tag" title="Contenu maison">Maison</span>` : "");
+const hbTag = (o) => (o && o.todo ? `<span class="hb-tag todo" title="Texte à compléter depuis votre livre">À compléter</span>` : "");
+/* Où enregistrer le texte : l’aventure du personnage, sinon l’unique aventure connue, sinon cet appareil (« _moi ») */
+function hbHome() {
+  const ch = S.view === "create" ? S.editId && S.chars.find((c) => c.id === S.editId) : curChar();
+  if (ch && ch.adv) return ch.adv;
+  const codes = HB.codes();
+  return codes.length === 1 ? codes[0] : "_moi";
+}
+const hbLocal = (code) => code === "_moi" || typeof FB === "undefined" || !FB.ok;
+/* Encadré « à compléter » pour une liste de clés */
+function hbTodoNote(keys) {
+  const todo = [...new Set(keys)].filter((k) => k && HB_RAW[k] && HB_RAW[k].sk);
+  if (!todo.length) return "";
+  return `<div class="hb-todo"><p><b>À compléter depuis votre livre.</b> Le texte n’est pas fourni par l’app : recopiez-le une fois, il apparaîtra pour ${hbHome() === "_moi" ? "vos personnages" : "toute l’aventure"}.</p><div class="row-btns">${todo.map((k) => `<button class="btn small" data-a="hbFill" data-k="${k}">${ICON.edit || ""}Compléter : ${esc(HB_RAW[k].n)}</button>`).join("")}</div></div>`;
+}
 function hbCanEdit(d, code) {
+  if (d.sk || code === "_moi") return true;
   if (typeof FB === "undefined" || !FB.ok) return false;
   if (d.by === FB.uid) return true;
   return !!(Live.code === code && Live.doc && Live.doc.gm === FB.uid);
@@ -4400,7 +4427,7 @@ function hbMeta(d) {
   const o = hbShape(d);
   if (!o) return "";
   switch (d.type) {
-    case "sub": return (CLASSES[o.cls] ? CLASSES[o.cls].n : "") + " · " + o.feats.length + " aptitude" + (o.feats.length > 1 ? "s" : "");
+    case "sub": return (CLASSES[o.cls] ? CLASSES[o.cls].n : "") + " · " + (d.sk ? "niveaux " + o.feats.map((x) => x.l).join(", ") : o.feats.length + " aptitude" + (o.feats.length > 1 ? "s" : ""));
     case "bg": return o.ab.map((a) => ABIL[a].s).join(", ") + " · " + o.skills.map((k) => SKILLS[k] ? SKILLS[k].n : k).join(", ") + (FEATS[o.feat] ? " · " + FEATS[o.feat].n : "");
     case "feat": return o.cat === "general" ? "Don général (niveau 4 et plus)" : "Don d’origine";
     case "spell": return (o.l ? "Niveau " + o.l : "Tour de magie") + " · " + SC[o.e] + (o.cl.length ? " · " + o.cl.map((k) => CLASSES[k].n).join(", ") : "");
@@ -4411,23 +4438,29 @@ function hbMeta(d) {
 
 function viewHB() {
   const code = S.hbCode;
-  if (typeof FB === "undefined" || !FB.ok) return `<header class="topbar"><button class="icon-btn" data-a="hbBack" aria-label="Retour">${ICON.back}</button><div class="tb-title"><strong>Contenu maison</strong></div></header><main class="sheet"><p class="mute">Le contenu maison demande une connexion à l’aventure.</p></main>`;
-  Live.watch(code);
+  const local = code === "_moi";
+  if (!local && (typeof FB === "undefined" || !FB.ok)) return `<header class="topbar"><button class="icon-btn" data-a="hbBack" aria-label="Retour">${ICON.back}</button><div class="tb-title"><strong>Livres et créations</strong></div></header><main class="sheet"><p class="mute">Le contenu de l’aventure demande une connexion.</p></main>`;
+  if (!local) Live.watch(code);
   if (S.hbf) return viewHBForm();
+  const todo = Object.values(PHB_RAW).filter((d) => HB_RAW["hb_" + d.id] && HB_RAW["hb_" + d.id].sk);
   const defs = HB.defs(code).slice().sort((a, b) => (a.type === b.type ? (a.n || "").localeCompare(b.n || "", "fr") : HB_TYPES.findIndex((t) => t[0] === a.type) - HB_TYPES.findIndex((t) => t[0] === b.type)));
   const f = S.hbFilter || "all";
-  const shown = defs.filter((d) => f === "all" || d.type === f);
+  const shown = f === "todo" ? todo.slice().sort((a, b) => HB_TYPES.findIndex((t) => t[0] === a.type) - HB_TYPES.findIndex((t) => t[0] === b.type) || (a.cls || "").localeCompare(b.cls || "") || a.n.localeCompare(b.n, "fr")) : defs.filter((d) => f === "all" || d.type === f);
   const counts = {}; defs.forEach((d) => (counts[d.type] = (counts[d.type] || 0) + 1));
   return `<header class="topbar">
     <button class="icon-btn" data-a="hbBack" aria-label="Retour">${ICON.back}</button>
-    <div class="tb-title"><strong>Contenu maison</strong><span class="eyebrow">${esc(HB.advName(code))} · ${esc(code)}</span></div>
+    <div class="tb-title"><strong>Livres et créations</strong><span class="eyebrow">${local ? "Sur cet appareil" : esc(HB.advName(code)) + " · " + esc(code)}</span></div>
     <button class="btn small primary" data-a="hbNew">${ICON.plus}<span class="hide-s">Ajouter</span></button>
   </header>
   <main class="sheet hb-page">
-    <section class="panel hb-intro"><p>Ajoutez ici les sous-classes, historiques, dons, sorts et objets de vos livres ou de vos créations. Ils apparaissent dans le créateur de personnage et sur les fiches de tous les membres de cette aventure.</p>
-      <p class="mute small">Ce contenu n’est visible que par les personnes qui ont le code de l’aventure. Chacun peut ajouter des entrées ; seuls leur auteur et le MJ peuvent les modifier.</p></section>
-    <div class="chips hb-filter">${chip("Tout (" + defs.length + ")", f === "all", "hbFilter", 'data-v="all"')}${HB_TYPES.map(([k, n]) => chip(n + (counts[k] ? " (" + counts[k] + ")" : ""), f === k, "hbFilter", `data-v="${k}"`)).join("")}</div>
-    ${shown.length ? `<div class="hb-list">${shown.map((d) => `<article class="hb-card">
+    <section class="panel hb-intro"><p>Les sous-classes, historiques et dons du Manuel des joueurs sont déjà dans le créateur : il ne manque que leur texte, à recopier une fois depuis votre livre. Vous pouvez aussi ajouter vos propres créations.</p>
+      <p class="mute small">${local ? "Ce contenu est enregistré sur cet appareil et dans les personnages qui l’utilisent." : "Ce contenu n’est visible que par les personnes qui ont le code de l’aventure. Chacun peut compléter ou ajouter des entrées ; seuls leur auteur et le MJ peuvent les modifier."}</p></section>
+    <div class="chips hb-filter">${chip("À compléter (" + todo.length + ")", f === "todo", "hbFilter", 'data-v="todo"')}${chip("Tout (" + defs.length + ")", f === "all", "hbFilter", 'data-v="all"')}${HB_TYPES.map(([k, n]) => chip(n + (counts[k] ? " (" + counts[k] + ")" : ""), f === k, "hbFilter", `data-v="${k}"`)).join("")}</div>
+    ${f === "todo" ? (shown.length ? `<div class="hb-list">${shown.map((d) => `<article class="hb-card todo">
+      <div class="hb-top"><span class="hb-type">${HB_TYPE_L[d.type] || ""}</span><b>${esc(d.n)}</b></div>
+      <span class="mute small">${esc(hbMeta(d))}</span>
+      <div class="hb-foot"><span></span><button class="btn small" data-a="hbFill" data-k="hb_${esc(d.id)}">Compléter</button></div>
+    </article>`).join("")}</div>` : `<section class="panel empty-state"><h3 class="ph">Tout est complété</h3><p>Le contenu du Manuel des joueurs est entièrement renseigné.</p></section>`) : shown.length ? `<div class="hb-list">${shown.map((d) => `<article class="hb-card">
       <div class="hb-top"><span class="hb-type">${HB_TYPE_L[d.type] || ""}</span><b>${esc(d.n)}</b></div>
       <span class="mute small">${esc(hbMeta(d))}</span>
       ${d.d ? `<p class="hb-desc">${esc(d.d.length > 220 ? d.d.slice(0, 220) + "…" : d.d)}</p>` : ""}
@@ -4441,6 +4474,7 @@ function hbBlank(type) {
 }
 function hbFormFrom(d) {
   const f = { ...hbBlank(d.type), ...clone(d) };
+  delete f.sk; delete f.src;
   if (d.type === "feat") f.fab = d.ab || [];
   if (d.type === "sub" && (!f.feats || !f.feats.length)) f.feats = [{ l: 3, n: "", d: "" }];
   return f;
@@ -4563,13 +4597,18 @@ function hbToDoc(f) {
 
 async function hbAct(a, d, el) {
   switch (a) {
-    case "hbOpen": S.hbCode = d.code; S.hbBack = { view: S.view, tab: S.tab, gmTab: S.gmTab }; S.hbf = null; S.hbFilter = "all"; S.view = "hb"; window.scrollTo(0, 0); return true;
-    case "hbBack": { const bk = S.hbBack || { view: "home" }; S.view = bk.view; if (bk.tab) S.tab = bk.tab; if (bk.gmTab) S.gmTab = bk.gmTab; S.hbf = null; window.scrollTo(0, 0); return true; }
+    case "hbOpen": S.hbCode = d.code; S.hbBack = { view: S.view, tab: S.tab, gmTab: S.gmTab }; S.hbf = null; S.hbDirect = false; S.hbFilter = HB.defs(d.code).length ? "all" : "todo"; S.view = "hb"; window.scrollTo(0, 0); return true;
+    case "hbFill": {
+      const raw = PHB_RAW[d.k] || HB_RAW[d.k]; if (!raw) return true;
+      if (S.view !== "hb") { S.hbCode = hbHome(); S.hbBack = { view: S.view, tab: S.tab, gmTab: S.gmTab, y: window.scrollY }; S.hbDirect = true; S.view = "hb"; }
+      S.hbf = hbFormFrom(raw); window.scrollTo(0, 0); return true;
+    }
+    case "hbBack": { const bk = S.hbBack || { view: "home" }; S.view = bk.view; if (bk.tab) S.tab = bk.tab; if (bk.gmTab) S.gmTab = bk.gmTab; S.hbf = null; S.hbDirect = false; setTimeout(() => window.scrollTo(0, bk.y || 0), 0); return true; }
     case "hbFilter": S.hbFilter = d.v; return true;
-    case "hbNew": S.hbf = hbBlank(S.hbFilter && S.hbFilter !== "all" ? S.hbFilter : "sub"); window.scrollTo(0, 0); return true;
+    case "hbNew": S.hbf = hbBlank(HB_TYPE_L[S.hbFilter] ? S.hbFilter : "sub"); window.scrollTo(0, 0); return true;
     case "hbType": { const keep = { n: S.hbf.n, d: S.hbf.d }; S.hbf = { ...hbBlank(d.v), ...keep }; return true; }
     case "hbEdit": { const def = HB.defs(S.hbCode).find((x) => x.id === d.id); if (def) { S.hbf = hbFormFrom(def); window.scrollTo(0, 0); } return true; }
-    case "hbCancel": S.hbf = null; return true;
+    case "hbCancel": S.hbf = null; if (S.hbDirect) return hbAct("hbBack", {}); return true;
     case "hbSet": { const f = S.hbf; f[d.k] = d.k === "l" ? +d.v : d.v; if (d.k === "cls") S.hbCls = d.v; return true; }
     case "hbFlag": S.hbf[d.k] = !S.hbf[d.k]; return true;
     case "hbToggle": { if (el && el.getAttribute("aria-disabled") === "true") return true; toggleIn(S.hbf[d.k], d.v, d.max ? +d.max : null); return true; }
@@ -4583,17 +4622,19 @@ async function hbAct(a, d, el) {
       doc.by = prev ? prev.by : FB.uid;
       doc.byName = prev ? prev.byName : hbAuthorName();
       try {
-        await FB.adv(S.hbCode).collection("homebrew").doc(doc.id).set(doc);
-        HB.set(S.hbCode, [...HB.defs(S.hbCode).filter((x) => x.id !== doc.id), doc]);
-        S.hbf = null; S.hbFilter = doc.type;
-        toast(prev ? "Modifications enregistrées" : "« " + doc.n + " » ajouté à l’aventure");
+        if (!hbLocal(S.hbCode)) await FB.adv(S.hbCode).collection("homebrew").doc(doc.id).set(doc);
+        HB.set(S.hbCode, [...HB.defs(S.hbCode).filter((x) => x.id !== doc.id), doc], S.hbCode === "_moi" ? "Cet appareil" : undefined);
+        S.hbf = null; S.hbFilter = doc.id.startsWith("phb_") ? "todo" : doc.type;
+        const ch = curChar(); if (ch && S.hbBack && S.hbBack.view === "sheet") { hbEmbed(ch.b); saveSoon(ch); }
+        toast(prev ? "Modifications enregistrées" : doc.id.startsWith("phb_") ? "« " + doc.n + " » complété" : "« " + doc.n + " » ajouté");
+        if (S.hbDirect) return hbAct("hbBack", {});
       } catch (e) { f.err = e && e.code === "permission-denied" ? "Enregistrement refusé : publiez les nouvelles règles Firestore (voir FIREBASE.md)." : "Enregistrement impossible. Vérifiez votre connexion."; }
       return true;
     }
     case "hbDelAsk": S.modal = { k: "hbDel", id: d.id }; return true;
     case "hbDel": {
       try {
-        await FB.adv(S.hbCode).collection("homebrew").doc(d.id).delete();
+        if (!hbLocal(S.hbCode)) await FB.adv(S.hbCode).collection("homebrew").doc(d.id).delete();
         HB.set(S.hbCode, HB.defs(S.hbCode).filter((x) => x.id !== d.id));
         toast("Entrée supprimée");
       } catch (e) { toast("Suppression impossible."); }
@@ -4625,6 +4666,70 @@ document.addEventListener("change", (e) => {
   if (t.dataset && t.dataset.hbf === "ty" && S.hbf) S.hbf.ty = t.value;
   if (t.dataset && (t.dataset.hbf === "dmg" || t.dataset.hbf === "spellsTxt") && S.hbf) render();
 });
+
+/* Forge des Héros — catalogue du Manuel des joueurs 2024 (hors SRD).
+   Seulement des noms et la structure de jeu (niveaux des aptitudes, caractéristiques, compétences, don d’origine) :
+   aucun texte du livre. Chaque groupe complète les effets depuis son propre livre ; le texte est enregistré
+   dans l’aventure (ou sur l’appareil) et remplace l’entrée « à compléter ». */
+
+const SUB_LEVELS = { barbare: [3, 6, 10, 14], barde: [3, 6, 14], clerc: [3, 6, 17], druide: [3, 6, 10, 14], ensorceleur: [3, 6, 14, 18], guerrier: [3, 7, 10, 15, 18], magicien: [3, 6, 10, 14], moine: [3, 6, 11, 17], occultiste: [3, 6, 10, 14], paladin: [3, 7, 15, 20], rodeur: [3, 7, 11, 15], roublard: [3, 9, 13, 17] };
+
+const PHB_SUBS = {
+  barbare: [["arbremonde", "Voie de l’Arbre-Monde"], ["coeursauvage", "Voie du Cœur sauvage"], ["zelateur", "Voie du Zélateur"]],
+  barde: [["danse", "Collège de la Danse"], ["seduction", "Collège de la Séduction"], ["vaillance", "Collège de la Vaillance"]],
+  clerc: [["guerre", "Domaine de la Guerre"], ["lumiere", "Domaine de la Lumière"], ["ruse", "Domaine de la Ruse"]],
+  druide: [["astres", "Cercle des Astres"], ["lune", "Cercle de la Lune"], ["mers", "Cercle des Mers"]],
+  ensorceleur: [["aberrante", "Sorcellerie aberrante"], ["mecanique", "Sorcellerie mécanique"], ["sauvage", "Sorcellerie sauvage"]],
+  guerrier: [["chevalierocculte", "Chevalier occulte"], ["maitreguerre", "Maître de guerre"], ["soldatpsi", "Soldat psi"]],
+  magicien: [["abjurateur", "Abjurateur"], ["devin", "Devin"], ["illusionniste", "Illusionniste"]],
+  moine: [["elements", "Credo des Éléments"], ["misericorde", "Credo de la Miséricorde"], ["ombre", "Credo de l’Ombre"]],
+  occultiste: [["archifee", "Protecteur Archifée"], ["celeste", "Protecteur Céleste"], ["grandancien", "Protecteur Grand Ancien"]],
+  paladin: [["anciens", "Serment des Anciens"], ["gloire", "Serment de Gloire"], ["vengeance", "Serment de Vengeance"]],
+  rodeur: [["belluaire", "Belluaire"], ["traqueur", "Traqueur des ténèbres"], ["vagabond", "Vagabond féerique"]],
+  roublard: [["ameaceree", "Âme acérée"], ["arnaqueur", "Arnaqueur arcanique"], ["assassin", "Assassin"]],
+};
+
+/* Dons : [clé, nom, catégorie] */
+const PHB_FEATS = [
+  ["faconneur", "Façonneur", "origine"], ["guerisseur", "Guérisseur", "origine"], ["chanceux", "Chanceux", "origine"],
+  ["musicien", "Musicien", "origine"], ["bagarreur", "Bagarreur de tavernes", "origine"], ["robuste", "Robuste", "origine"],
+  ["comedien", "Comédien"], ["athlete", "Athlète"], ["charge", "Expert de la charge"], ["chef", "Chef cuisinier"], ["arbaletrier", "Maître-arbalétrier"],
+  ["broyeur", "Broyeur"], ["dueldef", "Duelliste défensif"], ["deuxarmes", "Combattant à deux armes"], ["gaillard", "Gaillard"],
+  ["adepteelem", "Adepte élémentaire"], ["feerique", "Affinité féerique"], ["maitrearmeslourdes", "Maître des armes lourdes"],
+  ["protlourde", "Protection lourde"], ["maitrearmureslourdes", "Maître des armures lourdes"], ["figureproue", "Figure de proue"],
+  ["espritaffute", "Esprit affûté"], ["protlegere", "Protection légère"], ["tueurmages", "Tueur de mages"],
+  ["armesguerre", "Formation aux armes de guerre"], ["maitrearmuresinter", "Maître des armures intermédiaires"],
+  ["protinter", "Protection intermédiaire"], ["monte", "Combattant monté"], ["observateur", "Observateur"], ["perforateur", "Perforateur"],
+  ["empoisonneur", "Empoisonneur"], ["hast", "Maître d’hast"], ["resilient", "Résilient"], ["rituelle", "Magie rituelle"],
+  ["sentinelle", "Sentinelle"], ["ombreuse", "Affinité ombreuse"], ["tireurelite", "Tireur d’élite"], ["boucliers", "Maître des boucliers"],
+  ["expert", "Expert"], ["discret", "Discret"], ["trancheur", "Trancheur"], ["mobile", "Mobile"], ["incantelite", "Incantateur d’élite"],
+  ["telekinesiste", "Télékinésiste"], ["telepathe", "Télépathe"], ["mageguerre", "Mage de guerre"], ["maitrearmes", "Maître d’armes"],
+];
+
+/* Historiques : clé, nom, caractéristiques, compétences, outil, don (clé de FEATS), liste du don Initié */
+const PHB_BGS = [
+  ["artisan", "Artisan", ["for", "dex", "int"], ["inve", "psua"], "Outils d’artisan (au choix)", "hb_phb_faconneur"],
+  ["charlatan", "Charlatan", ["dex", "con", "cha"], ["trom", "esca"], "Matériel de contrefaçon", "doue"],
+  ["artiste", "Artiste", ["for", "dex", "cha"], ["acro", "repr"], "Instrument de musique (au choix)", "hb_phb_musicien"],
+  ["fermier", "Fermier", ["for", "con", "sag"], ["dres", "natu"], "Outils de charpentier", "hb_phb_robuste"],
+  ["garde", "Garde", ["for", "int", "sag"], ["athl", "perc"], "Jeu (au choix)", "vigilant"],
+  ["guide", "Guide", ["dex", "con", "sag"], ["disc", "surv"], "Outils de cartographe", "initie", "drd"],
+  ["ermite", "Ermite", ["con", "sag", "cha"], ["mede", "reli"], "Matériel d’herboriste", "hb_phb_guerisseur"],
+  ["marchand", "Marchand", ["con", "int", "cha"], ["dres", "psua"], "Instruments de navigation", "hb_phb_chanceux"],
+  ["noble", "Noble", ["for", "int", "cha"], ["hist", "psua"], "Jeu (au choix)", "doue"],
+  ["marin", "Marin", ["for", "dex", "sag"], ["acro", "perc"], "Instruments de navigation", "hb_phb_bagarreur"],
+  ["scribe", "Scribe", ["dex", "int", "sag"], ["inve", "perc"], "Matériel de calligraphe", "doue"],
+  ["voyageur", "Voyageur", ["dex", "sag", "cha"], ["pspi", "disc"], "Outils de voleur", "hb_phb_chanceux"],
+];
+
+const PHB_RAW = {};
+(function phbBoot() {
+  const add = (d) => { d.sk = true; d.src = "phb"; PHB_RAW["hb_" + d.id] = d; };
+  Object.entries(PHB_SUBS).forEach(([cls, list]) => list.forEach(([k, n]) => add({ id: "phb_" + cls + "_" + k, type: "sub", n, cls, d: "", feats: SUB_LEVELS[cls].map((l) => ({ l, n: "", d: "" })), spellsTxt: "" })));
+  PHB_FEATS.forEach(([k, n, cat]) => add({ id: "phb_" + k, type: "feat", n, cat: cat || "general", pre: cat ? "" : "Niveau 4", ab: [], d: "" }));
+  PHB_BGS.forEach(([k, n, ab, skills, tool, feat, featList]) => add({ id: "phb_" + k, type: "bg", n, ab, skills, tool, feat, featList: featList || "clr", d: "", gear: "", gold: 0 }));
+  Object.values(PHB_RAW).forEach((d) => hbRegister(d, true));
+})();
 
 /* Forge des Héros — bestiaire et objets magiques du SRD 5.2.
    Les données (MONSTERS, MAGIC_ITEMS) sont dans srd.js, chargé à la demande pour garder l’app légère. */
@@ -4743,7 +4848,7 @@ function invMagicPanel(ch) {
   const att = ch.p.inv.filter((i) => i.att).length;
   return `<section class="panel"><h3 class="ph">Objets magiques</h3>
     ${att ? `<p class="mute small">Harmonisation : <b class="${att > 3 ? "bad" : ""}">${att}/3</b></p>` : ""}
-    <label class="field"><span>Ajouter un objet magique</span><input id="miQ" value="${esc(S.miQ || "")}" placeholder="Rechercher dans le SRD${typeof HB !== "undefined" ? " et le contenu maison" : ""}" autocomplete="off"></label>
+    <label class="field"><span>Ajouter un objet magique</span><input id="miQ" value="${esc(S.miQ || "")}" placeholder="Rechercher dans le SRD${typeof HB !== "undefined" ? " et vos créations" : ""}" autocomplete="off"></label>
     <div class="mi-list" id="miList">${srdOk() ? miRows() : srdWait("des objets magiques")}</div>
   </section>`;
 }

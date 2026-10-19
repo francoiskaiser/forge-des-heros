@@ -94,7 +94,7 @@ function tabAdventure(ch) {
     <section class="panel"><div class="adv-head"><div><span class="eyebrow">Aventure</span><h3 class="ph">${esc(doc ? doc.name : "Chargement…")}</h3></div><span class="code-chip">${esc(ch.adv)}</span></div>
       <p class="lbl">Le groupe</p>
       <div class="party-mini">${mem.length ? mem.map(({ m, s }) => `<div class="pm ${m.charId === ch.id ? "me" : ""}"><div class="pm-top"><b>${esc(m.name)}</b><span class="mute small">${CLASSES[m.b.cls] ? CLASSES[m.b.cls].n : ""} ${m.b.level}</span></div>${hpBar(m.p.hp, s.hpMax)}<span class="mute small">${m.p.hp}/${s.hpMax} PV${m.p.cond && m.p.cond.length ? " · " + m.p.cond.map((x) => esc(COND_L[x] || x)).join(", ") : ""}</span></div>`).join("") : '<p class="mute small">Personne pour l’instant.</p>'}</div>
-      <div class="row-btns"><button class="btn small" data-a="hbOpen" data-code="${esc(ch.adv)}">Contenu maison${HB.defs(ch.adv).length ? " (" + HB.defs(ch.adv).length + ")" : ""}</button><button class="btn small ghost danger" data-a="advLeave">Quitter l’aventure</button></div>
+      <div class="row-btns"><button class="btn small" data-a="hbOpen" data-code="${esc(ch.adv)}">Livres et créations${HB.defs(ch.adv).length ? " (" + HB.defs(ch.adv).length + ")" : ""}</button><button class="btn small ghost danger" data-a="advLeave">Quitter l’aventure</button></div>
     </section>
     <section class="panel"><h3 class="ph">Initiative</h3>
       ${ord.list.length ? `<p class="mute small">Round ${ord.round}</p><ol class="init-ro">${ord.list.map((e, i) => `<li class="${i === ord.turn ? "now" : ""} ${e.kind}"><span class="iv">${e.v}</span><b>${esc(e.name)}</b>${i === ord.turn ? '<span class="turn-tag">à son tour</span>' : ""}</li>`).join("")}</ol>` : '<p class="mute small">Le MJ n’a pas encore lancé de combat.</p>'}
@@ -126,7 +126,7 @@ function viewGM() {
     <button class="code-chip big" data-a="copyCode" title="Copier le code">${esc(code)}</button>
   </header>
   <main class="sheet">
-    <nav class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" class="tab ${(S.gmTab || "groupe") === k ? "on" : ""}" data-a="gmTab" data-v="${k}">${n}</button>`).join("")}<button class="tab" data-a="hbOpen" data-code="${esc(code)}">Contenu maison${HB.defs(code).length ? " (" + HB.defs(code).length + ")" : ""}</button></nav>
+    <nav class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" class="tab ${(S.gmTab || "groupe") === k ? "on" : ""}" data-a="gmTab" data-v="${k}">${n}</button>`).join("")}<button class="tab" data-a="hbOpen" data-code="${esc(code)}">Livres et créations${HB.defs(code).length ? " (" + HB.defs(code).length + ")" : ""}</button></nav>
     <section class="tab-body">${body}</section>
   </main>`;
 }
@@ -331,7 +331,7 @@ function advModal(m) {
   if (sm) return sm;
   if (m.k === "advCreate") return `<h3>Nouvelle aventure</h3><p class="mute">Vous en serez le maître du jeu. Un code sera créé pour vos joueurs.</p><label class="field big"><span>Nom de l’aventure</span><input id="advName" placeholder="Ex. La Mine perdue" autocomplete="off"></label><div class="row-btns"><button class="btn primary" data-a="advCreate">Créer</button></div>`;
   if (m.k === "gmDetail") { const mm = Live.members.find((x) => x.id === m.id); return mm ? gmDetailModal(mm) : "<p>Ce personnage a quitté le groupe.</p>"; }
-  if (m.k === "advDelete") return `<h3>Supprimer l’aventure ?</h3><p>Le groupe, l’initiative, le contenu maison et vos notes seront effacés. Les fiches des joueurs restent sur leurs appareils.</p><div class="row-btns"><button class="btn dmgb" data-a="advDelete">Supprimer définitivement</button><button class="btn ghost" data-a="closeModal">Annuler</button></div>`;
+  if (m.k === "advDelete") return `<h3>Supprimer l’aventure ?</h3><p>Le groupe, l’initiative, les livres et créations et vos notes seront effacés. Les fiches des joueurs restent sur leurs appareils.</p><div class="row-btns"><button class="btn dmgb" data-a="advDelete">Supprimer définitivement</button><button class="btn ghost" data-a="closeModal">Annuler</button></div>`;
   return null;
 }
 

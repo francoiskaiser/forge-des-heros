@@ -115,7 +115,7 @@ function invMagicPanel(ch) {
   const att = ch.p.inv.filter((i) => i.att).length;
   return `<section class="panel"><h3 class="ph">Objets magiques</h3>
     ${att ? `<p class="mute small">Harmonisation : <b class="${att > 3 ? "bad" : ""}">${att}/3</b></p>` : ""}
-    <label class="field"><span>Ajouter un objet magique</span><input id="miQ" value="${esc(S.miQ || "")}" placeholder="Rechercher dans le SRD${typeof HB !== "undefined" ? " et le contenu maison" : ""}" autocomplete="off"></label>
+    <label class="field"><span>Ajouter un objet magique</span><input id="miQ" value="${esc(S.miQ || "")}" placeholder="Rechercher dans le SRD${typeof HB !== "undefined" ? " et vos créations" : ""}" autocomplete="off"></label>
     <div class="mi-list" id="miList">${srdOk() ? miRows() : srdWait("des objets magiques")}</div>
   </section>`;
 }

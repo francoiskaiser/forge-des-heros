@@ -206,9 +206,9 @@ function stepClass(b) {
     const subs = Object.entries(HBSUB).filter(([, x]) => x.cls === b.cls);
     const subPick = `<section class="panel"><h4>Sous-classe (niveau 3)</h4><div class="opt-grid">
       <button class="opt ${!b.subHb ? "on" : ""}" data-a="setSub" data-v=""><b>${c.sub.n}</b><span>${c.sub.d}</span></button>
-      ${subs.map(([k, x]) => `<button class="opt ${b.subHb === k ? "on" : ""}" data-a="setSub" data-v="${k}"><b>${esc(x.n)}${hbTag(x)}</b><span>${esc(x.d || x.feats.map((f) => f.n).join(", "))}</span></button>`).join("")}
+      ${subs.map(([k, x]) => `<button class="opt ${b.subHb === k ? "on" : ""}" data-a="setSub" data-v="${k}"><b>${esc(x.n)}${hbTag(x)}</b><span>${x.todo ? "Aptitudes aux niveaux " + x.feats.map((f) => f.l).join(", ") : esc(x.d || x.feats.map((f) => f.n).join(", "))}</span></button>`).join("")}
       ${b.subHb && !hs ? `<button class="opt on" data-a="setSub" data-v=""><b>Sous-classe maison introuvable</b><span>Elle a été supprimée de l’aventure. Touchez pour revenir à ${c.sub.n}.</span></button>` : ""}
-    </div>${!subs.length && typeof FB !== "undefined" && FB.ok ? `<p class="mute small">Vous avez d’autres sous-classes dans vos livres ? Ajoutez-les dans <b>Contenu maison</b>, depuis l’onglet Aventure d’une fiche ou l’écran du MJ.</p>` : ""}</section>`;
+    </div>${hbTodoNote([b.subHb])}</section>`;
     detail = `<section class="panel detail">
       <h3>${c.n}</h3>
       <dl class="facts">
@@ -251,7 +251,7 @@ function stepOrigin(b) {
     spDetail = `<section class="panel detail"><h3>${sp.n}</h3><p class="mute">${sp.desc}</p>
       <div class="feats">${sp.traits.map((t) => `<details class="feat" open><summary>${t.n}</summary><p>${t.d}</p></details>`).join("")}</div>${choice}${size}${sab}</section>`;
   }
-  return `<section class="block"><h3 class="bh">Historique</h3><p class="mute small">Votre passé détermine trois caractéristiques à améliorer, un don d’origine et deux compétences.</p><div class="pick-grid two">${bgs}</div></section>
+  return `<section class="block"><h3 class="bh">Historique</h3><p class="mute small">Votre passé détermine trois caractéristiques à améliorer, un don d’origine et deux compétences.</p><div class="pick-grid two">${bgs}</div>${b.bg && BACKGROUNDS[b.bg] ? hbTodoNote([b.bg, BACKGROUNDS[b.bg].feat]) : ""}</section>
   <section class="block"><h3 class="bh">Espèce</h3><div class="pick-grid">${sps}</div></section>${spDetail}`;
 }
 
@@ -300,7 +300,7 @@ function asiFeatUi(b, a, lv) {
   const taken = new Set(featsOf(b).filter((f) => f.src !== "asi" + lv).map((f) => f.id));
   const list = Object.entries(FEATS).filter(([k, f]) => f.cat === "general" && !taken.has(k));
   const f = FEATS[a.feat], dl = `data-lv="${lv}"`;
-  return `<p class="mute small">Un don général à la place de l’amélioration.${typeof FB !== "undefined" && FB.ok ? " Ajoutez les dons de vos livres dans le contenu maison d’une aventure." : ""}</p>
+  return `<p class="mute small">Un don général à la place de l’amélioration.</p>${hbTodoNote([a.feat])}
     <div class="opt-grid">${list.map(([k, x]) => `<button class="opt ${a.feat === k ? "on" : ""}" data-a="setAsiFeat" data-v="${k}" ${dl}><b>${esc(x.n)}${hbTag(x)}</b><span>${x.pre ? "<i>Prérequis : " + esc(x.pre) + "</i> · " : ""}${esc(x.d)}</span></button>`).join("")}</div>
     ${f && (f.ab || []).length ? `<div class="bonus-pick"><span>+1</span><div class="chips">${f.ab.map((x) => chip(ABIL[x].s, a.a === x, "setAsiA", `data-v="${x}" ${dl}`)).join("")}</div></div>` : ""}`;
 }
@@ -337,7 +337,7 @@ function stepOptions(b) {
     ${bg ? `<p class="mute small">Déjà acquises par l’historique : ${bg.skills.map((k) => SKILLS[k].n).join(", ")}.</p>` : ""}
     ${skillChips(b, classSkillPool(b), b.skillsClass, c.skills.n, "skClass", fromOthers(b.skillsClass))}</section>`);
   if (sp && sp.skillPick) out.push(`<section class="panel"><h4>Compétence d’espèce (${sp.n})</h4>${skillChips(b, sp.skillPick.from === "all" ? SKK : sp.skillPick.from, b.skillsSpecies, sp.skillPick.n, "skSpecies", fromOthers(b.skillsSpecies))}</section>`);
-  if (sp && sp.bonusFeat) out.push(`<section class="panel"><h4>Don d’origine (humain)</h4><div class="opt-grid">${Object.entries(FEATS).filter(([, f]) => f.cat !== "general").map(([k, f]) => `<button class="opt ${b.humanFeat === k ? "on" : ""}" data-a="humanFeat" data-v="${k}"><b>${esc(f.n)}${hbTag(f)}</b><span>${esc(f.d)}</span></button>`).join("")}</div></section>`);
+  if (sp && sp.bonusFeat) out.push(`<section class="panel"><h4>Don d’origine (humain)</h4>${hbTodoNote([b.humanFeat])}<div class="opt-grid">${Object.entries(FEATS).filter(([, f]) => f.cat !== "general").map(([k, f]) => `<button class="opt ${b.humanFeat === k ? "on" : ""}" data-a="humanFeat" data-v="${k}"><b>${esc(f.n)}${hbTag(f)}</b><span>${esc(f.d)}</span></button>`).join("")}</div></section>`);
   featsOf(b).forEach((f) => {
     if (f.id === "doue") out.push(`<section class="panel"><h4>Don Doué — ${b.skilled.length}/3</h4>${skillChips(b, SKK, b.skilled, 3, "skSkilled", fromOthers(b.skilled))}</section>`);
     if (f.id === "initie") out.push(`<section class="panel">${magicPicker(b, f.src)}</section>`);
@@ -654,7 +654,8 @@ function tabInventory(ch) {
 function tabTraits(ch, s) {
   const groups = {};
   s.features.forEach((f) => (groups[f.src] = groups[f.src] || []).push(f));
-  return `<section class="panel">${Object.entries(groups).map(([src, fs]) => `<p class="lvl-sep">${esc(src)}</p>${fs.map((f) => `<details class="feat"><summary>${esc(f.n)}</summary><p>${esc(f.d)}</p></details>`).join("")}`).join("")}</section>`;
+  const todo = typeof hbUsed === "function" ? hbTodoNote([...hbUsed(ch.b)]) : "";
+  return `${todo ? `<section class="panel">${todo}</section>` : ""}<section class="panel">${Object.entries(groups).map(([src, fs]) => `<p class="lvl-sep">${esc(src)}</p>${fs.map((f) => `<details class="feat"><summary>${esc(f.n)}</summary><p>${esc(f.d)}</p></details>`).join("")}`).join("")}</section>`;
 }
 
 function tabNotes(ch) {

@@ -676,3 +676,11 @@ textarea.notes { min-height: 260px; line-height: 1.55; }
   .sb-facts > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   .mon-add { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Catalogue du Manuel des joueurs : entrées à compléter */
+.hb-tag.todo { color: var(--ember); background: var(--emberbg); }
+.hb-todo { margin-top: 12px; padding: 12px 14px; border-radius: 12px; border: 1px dashed var(--ember); background: var(--emberbg); display: grid; gap: 10px; }
+.hb-todo p { margin: 0; font-size: .92rem; }
+.hb-todo .row-btns { flex-wrap: wrap; }
+.hb-todo .btn svg { width: 15px; height: 15px; margin-right: 4px; vertical-align: -2px; }
+.hb-card.todo { border-style: dashed; }
